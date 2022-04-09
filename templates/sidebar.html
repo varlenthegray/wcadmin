@@ -1,0 +1,56 @@
+{% load static %}
+
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <a href="#" class="sidebar-brand">WCWT<span>Admin</span></a>
+
+        <div class="sidebar-toggler not-active">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <div class="sidebar-body">
+        <ul class="nav">
+            <li class="nav-item nav-category">Main</li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="link-icon" data-feather="box"></i>
+                    <span class="link-title">Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item nav-category">Apps</li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#uiCustomers" role="button" aria-expanded="false" aria-controls="uiCustomers">
+                    <i class="link-icon" data-feather="users"></i>
+                    <span class="link-title">Customers</span>
+                    <i class="link-arrow" data-feather="chevron-down"></i>
+                </a>
+                <div class="collapse" id="uiCustomers">
+                    <ul class="nav sub-menu">
+                        <li class="nav-item"><a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#addCustomerModal">Add New</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">All Customers</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#uiReports" role="button" aria-expanded="false" aria-controls="uiReports">
+                    <i class="link-icon" data-feather="trending-up"></i>
+                    <span class="link-title">Reports</span>
+                    <i class="link-arrow" data-feather="chevron-down"></i>
+                </a>
+                <div class="collapse" id="uiReports">
+                    <ul class="nav sub-menu">
+                        <li class="nav-item"><a href="#" class="nav-link">Custom Report</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Due This Month</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Due Next Month</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Due +2 Months</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Due Last Month</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Due Last 3 Months</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
