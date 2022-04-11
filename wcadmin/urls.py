@@ -19,6 +19,6 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.dashboard),
-    path('customer/', include('customer.urls'))
+    path('', views.DashboardView.as_view(), name='dashboard'),
+    path('customer/', include('customer.urls'), name='customers')
 ]
