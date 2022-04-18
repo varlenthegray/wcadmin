@@ -1,7 +1,7 @@
-asgiref==3.5.0
-django-phonenumber-field==6.1.0
-Django==4.0.3
-pip==22.0.4
-setuptools==62.0.0
-sqlparse==0.4.2
-wheel==0.37.1
+asgiref~=3.5.0
+django-phonenumber-field~=6.1.0
+Django~=4.0.4
+pip~=22.0.4
+setuptools~=62.1.0
+sqlparse~=0.4.2
+wheel~=0.37.1
