@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Customers{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-12 stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-baseline mb-2">
+                        <h6 class="card-title mb-0">All Customers</h6>
+                        <div class="dropdown mb-2">
+                            <button class="btn p-0" type="button" id="dropdownMenuButton7" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton7">
+                                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
+                                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
+                                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table" id="customerDatatable">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Next Service Date</th>
+                                <th>Open in QB</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for customer in customer_list %}
+                                <tr>
+                                    <td>{{ customer.first_name }} {{ customer.last_name }}</td>
+                                    <td>{{ customer.billing_address_1 }}<br>{{ customer.billing_city }}, {{ customer.billing_state }} {{ customer.billing_zip }}</td>
+                                    <td><a href="tel:1{{ customer.main_phone }}">{{ customer.main_phone }}</a></td>
+                                    <td><a href="mailto:{{ customer.email }}">{{ customer.email }}</a></td>
+                                    <td>{{ customer.next_service }}</td>
+                                    <td>QB Link</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page_script %}
+    <script>
+      $(function() {
+        $("#customerDatatable").dataTable({
+          dom: 'Bfrtip',
+          buttons: {
+            buttons: [
+              { extend: 'copy', className: 'btn btn-outline-primary' },
+              { extend: 'csv', className: 'btn btn-outline-primary' },
+              { extend: 'excel', className: 'btn btn-outline-primary' },
+              { extend: 'pdf', className: 'btn btn-outline-primary' },
+              { extend: 'print', className: 'btn btn-outline-primary' },
+            ]
+          }
+        });
+      })
+    </script>
+{% endblock %}

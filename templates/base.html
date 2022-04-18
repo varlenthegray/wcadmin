@@ -19,7 +19,7 @@ License: For each use you must have a valid license purchased only from above li
     <meta name="author" content="WCWT">
     <meta name="keywords" content="WCWT Dashboard">
 
-    <title>{% block title %}WCWT Admin{% endblock %}</title>
+    <title>WCWT Admin - {% block title %}Dashboard{% endblock %}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,6 +36,9 @@ License: For each use you must have a valid license purchased only from above li
     <!-- endinject -->
 
     <!-- Plugin css for this page -->
+    {% block css_plugins %}
+    <link rel="stylesheet" href="{% static 'assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css' %}">
+    {% endblock %}
     <!-- End plugin css for this page -->
 
     <!-- inject:css -->
@@ -157,53 +160,6 @@ License: For each use you must have a valid license purchased only from above li
                     <div class="col-12 stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                {% for customer in customer_list %}
-                                    <ul>{{ customer.first_name }}</ul>
-                                {% endfor %}
-
-                                {% if is_paginated %}
-                                    <nav aria-label="Page navigation example">
-                                        <ul class="pagination">
-                                            {% if page_obj.has_previous %}
-                                                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}"><i data-feather="chevron-left"></i></a></li>
-                                            {% else %}
-                                                <li class="page-item disabled"><a class="page-link" href="#"><i data-feather="chevron-left"></i></a></li>
-                                            {% endif %}
-
-                                            {% if page_obj.has_next %}
-                                                {% for page_number in page_obj.paginator.get_elided_page_range %}
-                                                    {% if page_number == page_obj.paginator.ELLIPSIS %}
-                                                        <li class="page-item disabled"><a class="page-link" href="?page={{ page_number }}"><span>{{ page_number }}</span></a></li>
-                                                    {% else %}
-                                                        {% if page_obj.number == page_number %}
-                                                            <li class="page-item active"><a class="page-link" href="?page={{ page_number }}"><span>{{ page_number }}</span></a></li>
-                                                        {% else %}
-                                                            <li class="page-item"><a class="page-link" href="?page={{ page_number }}"><span>{{ page_number }}</span></a></li>
-                                                        {% endif %}
-                                                    {% endif %}
-                                                {% endfor %}
-
-
-
-                                            {% endif %}
-
-                                            {% if page_obj.has_next %}
-                                                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}"><i data-feather="chevron-right"></i></a></li>
-                                            {% else %}
-                                                <li class="page-item disabled"><a class="page-link" href="#"><i data-feather="chevron-right"></i></a></li>
-                                            {% endif %}
-                                        </ul>
-                                    </nav>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-12 stretch-card">
-                        <div class="card">
-                            <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-baseline mb-2">
                                     <h6 class="card-title mb-0">Service Due</h6>
                                     <div class="dropdown mb-2">
@@ -219,76 +175,30 @@ License: For each use you must have a valid license purchased only from above li
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="table-responsive">
-                                    <table class="table table-hover mb-0">
+                                    <table class="table" id="customerDatatable">
                                         <thead>
                                         <tr>
-                                            <th class="pt-0">#</th>
-                                            <th class="pt-0">Project Name</th>
-                                            <th class="pt-0">Start Date</th>
-                                            <th class="pt-0">Due Date</th>
-                                            <th class="pt-0">Status</th>
-                                            <th class="pt-0">Assign</th>
+                                            <th>Name</th>
+                                            <th>Address</th>
+                                            <th>Phone</th>
+                                            <th>Email</th>
+                                            <th>Next Service Date</th>
+                                            <th>Open in QB</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>NobleUI jQuery</td>
-                                            <td>01/01/2021</td>
-                                            <td>26/04/2021</td>
-                                            <td><span class="badge bg-danger">Released</span></td>
-                                            <td>Leonardo Payne</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>NobleUI Angular</td>
-                                            <td>01/01/2021</td>
-                                            <td>26/04/2021</td>
-                                            <td><span class="badge bg-success">Review</span></td>
-                                            <td>Carl Henson</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>NobleUI ReactJs</td>
-                                            <td>01/05/2021</td>
-                                            <td>10/09/2021</td>
-                                            <td><span class="badge bg-info">Pending</span></td>
-                                            <td>Jensen Combs</td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td>NobleUI VueJs</td>
-                                            <td>01/01/2021</td>
-                                            <td>31/11/2021</td>
-                                            <td><span class="badge bg-warning">Work in Progress</span>
-                                            </td>
-                                            <td>Amiah Burton</td>
-                                        </tr>
-                                        <tr>
-                                            <td>5</td>
-                                            <td>NobleUI Laravel</td>
-                                            <td>01/01/2021</td>
-                                            <td>31/12/2021</td>
-                                            <td><span class="badge bg-danger">Coming soon</span></td>
-                                            <td>Yaretzi Mayo</td>
-                                        </tr>
-                                        <tr>
-                                            <td>6</td>
-                                            <td>NobleUI NodeJs</td>
-                                            <td>01/01/2021</td>
-                                            <td>31/12/2021</td>
-                                            <td><span class="badge bg-primary">Coming soon</span></td>
-                                            <td>Carl Henson</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="border-bottom">3</td>
-                                            <td class="border-bottom">NobleUI EmberJs</td>
-                                            <td class="border-bottom">01/05/2021</td>
-                                            <td class="border-bottom">10/11/2021</td>
-                                            <td class="border-bottom"><span class="badge bg-info">Pending</span></td>
-                                            <td class="border-bottom">Jensen Combs</td>
-                                        </tr>
+                                        {% for customer in customer_list %}
+                                            <tr>
+                                                <td>{{ customer.first_name }} {{ customer.last_name }}</td>
+                                                <td>{{ customer.billing_address_1 }}<br>{{ customer.billing_city }}, {{ customer.billing_state }} {{ customer.billing_zip }}</td>
+                                                <td><a href="tel:1{{ customer.main_phone }}">{{ customer.main_phone }}</a></td>
+                                                <td><a href="mailto:{{ customer.email }}">{{ customer.email }}</a></td>
+                                                <td>{{ customer.next_service }}</td>
+                                                <td>QB Link</td>
+                                            </tr>
+                                        {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>
@@ -306,32 +216,54 @@ License: For each use you must have a valid license purchased only from above li
         <!-- partial:../../partials/_footer.html -->
         <footer class="footer d-flex flex-column flex-md-row align-items-center justify-content-between px-4 py-3 border-top small">
             <p class="text-muted mb-1 mb-md-0">Copyright © 2022 <a href="https://www.wcwater.com" target="_blank">WCWater</a></p>
-            <p class="text-muted">Handcrafted With <i class="mb-1 text-primary ms-1 icon-sm" data-feather="heart"></i> by <a href="https://innovated.tech">Innovated Tech</a></p>
+            <p class="text-muted">Handcrafted With <i class="mb-1 text-primary mx-1 icon-sm" data-feather="heart"></i> by <a href="https://innovated.tech">Innovated Tech</a></p>
         </footer>
         <!-- partial -->
     </div>
 </div>
 
+{% block page_script %}
 <script>
   $(function() {
     $('.donut').peity('donut');
+    $("#customerDatatable").dataTable({
+      dom: 'Bfrtip',
+      buttons: {
+        buttons: [
+            { extend: 'copy', className: 'btn btn-outline-primary' },
+            { extend: 'csv', className: 'btn btn-outline-primary' },
+            { extend: 'excel', className: 'btn btn-outline-primary' },
+            { extend: 'pdf', className: 'btn btn-outline-primary' },
+            { extend: 'print', className: 'btn btn-outline-primary' },
+        ]
+      }
+    });
   });
 </script>
+{% endblock %}
 
 <!-- core:js -->
 <script src="{% static 'assets/vendors/core/core.js' %}"></script>
 <!-- end core -->
 
 <!-- Plugin js for this page -->
+{% block page_plugins %}
 <script src="{% static 'assets/vendors/peity/jquery.peity.min.js' %}"></script>
+<script src="{% static 'assets/vendors/datatables.net/jquery.dataTables.js' %}"></script>
+<script src="{% static 'assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js' %}"></script>
+
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+{% endblock %}
 <!-- End plugin js for this page -->
 
 <!-- inject:js -->
 <script src="{% static 'assets/vendors/feather-icons/feather.min.js' %}"></script>
 <script src="{% static 'assets/js/template.js' %}"></script>
 <!-- endinject -->
-
-<!-- Custom js for this page -->
-<!-- End custom js for this page -->
 </body>
 </html>

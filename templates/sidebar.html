@@ -14,8 +14,9 @@
     <div class="sidebar-body">
         <ul class="nav">
             <li class="nav-item nav-category">Main</li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
+            {% url 'dashboard' as dash_url %}
+            <li class="nav-item {% if request.get_full_path == dash_url %}active{% endif %}">
+                <a href="{% url 'dashboard' %}" class="nav-link">
                     <i class="link-icon" data-feather="box"></i>
                     <span class="link-title">Dashboard</span>
                 </a>
@@ -29,8 +30,9 @@
                 </a>
                 <div class="collapse" id="uiCustomers">
                     <ul class="nav sub-menu">
+                        {% url 'allCustomers' as all_cust_url %}
                         <li class="nav-item"><a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#addCustomerModal">Add New</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link">All Customers</a></li>
+                        <li class="nav-item"><a href="{% url 'allCustomers' %}" class="nav-link {% if request.get_full_path == all_cust_url %}active{% endif %}">All Customers</a></li>
                     </ul>
                 </div>
             </li>
