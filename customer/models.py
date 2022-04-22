@@ -5,7 +5,7 @@ from django.conf import settings
 
 # Create your models here.
 class Customer(models.Model):
-    quickbooks_id = models.IntegerField(editable=False)
+    quickbooks_id = models.IntegerField(editable=False, null=True, blank=True)
     company = models.CharField(max_length=100, null=True, blank=True)
     title = models.CharField(max_length=30, null=True, blank=True)
     first_name = models.CharField(max_length=100)

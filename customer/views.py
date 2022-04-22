@@ -1,5 +1,7 @@
 from django.views import generic
 from .models import Customer
+from django.http import HttpResponseRedirect, HttpResponseBadRequest
+from .forms import AddCustomerForm
 
 
 # Create your views here.
@@ -11,14 +13,14 @@ class AllCustomers(generic.ListView):
 
 class AddCustomer(generic.CreateView):
     model = Customer
-    fields = ['company', 'title', 'first_name', 'middle_name', 'last_name', 'secondary_contact_name', 'website',
-              'email', 'main_phone', 'alternate_phone', 'fax_number', 'billing_address_1', 'billing_address_2',
-              'billing_address_3', 'billing_address_4', 'billing_city', 'billing_state', 'billing_zip',
-              'jobsite_address_1', 'jobsite_address_2', 'jobsite_address_3', 'jobsite_address_4', 'jobsite_city',
-              'jobsite_state', 'jobsite_zip', 'access_code', 'next_service', 'service_interval', 'is_active',
-              'requires_supporting_technician']
     template_name = 'customer/add_customer.html'
+    form_class = AddCustomerForm
 
-    def form_valid(self, form):
-        Customer.objects.create(form.cleaned_data)
-        return super().form_valid(form)
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+
+        if form.is_valid():
+            Customer.objects.create(**form.cleaned_data)
+            return HttpResponseRedirect('/')
+        else:
+            return HttpResponseBadRequest('/customer/add')
