@@ -25,9 +25,6 @@
     <orderEntry type="library" name="buttons.html5" level="application" />
     <orderEntry type="library" name="buttons.print" level="application" />
   </component>
-  <component name="PackageRequirementsSettings">
-    <option name="removeUnused" value="true" />
-  </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
     <option name="TEMPLATE_FOLDERS">

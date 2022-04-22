@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="wcadmin" remoteFilesAllowedToDisappearOnAutoupload="false" compareModeInSync="TIMESTAMP">
+    <serverData>
+      <paths name="wcadmin">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/wcadmin" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath path="/wcadmin/wcadmin/settings.py" />
+            <excludedPath local="true" path="$PROJECT_DIR$/wcadmin/settings.py" />
+            <excludedPath local="true" path="$PROJECT_DIR$/db.sqlite3" />
+            <excludedPath local="true" path="$PROJECT_DIR$/customer/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/equipment/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/service/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/supplier/migrations" />
+            <excludedPath path="/wcadmin/customer/migrations" />
+            <excludedPath path="/wcadmin/equipment/migrations" />
+            <excludedPath path="/wcadmin/service/migrations" />
+            <excludedPath path="/wcadmin/supplier/migrations" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>

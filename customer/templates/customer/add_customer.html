@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %}Add Customer{% endblock %}
+{% block page_header %}Add Customer{% endblock %}
+
+{% block page_content %}
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="mb-3">
+                            {{ form.title.errors }}
+                            <label class="form-label" for="{{ form.title.id_for_label }}">Title</label>
+                            {{ form.title|add_class:"form-control"|attr:"placeholder:Title" }}
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="mb-3">
+                            {{ form.first_name.errors }}
+                            <label class="form-label" for="{{ form.first_name.id_for_label }}"><abbr title="Primary Contact">First Name</abbr></label>
+                            {{ form.first_name|add_class:"form-control"|attr:"placeholder:First Name" }}
+                        </div>
+                    </div><!-- Col -->
+                    <div class="col-sm-2">
+                        <div class="mb-3">
+                            {{ form.middle_name.errors }}
+                            <label class="form-label" for="{{ form.middle_name.id_for_label }}"><abbr title="Middle Initials">MI</abbr></label>
+                            {{ form.middle_name|add_class:"form-control"|attr:"placeholder:MI" }}
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="mb-3">
+                            {{ form.last_name.errors }}
+                            <label class="form-label" for="{{ form.last_name.id_for_label }}">Last Name</label>
+                            {{ form.last_name|add_class:"form-control"|attr:"placeholder:Last Name" }}
+                        </div>
+                    </div><!-- Col -->
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="mb-3">
+                            {{ form.company.errors }}
+                            <label class="form-label" for="{{ form.company.id_for_label }}">Company Name</label>
+                            {{ form.company|add_class:"form-control"|attr:"placeholder:Company Name" }}
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="mb-3">
+                            {{ form.main_phone.errors }}
+                            <label class="form-label" for="{{ form.main_phone.id_for_label }}">Primary Phone</label>
+                            {{ form.main_phone|add_class:"form-control"|attr:"placeholder:(___) ___-____" }}
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="mb-3">
+                            {{ form.email.errors }}
+                            <label class="form-label" for="{{ form.email.id_for_label }}">Primary Email</label>
+                            {{ form.email|add_class:"form-control"|attr:"placeholder:abc@abc.com"|attr:"type:email" }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="mb-3">
+                            <ul class="nav nav-tabs" id="addCustomerTabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="jobsite-tab" data-bs-toggle="tab" href="#jobsite" role="tab" aria-controls="jobsite" aria-selected="true">Jobsite</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="billing-tab" data-bs-toggle="tab" href="#billing" role="tab" aria-controls="billing" aria-selected="false">Billing</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="extraInfo-tab" data-bs-toggle="tab" href="#extraInfo" role="tab" aria-controls="extraInfo" aria-selected="false">Extra Info</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content border border-top-0 p-3" id="myTabContent">
+                                <div class="tab-pane fade show active" id="jobsite" role="tabpanel" aria-labelledby="jobsite-tab">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="mb-3">
+                                                {{ form.jobsite_address_1.errors }}
+                                                <label class="form-label" for="{{ form.jobsite_address_1.id_for_label }}">Jobsite Address 1</label>
+                                                {{ form.jobsite_address_1|add_class:"form-control"|attr:"placeholder:1234 Hard Street" }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            {{ form.jobsite_city.errors }}
+                                            <label class="form-label" for="{{ form.jobsite_city.id_for_label }}">Jobsite City</label>
+                                            {{ form.jobsite_city|add_class:"form-control"|attr:"placeholder:Weaverville" }}
+                                        </div><!-- Col -->
+                                        <div class="col-sm-4">
+                                            {{ form.jobsite_state.errors }}
+                                            <label class="form-label" for="{{ form.jobsite_state.id_for_label }}">Jobsite State</label>
+                                            {{ form.jobsite_state|add_class:"form-control"|attr:"placeholder:NC"|attr:"value:NC" }}
+                                        </div><!-- Col -->
+                                        <div class="col-sm-4">
+                                            {{ form.jobsite_zip.errors }}
+                                            <label class="form-label" for="{{ form.jobsite_zip.id_for_label }}">Jobsite Zip</label>
+                                            {{ form.jobsite_zip|add_class:"form-control"|attr:"placeholder:28806" }}
+                                        </div><!-- Col -->
+                                    </div><!-- Row -->
+                                </div>
+
+                                <div class="tab-pane fade" id="billing" role="tabpanel" aria-labelledby="billing-tab">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="mb-3">
+                                                {{ form.billing_address_1.errors }}
+                                                <label class="form-label" for="{{ form.billing_address_1.id_for_label }}">Billing Address 1</label>
+                                                {{ form.billing_address_1|add_class:"form-control"|attr:"placeholder:1234 Easy Street" }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            {{ form.billing_city.errors }}
+                                            <label class="form-label" for="{{ form.billing_city.id_for_label }}">Billing City</label>
+                                            {{ form.billing_city|add_class:"form-control"|attr:"placeholder:Aronld" }}
+                                        </div><!-- Col -->
+                                        <div class="col-sm-4">
+                                            {{ form.billing_state.errors }}
+                                            <label class="form-label" for="{{ form.billing_state.id_for_label }}">Billing State</label>
+                                            {{ form.billing_state|add_class:"form-control"|attr:"placeholder:NC"|attr:"value:NC" }}
+                                        </div><!-- Col -->
+                                        <div class="col-sm-4">
+                                            {{ form.billing_zip.errors }}
+                                            <label class="form-label" for="{{ form.billing_zip.id_for_label }}">Billing Zip</label>
+                                            {{ form.billing_zip|add_class:"form-control"|attr:"placeholder:28801" }}
+                                        </div><!-- Col -->
+                                    </div><!-- Row -->
+                                </div>
+
+                                <div class="tab-pane fade" id="extraInfo" role="tabpanel" aria-labelledby="extraInfo-tab">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="mb-3">
+                                                {{ form.secondary_contact_name.errors }}
+                                                <label class="form-label" for="{{ form.secondary_contact_name.id_for_label }}">Secondary Contact Name</label>
+                                                {{ form.secondary_contact_name|add_class:"form-control"|attr:"placeholder:Secondary Contact Name" }}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="mb-3">
+                                                {{ form.alternate_phone.errors }}
+                                                <label class="form-label" for="{{ form.alternate_phone.id_for_label }}">Secondary Contact Phone</label>
+                                                {{ form.alternate_phone|add_class:"form-control"|attr:"placeholder:(___) ___-____" }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="mb-3">
+                                                {{ form.access_code.errors }}
+                                                <label class="form-label" for="{{ form.access_code.id_for_label }}">Access Code</label>
+                                                {{ form.access_code|add_class:"form-control"|attr:"placeholder:Access Code" }}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="mb-3">
+                                                {{ form.website.errors }}
+                                                <label class="form-label" for="{{ form.website.id_for_label }}">Website</label>
+                                                {{ form.website|add_class:"form-control"|attr:"placeholder:https://www.widgets.inc/" }}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="mb-3">
+                                                {{ form.fax_number.errors }}
+                                                <label class="form-label" for="{{ form.fax_number.id_for_label }}">Fax Number</label>
+                                                {{ form.fax_number|add_class:"form-control"|attr:"placeholder:(___) ___-____" }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2 offset-sm-10">
+                                <button type="submit" class="btn btn-primary submit float-end">Create Customer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page_script %}
+    <script>
+      $("#{{ form.main_phone.id_for_label }}").inputmask("(999) 999-9999");
+      $("#{{ form.alternate_phone.id_for_label }}").inputmask("(999) 999-9999");
+      $("#{{ form.fax_number.id_for_label }}").inputmask("(999) 999-9999");
+    </script>
+{% endblock %}
+
+{% block page_plugins %}
+    <script src="{% static 'assets/vendors/inputmask/jquery.inputmask.min.js' %}"></script>
+{% endblock %}

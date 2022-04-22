@@ -1,5 +1,4 @@
 from django.db import models
-from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 
 
@@ -9,11 +8,11 @@ class Supplier(models.Model):
     contact_last_name = models.CharField(max_length=200)
     company_name = models.CharField(max_length=200)
     support_email = models.EmailField()
-    support_phone = PhoneNumberField()
+    support_phone = models.CharField(max_length=15)
     sales_email = models.EmailField()
-    sales_phone = PhoneNumberField()
+    sales_phone = models.CharField(max_length=15)
     csr_email = models.EmailField()
-    csr_phone = PhoneNumberField()
+    csr_phone = models.CharField(max_length=15)
     website = models.CharField(max_length=150)
     have_1099 = models.BooleanField(default=False)
     billing_address_1 = models.CharField(max_length=200)

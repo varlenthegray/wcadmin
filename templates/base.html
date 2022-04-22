@@ -37,12 +37,13 @@ License: For each use you must have a valid license purchased only from above li
 
     <!-- Plugin css for this page -->
     {% block css_plugins %}
-    <link rel="stylesheet" href="{% static 'assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css' %}">
     {% endblock %}
     <!-- End plugin css for this page -->
 
     <!-- inject:css -->
     <link rel="stylesheet" href="{% static 'assets/fonts/feather-font/css/iconfont.css' %}">
+    {#    <script src="{% static 'fontawesomefree/js/all.min.js' %}"></script>#}
     <!-- endinject -->
 
     <!-- Layout styles -->
@@ -56,7 +57,60 @@ License: For each use you must have a valid license purchased only from above li
     <nav class="sidebar">{% include 'sidebar.html' %}</nav>
 
     <div class="page-wrapper">
-        {% include 'navbar.html' %}
+        <nav class="navbar">
+            <a href="#" class="sidebar-toggler"><i data-feather="menu"></i></a>
+
+            <div class="navbar-content">
+                <div class="search-form">
+                    <h3 class="page-title">{% block page_header %}Dashboard{% endblock %}</h3>
+                </div>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img class="wd-30 ht-30 rounded-circle" src="https://via.placeholder.com/30x30" alt="profile">
+                        </a>
+                        <div class="dropdown-menu p-0" aria-labelledby="profileDropdown">
+                            <div class="d-flex flex-column align-items-center border-bottom px-5 py-3">
+                                <div class="mb-3">
+                                    <img class="wd-80 ht-80 rounded-circle" src="https://via.placeholder.com/80x80" alt="">
+                                </div>
+                                <div class="text-center">
+                                    <p class="tx-16 fw-bolder">Amiah Burton</p>
+                                    <p class="tx-12 text-muted">amiahburton@gmail.com</p>
+                                </div>
+                            </div>
+                            <ul class="list-unstyled p-1">
+                                <li class="dropdown-item py-2">
+                                    <a href="javascript:" class="text-body ms-0">
+                                        <i class="me-2 icon-md" data-feather="user"></i>
+                                        <span>Profile</span>
+                                    </a>
+                                </li>
+                                <li class="dropdown-item py-2">
+                                    <a href="javascript:" class="text-body ms-0">
+                                        <i class="me-2 icon-md" data-feather="edit"></i>
+                                        <span>Edit Profile</span>
+                                    </a>
+                                </li>
+                                <li class="dropdown-item py-2">
+                                    <a href="javascript:" class="text-body ms-0">
+                                        <i class="me-2 icon-md" data-feather="repeat"></i>
+                                        <span>Switch User</span>
+                                    </a>
+                                </li>
+                                <li class="dropdown-item py-2">
+                                    <a href="javascript:" class="text-body ms-0">
+                                        <i class="me-2 icon-md" data-feather="log-out"></i>
+                                        <span>Log Out</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
         <div class="page-content">
             {% block page_content %}
@@ -65,11 +119,11 @@ License: For each use you must have a valid license purchased only from above li
                         <div class="card">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-baseline">
-                                    <h6 class="card-title mb-0"><abbr title="Last Month">Service Past Due</abbr></h6>
+                                    <h6 class="card-title mb-0"><abbr title="Last Month">Missed Last Month</abbr></h6>
                                 </div>
                                 <div class="row">
                                     <div class="col-8">
-                                        <h3 class="mb-2">56 of 88</h3>
+                                        <h3 class="mb-2">{{ service_past_due.count }} of {{ service_past_due_total.count }}</h3>
                                         <div class="d-flex align-items-baseline">
                                             <a href="#" class="text-danger">
                                                 <span>See All</span>
@@ -78,7 +132,7 @@ License: For each use you must have a valid license purchased only from above li
                                         </div>
                                     </div>
                                     <div class="col-4">
-                                        <span class="donut" data-peity='{ "fill": ["rgb(255,51,102)", "rgba(255,51,102,.2)"], "innerRadius": 15, "radius": 25 }'>56/88</span>
+                                        <span class="donut" data-peity='{ "fill": ["rgb(255,51,102)", "rgba(255,51,102,.2)"], "innerRadius": 15, "radius": 25 }'>{{ service_past_due.count }}/{{ service_past_due_total.count }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -88,11 +142,11 @@ License: For each use you must have a valid license purchased only from above li
                         <div class="card">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-baseline">
-                                    <h6 class="card-title mb-0"><abbr title="This Month">Service Due</abbr></h6>
+                                    <h6 class="card-title mb-0"><abbr title="This Month">Due This Month</abbr></h6>
                                 </div>
                                 <div class="row">
                                     <div class="col-8">
-                                        <h3 class="mb-2">23 of 142</h3>
+                                        <h3 class="mb-2">{{ service_due.count }} of {{ service_due_total.count }}</h3>
                                         <div class="d-flex align-items-baseline">
                                             <a href="#" class="text-primary">
                                                 <span>See All</span>
@@ -101,8 +155,7 @@ License: For each use you must have a valid license purchased only from above li
                                         </div>
                                     </div>
                                     <div class="col-4">
-                                        {# (142-23)/142 #}
-                                        <span class="donut" data-peity='{ "fill": ["rgb(101, 113, 255)", "rgba(101, 113, 255,.2)"], "innerRadius": 15, "radius": 25 }'>119/142</span>
+                                        <span class="donut" data-peity='{ "fill": ["rgb(101, 113, 255)", "rgba(101, 113, 255,.2)"], "innerRadius": 15, "radius": 25 }'>{{ service_due.count }}/{{ service_due_total.count }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -116,7 +169,7 @@ License: For each use you must have a valid license purchased only from above li
                                 </div>
                                 <div class="row">
                                     <div class="col-8">
-                                        <h3 class="mb-2">42 of 104</h3>
+                                        <h3 class="mb-2">{{ service_coming_up.count }} of {{ service_coming_up_total.count }}</h3>
                                         <div class="d-flex align-items-baseline">
                                             <a href="#" class="text-secondary">
                                                 <span>See All</span>
@@ -125,7 +178,7 @@ License: For each use you must have a valid license purchased only from above li
                                         </div>
                                     </div>
                                     <div class="col-4">
-                                        <span class="donut" data-peity='{ "fill": ["rgb(121, 135, 161)", "rgba(121, 135, 161,.2)"], "innerRadius": 15, "radius": 25 }'>42/106</span>
+                                        <span class="donut" data-peity='{ "fill": ["rgb(121, 135, 161)", "rgba(121, 135, 161,.2)"], "innerRadius": 15, "radius": 25 }'>{{ service_coming_up.count }}/{{ service_coming_up_total.count }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -139,7 +192,7 @@ License: For each use you must have a valid license purchased only from above li
                                 </div>
                                 <div class="row">
                                     <div class="col-8">
-                                        <h3 class="mb-2">10 of 14</h3>
+                                        <h3 class="mb-2">{{ service_refresh.count }} of {{ service_refresh_total.count }}</h3>
                                         <div class="d-flex align-items-baseline">
                                             <a href="#" class="text-info">
                                                 <span>See All</span>
@@ -148,7 +201,7 @@ License: For each use you must have a valid license purchased only from above li
                                         </div>
                                     </div>
                                     <div class="col-4">
-                                        <span class="donut" data-peity='{ "fill": ["rgb(102, 209, 209)", "rgba(102, 209, 209,.2)"], "innerRadius": 15, "radius": 25 }'>10/14</span>
+                                        <span class="donut" data-peity='{ "fill": ["rgb(102, 209, 209)", "rgba(102, 209, 209,.2)"], "innerRadius": 15, "radius": 25 }'>{{ service_refresh.count }}/{{ service_refresh_total.count }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -180,23 +233,26 @@ License: For each use you must have a valid license purchased only from above li
                                     <table class="table" id="customerDatatable">
                                         <thead>
                                         <tr>
+                                            <th>Actions</th>
                                             <th>Name</th>
                                             <th>Address</th>
                                             <th>Phone</th>
                                             <th>Email</th>
                                             <th>Next Service Date</th>
-                                            <th>Open in QB</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         {% for customer in customer_list %}
                                             <tr>
+                                                <td>
+                                                    <button type="button" class="btn btn-inverse-primary btn-xs btn-icon" title="Open in QuickBooks">QB</button>
+                                                    <button type="button" class="btn btn-inverse-secondary btn-xs btn-icon" title="View Customer Record"><i data-feather="eye"></i></button>
+                                                </td>
                                                 <td>{{ customer.first_name }} {{ customer.last_name }}</td>
                                                 <td>{{ customer.billing_address_1 }}<br>{{ customer.billing_city }}, {{ customer.billing_state }} {{ customer.billing_zip }}</td>
                                                 <td><a href="tel:1{{ customer.main_phone }}">{{ customer.main_phone }}</a></td>
                                                 <td><a href="mailto:{{ customer.email }}">{{ customer.email }}</a></td>
                                                 <td>{{ customer.next_service }}</td>
-                                                <td>QB Link</td>
                                             </tr>
                                         {% endfor %}
                                         </tbody>
@@ -222,42 +278,22 @@ License: For each use you must have a valid license purchased only from above li
     </div>
 </div>
 
-{% block page_script %}
-<script>
-  $(function() {
-    $('.donut').peity('donut');
-    $("#customerDatatable").dataTable({
-      dom: 'Bfrtip',
-      buttons: {
-        buttons: [
-            { extend: 'copy', className: 'btn btn-outline-primary' },
-            { extend: 'csv', className: 'btn btn-outline-primary' },
-            { extend: 'excel', className: 'btn btn-outline-primary' },
-            { extend: 'pdf', className: 'btn btn-outline-primary' },
-            { extend: 'print', className: 'btn btn-outline-primary' },
-        ]
-      }
-    });
-  });
-</script>
-{% endblock %}
-
 <!-- core:js -->
 <script src="{% static 'assets/vendors/core/core.js' %}"></script>
 <!-- end core -->
 
 <!-- Plugin js for this page -->
 {% block page_plugins %}
-<script src="{% static 'assets/vendors/peity/jquery.peity.min.js' %}"></script>
-<script src="{% static 'assets/vendors/datatables.net/jquery.dataTables.js' %}"></script>
-<script src="{% static 'assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js' %}"></script>
+    <script src="{% static 'assets/vendors/peity/jquery.peity.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/datatables.net/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js' %}"></script>
 
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
 {% endblock %}
 <!-- End plugin js for this page -->
 
@@ -265,5 +301,25 @@ License: For each use you must have a valid license purchased only from above li
 <script src="{% static 'assets/vendors/feather-icons/feather.min.js' %}"></script>
 <script src="{% static 'assets/js/template.js' %}"></script>
 <!-- endinject -->
+
+{% block page_script %}
+    <script>
+      $(function() {
+        $('.donut').peity('donut');
+        $("#customerDatatable").dataTable({
+          dom: 'Bfrtip',
+          buttons: {
+            buttons: [
+              { extend: 'copy', className: 'btn btn-outline-primary' },
+              { extend: 'csv', className: 'btn btn-outline-primary' },
+              { extend: 'excel', className: 'btn btn-outline-primary' },
+              { extend: 'pdf', className: 'btn btn-outline-primary' },
+              { extend: 'print', className: 'btn btn-outline-primary' },
+            ]
+          }
+        });
+      });
+    </script>
+{% endblock %}
 </body>
 </html>
