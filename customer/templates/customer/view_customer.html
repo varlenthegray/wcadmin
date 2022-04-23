@@ -114,8 +114,8 @@
                                     <div class="row">
                                         <div class="col-sm-2">
                                             <div class="form-check mb-3">
-                                                <input type="checkbox" class="form-check-input" id="billing_address_same_jobsite" checked="checked">
-                                                <label class="form-check-label" for="billing_address_same_jobsite">Same as Jobsite</label>
+                                                <input type="checkbox" class="form-check-input" id="{{ form.billing_address_same_as_jobsite.id_for_label }}" {% if form.billing_address_same_as_jobsite.value %}checked="checked"{% endif %}>
+                                                <label class="form-check-label" for="{{ form.billing_address_same_as_jobsite.id_for_label }}">Same as Jobsite</label>
                                             </div>
                                         </div>
                                     </div>
@@ -221,7 +221,8 @@
             '{{ form.jobsite_address_1.id_for_label }}',
             '{{ form.jobsite_city.id_for_label }}',
             '{{ form.jobsite_state.id_for_label }}',
-            '{{ form.jobsite_zip.id_for_label }}'
+            '{{ form.jobsite_zip.id_for_label }}',
+            '{{ form.billing_address_same_as_jobsite.id_for_label }}'
         );
     </script>
 {% endblock %}

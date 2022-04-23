@@ -1,5 +1,5 @@
 let customerBillingCheckbox = {
-  init: function(b_address_id, b_city_id, b_state_id, b_zip_id, j_address_id, j_city_id, j_state_id, j_zip_id) {
+  init: function(b_address_id, b_city_id, b_state_id, b_zip_id, j_address_id, j_city_id, j_state_id, j_zip_id, checkbox_id) {
     let fb_address = $("#" + b_address_id), fb_city = $("#" + b_city_id), fb_state = $("#" + b_state_id), fb_zip = $("#" + b_zip_id),
         fj_address = $("#" + j_address_id), fj_city = $("#" + j_city_id), fj_state = $("#" + j_state_id), fj_zip = $("#" + j_zip_id);
 
@@ -22,7 +22,7 @@ let customerBillingCheckbox = {
       }
     }
 
-    let same_billing_jobsite = $("#billing_address_same_jobsite");
+    let same_billing_jobsite = $("#" + checkbox_id);
 
     same_billing_jobsite.on("change", function() {
       disableBilling(this.checked);

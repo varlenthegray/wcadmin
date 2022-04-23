@@ -8,7 +8,7 @@ class AddCustomerForm(forms.ModelForm):
         fields = ['company', 'title', 'first_name', 'middle_name', 'last_name', 'secondary_contact_name', 'website',
                   'email', 'main_phone', 'alternate_phone', 'fax_number', 'billing_address_1', 'billing_city',
                   'billing_state', 'billing_zip', 'jobsite_address_1', 'jobsite_city', 'jobsite_state', 'jobsite_zip',
-                  'access_code']
+                  'access_code', 'billing_address_same_as_jobsite']
 
 
 class ViewCustomerForm(forms.ModelForm):
@@ -17,4 +17,4 @@ class ViewCustomerForm(forms.ModelForm):
         fields = ['company', 'title', 'first_name', 'middle_name', 'last_name', 'secondary_contact_name', 'website',
                   'email', 'main_phone', 'alternate_phone', 'fax_number', 'billing_address_1', 'billing_city',
                   'billing_state', 'billing_zip', 'jobsite_address_1', 'jobsite_city', 'jobsite_state', 'jobsite_zip',
-                  'access_code']
+                  'access_code', 'billing_address_same_as_jobsite']

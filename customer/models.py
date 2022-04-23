@@ -17,6 +17,7 @@ class Customer(models.Model):
     main_phone = models.CharField(max_length=15)
     alternate_phone = models.CharField(max_length=15, null=True, blank=True)
     fax_number = models.CharField(max_length=15, null=True, blank=True)
+    billing_address_same_as_jobsite = models.BooleanField(default=False, null=True, blank=True)
     billing_address_1 = models.CharField(max_length=200, null=True, blank=True)
     billing_address_2 = models.CharField(max_length=200, null=True, blank=True)
     billing_address_3 = models.CharField(max_length=200, null=True, blank=True)
