@@ -1,58 +1,60 @@
 {% load static %}
 
-<nav class="sidebar">
-    <div class="sidebar-header">
-        <a href="#" class="sidebar-brand">WCWT<span>Admin</span></a>
+{# This defines the URL's in the sidebar, used for active and conditional display #}
+{% url 'dashboard' as dashboard_url %}
+{% url 'allCustomers' as all_customers_url %}
+{% url 'addCustomer' as add_customer_url %}
 
-        <div class="sidebar-toggler not-active">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </div>
+<div class="sidebar-header">
+    <a href="#" class="sidebar-brand">WCWT<span>Admin</span></a>
 
-    <div class="sidebar-body">
-        <ul class="nav">
-            <li class="nav-item nav-category">Main</li>
-            {% url 'dashboard' as dash_url %}
-            <li class="nav-item {% if request.get_full_path == dash_url %}active{% endif %}">
-                <a href="{% url 'dashboard' %}" class="nav-link">
-                    <i class="link-icon" data-feather="box"></i>
-                    <span class="link-title">Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item nav-category">Apps</li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#uiCustomers" role="button" aria-expanded="false" aria-controls="uiCustomers">
-                    <i class="link-icon" data-feather="users"></i>
-                    <span class="link-title">Customers</span>
-                    <i class="link-arrow" data-feather="chevron-down"></i>
-                </a>
-                <div class="collapse" id="uiCustomers">
-                    <ul class="nav sub-menu">
-                        {% url 'allCustomers' as all_cust_url %}
-                        <li class="nav-item"><a href="{% url 'addCustomer' %}" class="nav-link">Add New</a></li>
-                        <li class="nav-item"><a href="{% url 'allCustomers' %}" class="nav-link {% if request.get_full_path == all_cust_url %}active{% endif %}">All Customers</a></li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#uiReports" role="button" aria-expanded="false" aria-controls="uiReports">
-                    <i class="link-icon" data-feather="trending-up"></i>
-                    <span class="link-title">Reports</span>
-                    <i class="link-arrow" data-feather="chevron-down"></i>
-                </a>
-                <div class="collapse" id="uiReports">
-                    <ul class="nav sub-menu">
-                        <li class="nav-item"><a href="#" class="nav-link">Custom Report</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link">Due This Month</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link">Due Next Month</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link">Due +2 Months</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link">Due Last Month</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link">Due Last 3 Months</a></li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
+    <div class="sidebar-toggler not-active">
+        <span></span>
+        <span></span>
+        <span></span>
     </div>
-</nav>
+</div>
+
+<div class="sidebar-body">
+    <ul class="nav">
+        <li class="nav-item nav-category">Main</li>
+        <li class="nav-item {% if request.get_full_path == dashboard_url %}active{% endif %}">
+            <a href="{{ dashboard_url }}" class="nav-link">
+                <i class="link-icon" data-feather="box"></i>
+                <span class="link-title">Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item nav-category">Apps</li>
+        <li class="nav-item {% if request.get_full_path == add_customer_url or request.get_full_path == all_customers_url %}active{% endif %}">
+            <a class="nav-link" data-bs-toggle="collapse" href="#uiCustomers" role="button" aria-expanded="false" aria-controls="uiCustomers">
+                <i class="link-icon" data-feather="users"></i>
+                <span class="link-title">Customers</span>
+                <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+
+            <div class="collapse {% if request.get_full_path == add_customer_url or request.get_full_path == all_customers_url %}show{% endif %}" id="uiCustomers">
+                <ul class="nav sub-menu">
+                    <li class="nav-item"><a href="{{ add_customer_url }}" class="nav-link {% if request.get_full_path == add_customer_url %}active{% endif %}">Add New</a></li>
+                    <li class="nav-item"><a href="{{ all_customers_url }}" class="nav-link {% if request.get_full_path == all_customers_url %}active{% endif %}">All Customers</a></li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#uiReports" role="button" aria-expanded="false" aria-controls="uiReports">
+                <i class="link-icon" data-feather="trending-up"></i>
+                <span class="link-title">Reports</span>
+                <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+            <div class="collapse" id="uiReports">
+                <ul class="nav sub-menu">
+                    <li class="nav-item"><a href="#" class="nav-link">Custom Report</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Due This Month</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Due Next Month</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Due +2 Months</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Due Last Month</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Due Last 3 Months</a></li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+</div>

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}Customers{% endblock %}
+{% block page_header %}All Customers{% endblock %}
 
 {% block page_content %}
     <div class="row">
@@ -8,17 +9,17 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-baseline mb-2">
-                        <h6 class="card-title mb-0">All Customers</h6>
+                        <h6 class="card-title mb-0">Service Due</h6>
                         <div class="dropdown mb-2">
                             <button class="btn p-0" type="button" id="dropdownMenuButton7" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton7">
-                                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
-                                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
-                                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
-                                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
-                                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                                <button id="dt_button_copy" class="dropdown-item d-flex align-items-center"><i data-feather="copy" class="icon-sm me-2"></i> <span class="">Copy</span></button>
+                                <button id="dt_button_csv" class="dropdown-item d-flex align-items-center"><i data-feather="file-text" class="icon-sm me-2"></i> <span class="">Download CSV</span></button>
+                                <button id="dt_button_excel" class="dropdown-item d-flex align-items-center"><i data-feather="columns" class="icon-sm me-2"></i> <span class="">Download Excel</span></button>
+                                <button id="dt_button_pdf" class="dropdown-item d-flex align-items-center"><i data-feather="pen-tool" class="icon-sm me-2"></i> <span class="">Download PDF</span></button>
+                                <button id="dt_button_print" class="dropdown-item d-flex align-items-center"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print Table</span></button>
                             </div>
                         </div>
                     </div>
@@ -27,23 +28,26 @@
                         <table class="table" id="customerDatatable">
                             <thead>
                             <tr>
+                                <th>Actions</th>
                                 <th>Name</th>
                                 <th>Address</th>
                                 <th>Phone</th>
                                 <th>Email</th>
                                 <th>Next Service Date</th>
-                                <th>Open in QB</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for customer in customer_list %}
                                 <tr>
+                                    <td>
+                                        <a href="#" class="btn btn-inverse-primary btn-xs btn-icon" title="Open in QuickBooks">QB</a>
+                                        <a href="{% url 'viewCustomer' pk=customer.pk %}" class="btn btn-inverse-secondary btn-xs btn-icon" title="View Customer Record"><i data-feather="eye"></i></a>
+                                    </td>
                                     <td>{{ customer.first_name }} {{ customer.last_name }}</td>
                                     <td>{{ customer.billing_address_1 }}<br>{{ customer.billing_city }}, {{ customer.billing_state }} {{ customer.billing_zip }}</td>
                                     <td><a href="tel:1{{ customer.main_phone }}">{{ customer.main_phone }}</a></td>
                                     <td><a href="mailto:{{ customer.email }}">{{ customer.email }}</a></td>
                                     <td>{{ customer.next_service }}</td>
-                                    <td>QB Link</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -58,8 +62,8 @@
 {% block page_script %}
     <script>
       $(function() {
-        $("#customerDatatable").dataTable({
-          dom: 'Bfrtip',
+        let table = $("#customerDatatable").DataTable({
+          dom: 'frtip',
           buttons: {
             buttons: [
               { extend: 'copy', className: 'btn btn-outline-primary' },
@@ -70,6 +74,27 @@
             ]
           }
         });
-      })
+
+        $("#dt_button_copy").on("click", function() {
+          table.buttons('.buttons-copy').trigger();
+          window.alert("Copied.");
+        });
+
+        $("#dt_button_csv").on("click", function() {
+          table.buttons('.buttons-csv').trigger();
+        });
+
+        $("#dt_button_excel").on("click", function() {
+          table.buttons('.buttons-excel').trigger();
+        });
+
+        $("#dt_button_pdf").on("click", function() {
+          table.buttons('.buttons-pdf').trigger();
+        });
+
+        $("#dt_button_print").on("click", function() {
+          table.buttons('.buttons-print').trigger();
+        });
+      });
     </script>
 {% endblock %}

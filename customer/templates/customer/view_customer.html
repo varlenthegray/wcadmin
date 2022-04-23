@@ -2,8 +2,8 @@
 {% load widget_tweaks %}
 {% load static %}
 
-{% block title %}Add Customer{% endblock %}
-{% block page_header %}Add Customer{% endblock %}
+{% block title %}{{ object.first_name }} {{ object.last_name }}{% endblock %}
+{% block page_header %}View Customer: <abbr title="Database ID: {{ object.pk }}, Quickbooks ID: {{ object.quickbooks_id }}">{{ object.first_name }} {{ object.last_name }}</abbr>{% endblock %}
 
 {% block page_content %}
     <div class="card">
@@ -129,7 +129,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="row">
                                         <div class="col-sm-4">
                                             {{ form.billing_city.errors }}
@@ -196,7 +195,7 @@
 
                         <div class="row">
                             <div class="col-sm-2 offset-sm-10">
-                                <button type="submit" class="btn btn-primary submit float-end">Create Customer</button>
+                                <button type="submit" class="btn btn-primary submit float-end">Update Customer</button>
                             </div>
                         </div>
                     </div>
@@ -210,8 +209,11 @@
     <script src="{% static 'js/customer-billing-checkbox.js' %}"></script>
 
     <script>
-      $(function() {
-        customerBillingCheckbox.init(
+      $("#{{ form.main_phone.id_for_label }}").inputmask("(999) 999-9999");
+      $("#{{ form.alternate_phone.id_for_label }}").inputmask("(999) 999-9999");
+      $("#{{ form.fax_number.id_for_label }}").inputmask("(999) 999-9999");
+
+      customerBillingCheckbox.init(
             '{{ form.billing_address_1.id_for_label }}',
             '{{ form.billing_city.id_for_label }}',
             '{{ form.billing_state.id_for_label }}',
@@ -221,7 +223,6 @@
             '{{ form.jobsite_state.id_for_label }}',
             '{{ form.jobsite_zip.id_for_label }}'
         );
-      });
     </script>
 {% endblock %}
 
