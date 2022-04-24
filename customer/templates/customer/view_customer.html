@@ -16,28 +16,28 @@
                         <div class="mb-3">
                             {{ form.title.errors }}
                             <label class="form-label" for="{{ form.title.id_for_label }}">Title</label>
-                            {{ form.title|add_class:"form-control"|attr:"placeholder:Title" }}
+                            {{ form.title|add_class:"form-control"|attr:"placeholder:Title"|attr:"autocomplete:off" }}
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="mb-3">
                             {{ form.first_name.errors }}
                             <label class="form-label" for="{{ form.first_name.id_for_label }}"><abbr title="Primary Contact">First Name</abbr></label>
-                            {{ form.first_name|add_class:"form-control"|attr:"placeholder:First Name" }}
+                            {{ form.first_name|add_class:"form-control"|attr:"placeholder:First Name"|attr:"autocomplete:off" }}
                         </div>
                     </div><!-- Col -->
                     <div class="col-sm-2">
                         <div class="mb-3">
                             {{ form.middle_name.errors }}
                             <label class="form-label" for="{{ form.middle_name.id_for_label }}"><abbr title="Middle Initials">MI</abbr></label>
-                            {{ form.middle_name|add_class:"form-control"|attr:"placeholder:MI" }}
+                            {{ form.middle_name|add_class:"form-control"|attr:"placeholder:MI"|attr:"autocomplete:off" }}
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="mb-3">
                             {{ form.last_name.errors }}
                             <label class="form-label" for="{{ form.last_name.id_for_label }}">Last Name</label>
-                            {{ form.last_name|add_class:"form-control"|attr:"placeholder:Last Name" }}
+                            {{ form.last_name|add_class:"form-control"|attr:"placeholder:Last Name"|attr:"autocomplete:off" }}
                         </div>
                     </div><!-- Col -->
                 </div>
@@ -47,21 +47,21 @@
                         <div class="mb-3">
                             {{ form.company.errors }}
                             <label class="form-label" for="{{ form.company.id_for_label }}">Company Name</label>
-                            {{ form.company|add_class:"form-control"|attr:"placeholder:Company Name" }}
+                            {{ form.company|add_class:"form-control"|attr:"placeholder:Company Name"|attr:"autocomplete:off" }}
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="mb-3">
                             {{ form.main_phone.errors }}
                             <label class="form-label" for="{{ form.main_phone.id_for_label }}">Primary Phone</label>
-                            {{ form.main_phone|add_class:"form-control"|attr:"placeholder:(___) ___-____" }}
+                            {{ form.main_phone|add_class:"form-control"|attr:"placeholder:(___) ___-____"|attr:"autocomplete:off" }}
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="mb-3">
                             {{ form.email.errors }}
                             <label class="form-label" for="{{ form.email.id_for_label }}">Primary Email</label>
-                            {{ form.email|add_class:"form-control"|attr:"placeholder:abc@abc.com"|attr:"type:email" }}
+                            {{ form.email|add_class:"form-control"|attr:"placeholder:abc@abc.com"|attr:"type:email"|attr:"autocomplete:off" }}
                         </div>
                     </div>
                 </div>
@@ -87,25 +87,26 @@
                                             <div class="mb-3">
                                                 {{ form.jobsite_address_1.errors }}
                                                 <label class="form-label" for="{{ form.jobsite_address_1.id_for_label }}">Jobsite Address 1</label>
-                                                {{ form.jobsite_address_1|add_class:"form-control"|attr:"placeholder:1234 Hard Street" }}
+                                                {{ form.jobsite_address_1|add_class:"form-control"|attr:"placeholder:1234 Hard Street"|attr:"autocomplete:off" }}
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row">
                                         <div class="col-sm-4">
                                             {{ form.jobsite_city.errors }}
                                             <label class="form-label" for="{{ form.jobsite_city.id_for_label }}">Jobsite City</label>
-                                            {{ form.jobsite_city|add_class:"form-control"|attr:"placeholder:Weaverville" }}
+                                            {{ form.jobsite_city|add_class:"form-control"|attr:"placeholder:Weaverville"|attr:"autocomplete:off" }}
                                         </div><!-- Col -->
                                         <div class="col-sm-4">
                                             {{ form.jobsite_state.errors }}
                                             <label class="form-label" for="{{ form.jobsite_state.id_for_label }}">Jobsite State</label>
-                                            {{ form.jobsite_state|add_class:"form-control"|attr:"placeholder:NC"|attr:"value:NC" }}
+                                            {{ form.jobsite_state|add_class:"form-control"|attr:"placeholder:NC"|attr:"value:NC"|attr:"autocomplete:off" }}
                                         </div><!-- Col -->
                                         <div class="col-sm-4">
                                             {{ form.jobsite_zip.errors }}
                                             <label class="form-label" for="{{ form.jobsite_zip.id_for_label }}">Jobsite Zip</label>
-                                            {{ form.jobsite_zip|add_class:"form-control"|attr:"placeholder:28806" }}
+                                            {{ form.jobsite_zip|add_class:"form-control"|attr:"placeholder:28806"|attr:"autocomplete:off" }}
                                         </div><!-- Col -->
                                     </div><!-- Row -->
                                 </div>
@@ -125,25 +126,26 @@
                                             <div class="mb-3">
                                                 {{ form.billing_address_1.errors }}
                                                 <label class="form-label" for="{{ form.billing_address_1.id_for_label }}">Billing Address 1</label>
-                                                {{ form.billing_address_1|add_class:"form-control"|attr:"placeholder:1234 Easy Street" }}
+                                                {{ form.billing_address_1|add_class:"form-control"|attr:"placeholder:1234 Easy Street"|attr:"autocomplete:off" }}
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row">
                                         <div class="col-sm-4">
                                             {{ form.billing_city.errors }}
                                             <label class="form-label" for="{{ form.billing_city.id_for_label }}">Billing City</label>
-                                            {{ form.billing_city|add_class:"form-control"|attr:"placeholder:Aronld" }}
+                                            {{ form.billing_city|add_class:"form-control"|attr:"placeholder:Aronld"|attr:"autocomplete:off" }}
                                         </div><!-- Col -->
                                         <div class="col-sm-4">
                                             {{ form.billing_state.errors }}
                                             <label class="form-label" for="{{ form.billing_state.id_for_label }}">Billing State</label>
-                                            {{ form.billing_state|add_class:"form-control"|attr:"placeholder:NC"|attr:"value:NC" }}
+                                            {{ form.billing_state|add_class:"form-control"|attr:"placeholder:NC"|attr:"value:NC"|attr:"autocomplete:off" }}
                                         </div><!-- Col -->
                                         <div class="col-sm-4">
                                             {{ form.billing_zip.errors }}
                                             <label class="form-label" for="{{ form.billing_zip.id_for_label }}">Billing Zip</label>
-                                            {{ form.billing_zip|add_class:"form-control"|attr:"placeholder:28801" }}
+                                            {{ form.billing_zip|add_class:"form-control"|attr:"placeholder:28801"|attr:"autocomplete:off" }}
                                         </div><!-- Col -->
                                     </div><!-- Row -->
                                 </div>
@@ -206,14 +208,14 @@
 {% endblock %}
 
 {% block page_script %}
-{#    <script src="{% static 'js/customer-billing-checkbox.js' %}"></script>#}
+    <script src="{% static 'js/customer-billing-checkbox.js' %}"></script>
 
     <script>
       $("#{{ form.main_phone.id_for_label }}").inputmask("(999) 999-9999");
       $("#{{ form.alternate_phone.id_for_label }}").inputmask("(999) 999-9999");
       $("#{{ form.fax_number.id_for_label }}").inputmask("(999) 999-9999");
 
-      {% comment %}customerBillingCheckbox.init(
+      customerBillingCheckbox.init(
             '{{ form.billing_address_1.id_for_label }}',
             '{{ form.billing_city.id_for_label }}',
             '{{ form.billing_state.id_for_label }}',
@@ -223,7 +225,7 @@
             '{{ form.jobsite_state.id_for_label }}',
             '{{ form.jobsite_zip.id_for_label }}',
             '{{ form.billing_address_same_as_jobsite.id_for_label }}'
-        );{% endcomment %}
+        );
     </script>
 {% endblock %}
 
