@@ -24,6 +24,7 @@
     <orderEntry type="library" name="pdfmake" level="application" />
     <orderEntry type="library" name="buttons.html5" level="application" />
     <orderEntry type="library" name="buttons.print" level="application" />
+    <orderEntry type="library" name="luxon" level="application" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />

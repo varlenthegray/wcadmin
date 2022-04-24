@@ -31,3 +31,12 @@ class ViewCustomer(generic.UpdateView):
     model = Customer
     template_name = 'customer/view_customer.html'
     form_class = ViewCustomerForm
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+
+        if form.is_valid():
+            Customer.objects.filter(pk=kwargs['pk']).update(**form.cleaned_data)
+            return HttpResponseRedirect('/')
+        else:
+            return HttpResponseBadRequest('Unable to update the customer.')

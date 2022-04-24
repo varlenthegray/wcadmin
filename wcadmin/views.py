@@ -6,7 +6,7 @@ from django.utils import timezone
 class DashboardView(generic.ListView):
     model = Customer
     queryset = Customer.objects.filter(next_service__month=timezone.now().month)\
-        .filter(next_service__year=timezone.now().year)
+        .filter(next_service__year=timezone.now().year).filter(is_active=True)
     template_name = "base.html"
 
     def get_context_data(self, **kwargs):

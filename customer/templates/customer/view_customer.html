@@ -3,9 +3,15 @@
 {% load static %}
 
 {% block title %}{{ object.first_name }} {{ object.last_name }}{% endblock %}
-{% block page_header %}View Customer: <abbr title="Database ID: {{ object.pk }}, Quickbooks ID: {{ object.quickbooks_id }}">{{ object.first_name }} {{ object.last_name }}</abbr>{% endblock %}
+{% block page_header %}Editing <abbr title="Database ID: {{ object.pk }}, Quickbooks ID: {{ object.quickbooks_id }}">{{ object.first_name }} {{ object.last_name }}</abbr>{% endblock %}
+{% block css_plugins %}
+    <link rel="stylesheet" href="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css' %}">
+{% endblock %}
 
 {% block page_content %}
+    {% if not form.is_active.value %}<div class="alert alert-danger" role="alert">Customer is inactive or deleted.</div>{% endif %}
+    {% if form.requires_supporting_technician.value %}<div class="alert alert-warning" role="alert">Requires two technicians!</div>{% endif %}
+
     <div class="card">
         <div class="card-body">
             <form method="post">
@@ -67,142 +73,195 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-12">
-                        <div class="mb-3">
-                            <ul class="nav nav-tabs" id="addCustomerTabs" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="jobsite-tab" data-bs-toggle="tab" href="#jobsite" role="tab" aria-controls="jobsite" aria-selected="true">Jobsite</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="billing-tab" data-bs-toggle="tab" href="#billing" role="tab" aria-controls="billing" aria-selected="false">Billing</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="extraInfo-tab" data-bs-toggle="tab" href="#extraInfo" role="tab" aria-controls="extraInfo" aria-selected="false">Extra Info</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content border border-top-0 p-3" id="myTabContent">
-                                <div class="tab-pane fade show active" id="jobsite" role="tabpanel" aria-labelledby="jobsite-tab">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="mb-3">
-                                                {{ form.jobsite_address_1.errors }}
-                                                <label class="form-label" for="{{ form.jobsite_address_1.id_for_label }}">Jobsite Address 1</label>
-                                                {{ form.jobsite_address_1|add_class:"form-control"|attr:"placeholder:1234 Hard Street"|attr:"autocomplete:off" }}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            {{ form.jobsite_city.errors }}
-                                            <label class="form-label" for="{{ form.jobsite_city.id_for_label }}">Jobsite City</label>
-                                            {{ form.jobsite_city|add_class:"form-control"|attr:"placeholder:Weaverville"|attr:"autocomplete:off" }}
-                                        </div><!-- Col -->
-                                        <div class="col-sm-4">
-                                            {{ form.jobsite_state.errors }}
-                                            <label class="form-label" for="{{ form.jobsite_state.id_for_label }}">Jobsite State</label>
-                                            {{ form.jobsite_state|add_class:"form-control"|attr:"placeholder:NC"|attr:"value:NC"|attr:"autocomplete:off" }}
-                                        </div><!-- Col -->
-                                        <div class="col-sm-4">
-                                            {{ form.jobsite_zip.errors }}
-                                            <label class="form-label" for="{{ form.jobsite_zip.id_for_label }}">Jobsite Zip</label>
-                                            {{ form.jobsite_zip|add_class:"form-control"|attr:"placeholder:28806"|attr:"autocomplete:off" }}
-                                        </div><!-- Col -->
-                                    </div><!-- Row -->
-                                </div>
-
-                                <div class="tab-pane fade" id="billing" role="tabpanel" aria-labelledby="billing-tab">
-                                    <div class="row">
-                                        <div class="col-sm-2">
-                                            <div class="form-check mb-3">
-                                                <input type="checkbox" class="form-check-input" id="{{ form.billing_address_same_as_jobsite.id_for_label }}" {% if form.billing_address_same_as_jobsite.value %}checked="checked"{% endif %}>
-                                                <label class="form-check-label" for="{{ form.billing_address_same_as_jobsite.id_for_label }}">Same as Jobsite</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="mb-3">
-                                                {{ form.billing_address_1.errors }}
-                                                <label class="form-label" for="{{ form.billing_address_1.id_for_label }}">Billing Address 1</label>
-                                                {{ form.billing_address_1|add_class:"form-control"|attr:"placeholder:1234 Easy Street"|attr:"autocomplete:off" }}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            {{ form.billing_city.errors }}
-                                            <label class="form-label" for="{{ form.billing_city.id_for_label }}">Billing City</label>
-                                            {{ form.billing_city|add_class:"form-control"|attr:"placeholder:Aronld"|attr:"autocomplete:off" }}
-                                        </div><!-- Col -->
-                                        <div class="col-sm-4">
-                                            {{ form.billing_state.errors }}
-                                            <label class="form-label" for="{{ form.billing_state.id_for_label }}">Billing State</label>
-                                            {{ form.billing_state|add_class:"form-control"|attr:"placeholder:NC"|attr:"value:NC"|attr:"autocomplete:off" }}
-                                        </div><!-- Col -->
-                                        <div class="col-sm-4">
-                                            {{ form.billing_zip.errors }}
-                                            <label class="form-label" for="{{ form.billing_zip.id_for_label }}">Billing Zip</label>
-                                            {{ form.billing_zip|add_class:"form-control"|attr:"placeholder:28801"|attr:"autocomplete:off" }}
-                                        </div><!-- Col -->
-                                    </div><!-- Row -->
-                                </div>
-
-                                <div class="tab-pane fade" id="extraInfo" role="tabpanel" aria-labelledby="extraInfo-tab">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="mb-3">
-                                                {{ form.secondary_contact_name.errors }}
-                                                <label class="form-label" for="{{ form.secondary_contact_name.id_for_label }}">Secondary Contact Name</label>
-                                                {{ form.secondary_contact_name|add_class:"form-control"|attr:"placeholder:Secondary Contact Name" }}
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="mb-3">
-                                                {{ form.alternate_phone.errors }}
-                                                <label class="form-label" for="{{ form.alternate_phone.id_for_label }}">Secondary Contact Phone</label>
-                                                {{ form.alternate_phone|add_class:"form-control"|attr:"placeholder:(___) ___-____" }}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            <div class="mb-3">
-                                                {{ form.access_code.errors }}
-                                                <label class="form-label" for="{{ form.access_code.id_for_label }}">Access Code</label>
-                                                {{ form.access_code|add_class:"form-control"|attr:"placeholder:Access Code" }}
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <div class="mb-3">
-                                                {{ form.website.errors }}
-                                                <label class="form-label" for="{{ form.website.id_for_label }}">Website</label>
-                                                {{ form.website|add_class:"form-control"|attr:"placeholder:https://www.widgets.inc/" }}
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <div class="mb-3">
-                                                {{ form.fax_number.errors }}
-                                                <label class="form-label" for="{{ form.fax_number.id_for_label }}">Fax Number</label>
-                                                {{ form.fax_number|add_class:"form-control"|attr:"placeholder:(___) ___-____" }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="col-sm-3">
+                        {{ form.next_service.errors }}
+                        <label class="form-label" for="{{ form.next_service.id_for_label }}">Next Service Date</label>
+                        <div class="input-group date datepicker mb-3" id="datePickerServiceDate">
+                            {{ form.next_service|add_class:"form-control"|attr:"placeholder:Next Service Date"|attr:"autocomplete:off" }}
+                            <span class="input-group-text input-group-addon"><i data-feather="calendar"></i></span>
                         </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="mb-3">
+                            {{ form.service_interval.errors }}
+                            <label class="form-label" for="{{ form.service_interval.id_for_label }}">Service Interval</label>
+                            {{ form.service_interval|add_class:"form-control"|attr:"placeholder:12"|attr:"autocomplete:off"|attr:"type:number"|attr:"min:2"|attr:"max:120" }}
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="mb-3">
+                            {{ form.primary_technician.errors }}
+                            <label class="form-label" for="{{ form.primary_technician.id_for_label }}">Primary Technician</label>
+                            {{ form.primary_technician|add_class:"form-control" }}
+                        </div>
+                    </div>
+                    <div class="col-sm-4 text-end">
+                        <div class="mb-3 form-check">
+                            {{ form.is_active.errors }}
+                            <label class="form-check-label me-4" for="{{ form.is_active.id_for_label }}">Active</label>
+                            {{ form.is_active|add_class:"form-check-input float-end" }}
+                        </div>
+                        <div class="mb-3 form-check">
+                            {{ form.requires_supporting_technician.errors }}
+                            <label class="form-check-label me-4" for="{{ form.requires_supporting_technician.id_for_label }}">Requires Two Technicians</label>
+                            {{ form.requires_supporting_technician|add_class:"form-check-input float-end" }}
+                        </div>
+                    </div>
+                </div>
 
-                        <div class="row">
-                            <div class="col-sm-2 offset-sm-10">
-                                <button type="submit" class="btn btn-primary submit float-end">Update Customer</button>
+                <div class="row mb-3">
+                    <div class="col-sm-12">
+                        <ul class="nav nav-tabs" id="addCustomerTabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="jobsite-tab" data-bs-toggle="tab" href="#jobsite" role="tab" aria-controls="jobsite" aria-selected="true">Jobsite</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="billing-tab" data-bs-toggle="tab" href="#billing" role="tab" aria-controls="billing" aria-selected="false">Billing</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="extraInfo-tab" data-bs-toggle="tab" href="#extraInfo" role="tab" aria-controls="extraInfo" aria-selected="false">Extra Info</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content border border-top-0 p-3" id="myTabContent">
+                            <div class="tab-pane fade show active" id="jobsite" role="tabpanel" aria-labelledby="jobsite-tab">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="mb-3">
+                                            {{ form.jobsite_address_1.errors }}
+                                            <label class="form-label" for="{{ form.jobsite_address_1.id_for_label }}">Jobsite Address 1</label>
+                                            {{ form.jobsite_address_1|add_class:"form-control"|attr:"placeholder:1234 Hard Street"|attr:"autocomplete:off" }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        {{ form.jobsite_city.errors }}
+                                        <label class="form-label" for="{{ form.jobsite_city.id_for_label }}">Jobsite City</label>
+                                        {{ form.jobsite_city|add_class:"form-control"|attr:"placeholder:Weaverville"|attr:"autocomplete:off" }}
+                                    </div><!-- Col -->
+                                    <div class="col-sm-4">
+                                        {{ form.jobsite_state.errors }}
+                                        <label class="form-label" for="{{ form.jobsite_state.id_for_label }}">Jobsite State</label>
+                                        {{ form.jobsite_state|add_class:"form-control"|attr:"placeholder:NC"|attr:"value:NC"|attr:"autocomplete:off" }}
+                                    </div><!-- Col -->
+                                    <div class="col-sm-4">
+                                        {{ form.jobsite_zip.errors }}
+                                        <label class="form-label" for="{{ form.jobsite_zip.id_for_label }}">Jobsite Zip</label>
+                                        {{ form.jobsite_zip|add_class:"form-control"|attr:"placeholder:28806"|attr:"autocomplete:off" }}
+                                    </div><!-- Col -->
+                                </div><!-- Row -->
+                            </div>
+
+                            <div class="tab-pane fade" id="billing" role="tabpanel" aria-labelledby="billing-tab">
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <div class="form-check mb-3">
+                                            <input type="checkbox" class="form-check-input" id="{{ form.billing_address_same_as_jobsite.id_for_label }}" {% if form.billing_address_same_as_jobsite.value %}checked="checked"{% endif %}>
+                                            <label class="form-check-label" for="{{ form.billing_address_same_as_jobsite.id_for_label }}">Same as Jobsite</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="mb-3">
+                                            {{ form.billing_address_1.errors }}
+                                            <label class="form-label" for="{{ form.billing_address_1.id_for_label }}">Billing Address 1</label>
+                                            {{ form.billing_address_1|add_class:"form-control"|attr:"placeholder:1234 Easy Street"|attr:"autocomplete:off" }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        {{ form.billing_city.errors }}
+                                        <label class="form-label" for="{{ form.billing_city.id_for_label }}">Billing City</label>
+                                        {{ form.billing_city|add_class:"form-control"|attr:"placeholder:Aronld"|attr:"autocomplete:off" }}
+                                    </div><!-- Col -->
+                                    <div class="col-sm-4">
+                                        {{ form.billing_state.errors }}
+                                        <label class="form-label" for="{{ form.billing_state.id_for_label }}">Billing State</label>
+                                        {{ form.billing_state|add_class:"form-control"|attr:"placeholder:NC"|attr:"value:NC"|attr:"autocomplete:off" }}
+                                    </div><!-- Col -->
+                                    <div class="col-sm-4">
+                                        {{ form.billing_zip.errors }}
+                                        <label class="form-label" for="{{ form.billing_zip.id_for_label }}">Billing Zip</label>
+                                        {{ form.billing_zip|add_class:"form-control"|attr:"placeholder:28801"|attr:"autocomplete:off" }}
+                                    </div><!-- Col -->
+                                </div><!-- Row -->
+                            </div>
+
+                            <div class="tab-pane fade" id="extraInfo" role="tabpanel" aria-labelledby="extraInfo-tab">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="mb-3">
+                                            {{ form.secondary_contact_name.errors }}
+                                            <label class="form-label" for="{{ form.secondary_contact_name.id_for_label }}">Secondary Contact Name</label>
+                                            {{ form.secondary_contact_name|add_class:"form-control"|attr:"placeholder:Secondary Contact Name" }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="mb-3">
+                                            {{ form.alternate_phone.errors }}
+                                            <label class="form-label" for="{{ form.alternate_phone.id_for_label }}">Secondary Contact Phone</label>
+                                            {{ form.alternate_phone|add_class:"form-control"|attr:"placeholder:(___) ___-____" }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="mb-3">
+                                            {{ form.access_code.errors }}
+                                            <label class="form-label" for="{{ form.access_code.id_for_label }}">Access Code</label>
+                                            {{ form.access_code|add_class:"form-control"|attr:"placeholder:Access Code" }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="mb-3">
+                                            {{ form.website.errors }}
+                                            <label class="form-label" for="{{ form.website.id_for_label }}">Website</label>
+                                            {{ form.website|add_class:"form-control"|attr:"placeholder:https://www.widgets.inc/" }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="mb-3">
+                                            {{ form.fax_number.errors }}
+                                            <label class="form-label" for="{{ form.fax_number.id_for_label }}">Fax Number</label>
+                                            {{ form.fax_number|add_class:"form-control"|attr:"placeholder:(___) ___-____" }}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-sm-2 offset-sm-10">
+                        <button type="submit" class="btn btn-primary submit float-end">Update Customer</button>
+                    </div>
+                </div>
             </form>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-sm" tabindex="-1" id="modalCalculateService" aria-labelledby="modalCalculateService" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Calculate Service Date?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Do you want to re-calculate the next service date based on this new service interval?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" id="modalCalculateServiceYes">Yes</button>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -211,11 +270,12 @@
     <script src="{% static 'js/customer-billing-checkbox.js' %}"></script>
 
     <script>
-      $("#{{ form.main_phone.id_for_label }}").inputmask("(999) 999-9999");
-      $("#{{ form.alternate_phone.id_for_label }}").inputmask("(999) 999-9999");
-      $("#{{ form.fax_number.id_for_label }}").inputmask("(999) 999-9999");
+      $(function() {
+        $("#{{ form.main_phone.id_for_label }}").inputmask("(999) 999-9999");
+        $("#{{ form.alternate_phone.id_for_label }}").inputmask("(999) 999-9999");
+        $("#{{ form.fax_number.id_for_label }}").inputmask("(999) 999-9999");
 
-      customerBillingCheckbox.init(
+        customerBillingCheckbox.init(
             '{{ form.billing_address_1.id_for_label }}',
             '{{ form.billing_city.id_for_label }}',
             '{{ form.billing_state.id_for_label }}',
@@ -226,9 +286,45 @@
             '{{ form.jobsite_zip.id_for_label }}',
             '{{ form.billing_address_same_as_jobsite.id_for_label }}'
         );
+
+        let datePickerNextDate = $("#{{ form.next_service.id_for_label }}");
+
+        if(datePickerNextDate.length) {
+          let date = new Date({{ form.next_service.value|date:'Y' }}, ({{ form.next_service.value|date:'m' }} - 1), {{ form.next_service.value|date:'d' }});
+
+          datePickerNextDate.datepicker({
+            format: "mm-dd-yyyy",
+            todayHighlight: true,
+            autoclose: true
+          });
+
+          datePickerNextDate.datepicker('setDate', date);
+        }
+
+        let currentServiceInt = {{ form.service_interval.value }},
+            serviceIntField = $("#{{ form.service_interval.id_for_label }}"),
+            serviceIntModal = new bootstrap.Modal($("#modalCalculateService"));
+
+        serviceIntField.on("blur", function() {
+          if(Number(this.value) !== currentServiceInt) {
+            serviceIntModal.toggle();
+          }
+        });
+
+        $("#modalCalculateServiceYes").on("click", function() {
+          let currentServiceDate = luxon.DateTime.fromISO('{{ form.next_service.value|date:'Y-m-d' }}');
+          let newServiceDate = currentServiceDate.plus({ months: Number(serviceIntField.val()) });
+
+          $("#{{ form.next_service.id_for_label }}").val(newServiceDate.toFormat('LL-dd-yyyy'));
+
+          serviceIntModal.toggle();
+        });
+      });
     </script>
 {% endblock %}
 
 {% block page_plugins %}
+    <script src="https://cdn.jsdelivr.net/npm/luxon@2.3.2/build/global/luxon.min.js"></script>
     <script src="{% static 'assets/vendors/inputmask/jquery.inputmask.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js' %}"></script>
 {% endblock %}
