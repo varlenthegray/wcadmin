@@ -206,14 +206,14 @@
 {% endblock %}
 
 {% block page_script %}
-    <script src="{% static 'js/customer-billing-checkbox.js' %}"></script>
+{#    <script src="{% static 'js/customer-billing-checkbox.js' %}"></script>#}
 
     <script>
       $("#{{ form.main_phone.id_for_label }}").inputmask("(999) 999-9999");
       $("#{{ form.alternate_phone.id_for_label }}").inputmask("(999) 999-9999");
       $("#{{ form.fax_number.id_for_label }}").inputmask("(999) 999-9999");
 
-      customerBillingCheckbox.init(
+      {% comment %}customerBillingCheckbox.init(
             '{{ form.billing_address_1.id_for_label }}',
             '{{ form.billing_city.id_for_label }}',
             '{{ form.billing_state.id_for_label }}',
@@ -223,7 +223,7 @@
             '{{ form.jobsite_state.id_for_label }}',
             '{{ form.jobsite_zip.id_for_label }}',
             '{{ form.billing_address_same_as_jobsite.id_for_label }}'
-        );
+        );{% endcomment %}
     </script>
 {% endblock %}
 

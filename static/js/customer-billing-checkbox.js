@@ -15,10 +15,12 @@ let customerBillingCheckbox = {
         fb_state.val(fj_state.val());
         fb_zip.val(fj_zip.val());
       } else {
-        fb_address.prop('disabled', false).val('');
-        fb_city.prop('disabled', false).val('');
-        fb_state.prop('disabled', false).val('');
-        fb_zip.prop('disabled', false).val('');
+        let fb_address_prev_val = fb_address.value, fb_city_prev_val = fb_city.value, fb_state_prev_val = fb_state.value, fb_zip_prev_val = fb_zip.value;
+
+        fb_address.prop('disabled', false).val(fb_address_prev_val);
+        fb_city.prop('disabled', false).val(fb_city_prev_val);
+        fb_state.prop('disabled', false).val(fb_state_prev_val);
+        fb_zip.prop('disabled', false).val(fb_zip_prev_val);
       }
     }
 
