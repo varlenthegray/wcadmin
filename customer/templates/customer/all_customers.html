@@ -4,12 +4,14 @@
 {% block page_header %}All Customers{% endblock %}
 
 {% block page_content %}
+    {% block custom_report_header %}{% endblock %}
+
     <div class="row">
         <div class="col-12 stretch-card">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-baseline mb-2">
-                        <h6 class="card-title mb-0">Service Due</h6>
+                        <h6 class="card-title mb-0">{% block card_title %}Service Due{% endblock %}</h6>
                         <div class="dropdown mb-2">
                             <button class="btn p-0" type="button" id="dropdownMenuButton7" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>

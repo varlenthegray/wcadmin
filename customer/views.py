@@ -2,13 +2,56 @@ from django.views import generic
 from .models import Customer
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from .forms import AddCustomerForm, ViewCustomerForm
+from django.utils import timezone
+from datetime import datetime, timedelta
 
 
-# Create your views here.
 class AllCustomers(generic.ListView):
     model = Customer
     queryset = Customer.objects.all()
     template_name = 'customer/all_customers.html'
+
+
+class CustomersDueThisMonth(generic.ListView):
+    model = Customer
+    queryset = Customer.objects.filter(next_service__month=timezone.now().month)\
+        .filter(next_service__year=timezone.now().year)
+    template_name = 'customer/reports/due_this_month.html'
+
+
+class CustomersDueNextMonth(generic.ListView):
+    model = Customer
+    queryset = Customer.objects.filter(next_service__month=(timezone.now().month + 1))\
+        .filter(next_service__year=timezone.now().year)
+    template_name = 'customer/reports/due_next_month.html'
+
+
+class CustomersDueTwoMonthsFuture(generic.ListView):
+    model = Customer
+    queryset = Customer.objects.filter(next_service__month=(timezone.now().month + 2))\
+        .filter(next_service__year=timezone.now().year)
+    template_name = 'customer/reports/due_two_months_future.html'
+
+
+class CustomersDueLastMonth(generic.ListView):
+    model = Customer
+    queryset = Customer.objects.filter(next_service__month=(timezone.now().month - 1))\
+        .filter(next_service__year=timezone.now().year)
+    template_name = 'customer/reports/due_last_month.html'
+
+
+class CustomersDueLastThreeMonths(generic.ListView):
+    model = Customer
+    queryset = Customer.objects.filter(next_service__gt=(datetime.now() - timedelta(weeks=12)))\
+        .filter(next_service__lt=timezone.now()).filter(next_service__year=timezone.now().year)
+    template_name = 'customer/reports/due_last_three_months.html'
+
+
+class CustomersCustomReport(generic.ListView):
+    model = Customer
+    queryset = Customer.objects.filter(next_service__month=timezone.now().month)\
+        .filter(next_service__year=timezone.now().year)
+    template_name = 'customer/reports/custom_report.html'
 
 
 class AddCustomer(generic.CreateView):

@@ -4,6 +4,12 @@
 {% url 'dashboard' as dashboard_url %}
 {% url 'allCustomers' as all_customers_url %}
 {% url 'addCustomer' as add_customer_url %}
+{% url 'customersDueThisMonth' as report_customer_this_month_url %}
+{% url 'customersDueNextMonth' as report_customer_next_month_url %}
+{% url 'customerDueTwoMonthsFuture' as report_customer_two_months_future_url %}
+{% url 'customerDueLastMonth' as report_customer_last_month_url %}
+{% url 'customerDueLastThreeMonths' as report_customer_last_three_months_url %}
+{% url 'customerCustomReport' as report_customer_custom_url %}
 
 <div class="sidebar-header">
     <a href="#" class="sidebar-brand">WCWT<span>Admin</span></a>
@@ -47,12 +53,12 @@
             </a>
             <div class="collapse" id="uiReports">
                 <ul class="nav sub-menu">
-                    <li class="nav-item"><a href="#" class="nav-link">Custom Report</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Due This Month</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Due Next Month</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Due +2 Months</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Due Last Month</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Due Last 3 Months</a></li>
+                    <li class="nav-item"><a href="{{ report_customer_this_month_url }}" class="nav-link">Due This Month</a></li>
+                    <li class="nav-item"><a href="{{ report_customer_next_month_url }}" class="nav-link">Due Next Month</a></li>
+                    <li class="nav-item"><a href="{{ report_customer_two_months_future_url }}" class="nav-link">Due +2 Months</a></li>
+                    <li class="nav-item"><a href="{{ report_customer_last_month_url }}" class="nav-link">Due Last Month</a></li>
+                    <li class="nav-item"><a href="{{ report_customer_last_three_months_url }}" class="nav-link">Due Last 3 Months</a></li>
+                    <li class="nav-item"><a href="{{ report_customer_custom_url }}" class="nav-link">Custom Report</a></li>
                 </ul>
             </div>
         </li>
