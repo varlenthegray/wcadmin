@@ -67,12 +67,12 @@ class CustomersCustomReport(generic.ListView):
             from_date = datetime.strptime(from_date, '%m-%d-%Y').strftime('%Y-%m-%d')
             print("Checking date from " + from_date)
 
-            self.queryset.filter(next_service__gte=from_date)
+            self.queryset = self.queryset.filter(next_service__gte=from_date)
 
         if to_date:
             to_date = datetime.strptime(to_date, '%m-%d-%Y').strftime('%Y-%m-%d')
             print("Checking date to " + to_date)
-            self.queryset.filter(next_service__lte=to_date)
+            self.queryset = self.queryset.filter(next_service__lte=to_date)
 
         return self.queryset
 
