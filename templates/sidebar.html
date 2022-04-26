@@ -10,6 +10,7 @@
 {% url 'customerDueLastMonth' as report_customer_last_month_url %}
 {% url 'customerDueLastThreeMonths' as report_customer_last_three_months_url %}
 {% url 'customerCustomReport' as report_customer_custom_url %}
+{% url 'customerDueLastYearThisMonth' as report_customer_last_year_this_month_url %}
 
 <div class="sidebar-header">
     <a href="#" class="sidebar-brand">WCWT<span>Admin</span></a>
@@ -58,6 +59,7 @@
                     <li class="nav-item"><a href="{{ report_customer_two_months_future_url }}" class="nav-link">Due +2 Months</a></li>
                     <li class="nav-item"><a href="{{ report_customer_last_month_url }}" class="nav-link">Due Last Month</a></li>
                     <li class="nav-item"><a href="{{ report_customer_last_three_months_url }}" class="nav-link">Due Last 3 Months</a></li>
+                    <li class="nav-item"><a href="{{ report_customer_last_year_this_month_url }}" class="nav-link">Due Last Year This Month</a></li>
                     <li class="nav-item"><a href="{{ report_customer_custom_url }}" class="nav-link">Custom Report</a></li>
                 </ul>
             </div>

@@ -15,43 +15,66 @@ class AllCustomers(generic.ListView):
 class CustomersDueThisMonth(generic.ListView):
     model = Customer
     queryset = Customer.objects.filter(next_service__month=timezone.now().month)\
-        .filter(next_service__year=timezone.now().year)
+        .filter(next_service__year=timezone.now().year).filter(is_active=True)
     template_name = 'customer/reports/due_this_month.html'
 
 
 class CustomersDueNextMonth(generic.ListView):
     model = Customer
     queryset = Customer.objects.filter(next_service__month=(timezone.now().month + 1))\
-        .filter(next_service__year=timezone.now().year)
+        .filter(next_service__year=timezone.now().year).filter(is_active=True)
     template_name = 'customer/reports/due_next_month.html'
 
 
 class CustomersDueTwoMonthsFuture(generic.ListView):
     model = Customer
     queryset = Customer.objects.filter(next_service__month=(timezone.now().month + 2))\
-        .filter(next_service__year=timezone.now().year)
+        .filter(next_service__year=timezone.now().year).filter(is_active=True)
     template_name = 'customer/reports/due_two_months_future.html'
 
 
 class CustomersDueLastMonth(generic.ListView):
     model = Customer
     queryset = Customer.objects.filter(next_service__month=(timezone.now().month - 1))\
-        .filter(next_service__year=timezone.now().year)
+        .filter(next_service__year=timezone.now().year).filter(is_active=True)
     template_name = 'customer/reports/due_last_month.html'
 
 
 class CustomersDueLastThreeMonths(generic.ListView):
     model = Customer
     queryset = Customer.objects.filter(next_service__gt=(datetime.now() - timedelta(weeks=12)))\
-        .filter(next_service__lt=timezone.now()).filter(next_service__year=timezone.now().year)
+        .filter(next_service__lt=timezone.now()).filter(next_service__year=timezone.now().year).filter(is_active=True)
     template_name = 'customer/reports/due_last_three_months.html'
+
+
+class CustomersDueLastYearThisMonth(generic.ListView):
+    model = Customer
+    queryset = Customer.objects.filter(next_service__month=timezone.now().month)\
+        .filter(next_service__year=(timezone.now().year - 1)).filter(is_active=True)
+    template_name = 'customer/reports/due_last_year_this_month.html'
 
 
 class CustomersCustomReport(generic.ListView):
     model = Customer
-    queryset = Customer.objects.filter(next_service__month=timezone.now().month)\
-        .filter(next_service__year=timezone.now().year)
     template_name = 'customer/reports/custom_report.html'
+
+    def get_queryset(self):
+        from_date = self.request.GET.get('fromDate')
+        to_date = self.request.GET.get('toDate')
+        self.queryset = Customer.objects.filter(is_active=True)
+
+        if from_date:
+            from_date = datetime.strptime(from_date, '%m-%d-%Y').strftime('%Y-%m-%d')
+            print("Checking date from " + from_date)
+
+            self.queryset.filter(next_service__gte=from_date)
+
+        if to_date:
+            to_date = datetime.strptime(to_date, '%m-%d-%Y').strftime('%Y-%m-%d')
+            print("Checking date to " + to_date)
+            self.queryset.filter(next_service__lte=to_date)
+
+        return self.queryset
 
 
 class AddCustomer(generic.CreateView):

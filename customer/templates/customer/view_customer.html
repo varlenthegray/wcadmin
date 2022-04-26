@@ -4,6 +4,7 @@
 
 {% block title %}{{ object.first_name }} {{ object.last_name }}{% endblock %}
 {% block page_header %}Editing <abbr title="Database ID: {{ object.pk }}, Quickbooks ID: {{ object.quickbooks_id }}">{{ object.first_name }} {{ object.last_name }}</abbr>{% endblock %}
+
 {% block css_plugins %}
     <link rel="stylesheet" href="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css' %}">
 {% endblock %}
@@ -288,6 +289,8 @@
         );
 
         let datePickerNextDate = $("#{{ form.next_service.id_for_label }}");
+
+        datePickerNextDate.inputmask("99-99-9999");
 
         if(datePickerNextDate.length) {
           let date = new Date({{ form.next_service.value|date:'Y' }}, ({{ form.next_service.value|date:'m' }} - 1), {{ form.next_service.value|date:'d' }});

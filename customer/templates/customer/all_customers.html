@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Customers{% endblock %}
 {% block page_header %}All Customers{% endblock %}
@@ -45,7 +46,7 @@
                                         <a href="#" class="btn btn-inverse-primary btn-xs btn-icon" title="Open in QuickBooks">QB</a>
                                         <a href="{% url 'viewCustomer' pk=customer.pk %}" class="btn btn-inverse-secondary btn-xs btn-icon" title="View Customer Record"><i data-feather="eye"></i></a>
                                     </td>
-                                    <td>{{ customer.first_name }} {{ customer.last_name }}</td>
+                                    <td>{{ customer.first_name }} {{ customer.last_name }}<br><i>{{ customer.company }}</i></td>
                                     <td>{{ customer.billing_address_1 }}<br>{{ customer.billing_city }}, {{ customer.billing_state }} {{ customer.billing_zip }}</td>
                                     <td><a href="tel:1{{ customer.main_phone }}">{{ customer.main_phone }}</a></td>
                                     <td><a href="mailto:{{ customer.email }}">{{ customer.email }}</a></td>
@@ -61,42 +62,4 @@
     </div>
 {% endblock %}
 
-{% block page_script %}
-    <script>
-      $(function() {
-        let table = $("#customerDatatable").DataTable({
-          dom: 'frtip',
-          buttons: {
-            buttons: [
-              { extend: 'copy', className: 'btn btn-outline-primary' },
-              { extend: 'csv', className: 'btn btn-outline-primary' },
-              { extend: 'excel', className: 'btn btn-outline-primary' },
-              { extend: 'pdf', className: 'btn btn-outline-primary' },
-              { extend: 'print', className: 'btn btn-outline-primary' },
-            ]
-          }
-        });
-
-        $("#dt_button_copy").on("click", function() {
-          table.buttons('.buttons-copy').trigger();
-          window.alert("Copied.");
-        });
-
-        $("#dt_button_csv").on("click", function() {
-          table.buttons('.buttons-csv').trigger();
-        });
-
-        $("#dt_button_excel").on("click", function() {
-          table.buttons('.buttons-excel').trigger();
-        });
-
-        $("#dt_button_pdf").on("click", function() {
-          table.buttons('.buttons-pdf').trigger();
-        });
-
-        $("#dt_button_print").on("click", function() {
-          table.buttons('.buttons-print').trigger();
-        });
-      });
-    </script>
-{% endblock %}
+{% block page_script %}{% endblock %}

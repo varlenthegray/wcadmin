@@ -39,6 +39,8 @@ License: For each use you must have a valid license purchased only from above li
     {% block css_plugins %}
         <link rel="stylesheet" href="{% static 'assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css' %}">
     {% endblock %}
+
+    {% block add_css_plugins %}{% endblock %}
     <!-- End plugin css for this page -->
 
     <!-- inject:css -->
@@ -125,7 +127,7 @@ License: For each use you must have a valid license purchased only from above li
                                     <div class="col-8">
                                         <h3 class="mb-2">{{ service_past_due.count }} of {{ service_past_due_total.count }}</h3>
                                         <div class="d-flex align-items-baseline">
-                                            <a href="#" class="text-danger">
+                                            <a href="{% url 'customerDueLastMonth' %}" class="text-danger">
                                                 <span>See All</span>
                                                 <i data-feather="arrow-right" class="icon-sm mb-1"></i>
                                             </a>
@@ -148,7 +150,7 @@ License: For each use you must have a valid license purchased only from above li
                                     <div class="col-8">
                                         <h3 class="mb-2">{{ service_due.count }} of {{ service_due_total.count }}</h3>
                                         <div class="d-flex align-items-baseline">
-                                            <a href="#" class="text-primary">
+                                            <a href="{% url 'customersDueThisMonth' %}" class="text-primary">
                                                 <span>See All</span>
                                                 <i data-feather="arrow-right" class="icon-sm mb-1"></i>
                                             </a>
@@ -171,7 +173,7 @@ License: For each use you must have a valid license purchased only from above li
                                     <div class="col-8">
                                         <h3 class="mb-2">{{ service_coming_up.count }} of {{ service_coming_up_total.count }}</h3>
                                         <div class="d-flex align-items-baseline">
-                                            <a href="#" class="text-secondary">
+                                            <a href="{% url 'customersDueNextMonth' %}" class="text-secondary">
                                                 <span>See All</span>
                                                 <i data-feather="arrow-right" class="icon-sm mb-1"></i>
                                             </a>
@@ -194,7 +196,7 @@ License: For each use you must have a valid license purchased only from above li
                                     <div class="col-8">
                                         <h3 class="mb-2">{{ service_refresh.count }} of {{ service_refresh_total.count }}</h3>
                                         <div class="d-flex align-items-baseline">
-                                            <a href="#" class="text-info">
+                                            <a href="{% url 'customerDueLastYearThisMonth' %}" class="text-info">
                                                 <span>See All</span>
                                                 <i data-feather="arrow-right" class="icon-sm mb-1"></i>
                                             </a>
@@ -248,7 +250,7 @@ License: For each use you must have a valid license purchased only from above li
                                                     <a href="#" class="btn btn-inverse-primary btn-xs btn-icon" title="Open in QuickBooks">QB</a>
                                                     <a href="{% url 'viewCustomer' pk=customer.pk %}" class="btn btn-inverse-secondary btn-xs btn-icon" title="View Customer Record"><i data-feather="eye"></i></a>
                                                 </td>
-                                                <td>{{ customer.first_name }} {{ customer.last_name }}</td>
+                                                <td>{{ customer.first_name }} {{ customer.last_name }}<br><i>{{ customer.company }}</i></td>
                                                 <td>{{ customer.billing_address_1 }}<br>{{ customer.billing_city }}, {{ customer.billing_state }} {{ customer.billing_zip }}</td>
                                                 <td><a href="tel:1{{ customer.main_phone }}">{{ customer.main_phone }}</a></td>
                                                 <td><a href="mailto:{{ customer.email }}">{{ customer.email }}</a></td>
@@ -283,6 +285,7 @@ License: For each use you must have a valid license purchased only from above li
     <script src="{% static 'assets/vendors/peity/jquery.peity.min.js' %}"></script>
     <script src="{% static 'assets/vendors/datatables.net/jquery.dataTables.js' %}"></script>
     <script src="{% static 'assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js' %}"></script>
+    <script src="{% static 'js/customerid-datatable.js' %}"></script>
 
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -291,6 +294,14 @@ License: For each use you must have a valid license purchased only from above li
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
 {% endblock %}
+
+{% block add_page_plugins %}
+    <script>
+      $(function() {
+        $('.donut').peity('donut');
+      });
+    </script>
+{% endblock %}
 <!-- End plugin js for this page -->
 
 <!-- inject:js -->
@@ -298,46 +309,6 @@ License: For each use you must have a valid license purchased only from above li
 <script src="{% static 'assets/js/template.js' %}"></script>
 <!-- endinject -->
 
-{% block page_script %}
-    <script>
-      $(function() {
-        $('.donut').peity('donut');
-
-        let table = $("#customerDatatable").DataTable({
-          dom: 'frtip',
-          buttons: {
-            buttons: [
-              { extend: 'copy', className: 'btn btn-outline-primary' },
-              { extend: 'csv', className: 'btn btn-outline-primary' },
-              { extend: 'excel', className: 'btn btn-outline-primary' },
-              { extend: 'pdf', className: 'btn btn-outline-primary' },
-              { extend: 'print', className: 'btn btn-outline-primary' },
-            ]
-          }
-        });
-
-        $("#dt_button_copy").on("click", function() {
-          table.buttons('.buttons-copy').trigger();
-          window.alert("Copied.");
-        });
-
-        $("#dt_button_csv").on("click", function() {
-          table.buttons('.buttons-csv').trigger();
-        });
-
-        $("#dt_button_excel").on("click", function() {
-          table.buttons('.buttons-excel').trigger();
-        });
-
-        $("#dt_button_pdf").on("click", function() {
-          table.buttons('.buttons-pdf').trigger();
-        });
-
-        $("#dt_button_print").on("click", function() {
-          table.buttons('.buttons-print').trigger();
-        });
-      });
-    </script>
-{% endblock %}
+{% block page_script %}{% endblock %}
 </body>
 </html>

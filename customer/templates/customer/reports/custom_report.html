@@ -1,20 +1,75 @@
 {% extends 'customer/all_customers.html' %}
+{% load static %}
 
 {% block page_header %}Custom Report{% endblock %}
 {% block card_title %}Custom Service Report{% endblock %}
+
+{% block add_css_plugins %}
+    <link rel="stylesheet" href="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css' %}">
+{% endblock %}
 
 {% block custom_report_header %}
     <div class="row mb-3">
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-2">
-
+                    <form method="get">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label class="form-label" for="serviceFromDateField">Service Starting On</label>
+                                <div class="input-group date datepicker mb-3" id="serviceFromDate">
+                                    <input type="text" class="form-control" id="serviceFromDateField" name="fromDate" autocomplete="off" placeholder="Start Date...">
+                                    <span class="input-group-text input-group-addon"><i data-feather="calendar"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <label class="form-label" for="serviceToDateField">Service Ending On</label>
+                                <div class="input-group date datepicker mb-3" id="serviceToDate">
+                                    <input type="text" class="form-control" id="serviceToDateField" name="toDate" autocomplete="off" placeholder="End Date...">
+                                    <span class="input-group-text input-group-addon"><i data-feather="calendar"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 align-items-center d-flex">
+                                <button type="submit" class="btn btn-primary">Show</button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block page_script %}
+    <script>
+      $(function() {
+        let datePickerStartDate = $("#serviceFromDateField"), datePickerEndDate = $("#serviceToDateField");
+
+        datePickerStartDate.inputmask("99-99-9999");
+        datePickerEndDate.inputmask("99-99-9999");
+
+        if(datePickerStartDate.length) {
+          datePickerStartDate.datepicker({
+            format: "mm-dd-yyyy",
+            setDate: new Date(),
+            todayHighlight: true,
+            autoclose: true
+          });
+        }
+
+        if(datePickerEndDate.length) {
+          datePickerEndDate.datepicker({
+            format: "mm-dd-yyyy",
+            setDate: new Date(),
+            todayHighlight: true,
+            autoclose: true
+          });
+        }
+      });
+    </script>
+{% endblock %}
+
+{% block add_page_plugins %}
+    <script src="{% static 'assets/vendors/inputmask/jquery.inputmask.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js' %}"></script>
 {% endblock %}

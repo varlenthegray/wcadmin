@@ -13,19 +13,23 @@ class DashboardView(generic.ListView):
         context = super().get_context_data(**kwargs)
 
         context["service_past_due_total"] = Customer.objects.filter(next_service__year=timezone.now().year)\
-            .filter(next_service__month=(timezone.now().month - 1))
-        context["service_past_due"] = context["service_past_due_total"].filter(next_service__lt=timezone.now())
+            .filter(next_service__month=(timezone.now().month - 1)).filter(is_active=True)
+        context["service_past_due"] = context["service_past_due_total"].filter(next_service__lt=timezone.now())\
+            .filter(is_active=True)
 
         context["service_due_total"] = Customer.objects.filter(next_service__year=timezone.now().year)\
-            .filter(next_service__month=timezone.now().month)
-        context["service_due"] = context["service_due_total"].filter(next_service__lt=timezone.now())
+            .filter(next_service__month=timezone.now().month).filter(is_active=True)
+        context["service_due"] = context["service_due_total"].filter(next_service__lt=timezone.now())\
+            .filter(is_active=True)
 
         context["service_coming_up_total"] = Customer.objects.filter(next_service__year=timezone.now().year)\
-            .filter(next_service__month=(timezone.now().month + 1))
-        context["service_coming_up"] = context["service_coming_up_total"].filter(next_service__lt=timezone.now())
+            .filter(next_service__month=(timezone.now().month + 1)).filter(is_active=True)
+        context["service_coming_up"] = context["service_coming_up_total"].filter(next_service__lt=timezone.now())\
+            .filter(is_active=True)
 
         context["service_refresh_total"] = Customer.objects.filter(next_service__year=(timezone.now().year - 1))\
-            .filter(next_service__month=timezone.now().month)
-        context["service_refresh"] = context["service_refresh_total"].filter(next_service__gt=timezone.now())
+            .filter(next_service__month=timezone.now().month).filter(is_active=True)
+        context["service_refresh"] = context["service_refresh_total"].filter(next_service__gt=timezone.now())\
+            .filter(is_active=True)
 
         return context
