@@ -4,57 +4,58 @@ from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from .forms import AddCustomerForm, ViewCustomerForm
 from django.utils import timezone
 from datetime import datetime, timedelta
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class AllCustomers(generic.ListView):
+class AllCustomers(LoginRequiredMixin, generic.ListView):
     model = Customer
     queryset = Customer.objects.all()
     template_name = 'customer/all_customers.html'
 
 
-class CustomersDueThisMonth(generic.ListView):
+class CustomersDueThisMonth(LoginRequiredMixin, generic.ListView):
     model = Customer
     queryset = Customer.objects.filter(next_service__month=timezone.now().month)\
         .filter(next_service__year=timezone.now().year).filter(is_active=True)
     template_name = 'customer/reports/due_this_month.html'
 
 
-class CustomersDueNextMonth(generic.ListView):
+class CustomersDueNextMonth(LoginRequiredMixin, generic.ListView):
     model = Customer
     queryset = Customer.objects.filter(next_service__month=(timezone.now().month + 1))\
         .filter(next_service__year=timezone.now().year).filter(is_active=True)
     template_name = 'customer/reports/due_next_month.html'
 
 
-class CustomersDueTwoMonthsFuture(generic.ListView):
+class CustomersDueTwoMonthsFuture(LoginRequiredMixin, generic.ListView):
     model = Customer
     queryset = Customer.objects.filter(next_service__month=(timezone.now().month + 2))\
         .filter(next_service__year=timezone.now().year).filter(is_active=True)
     template_name = 'customer/reports/due_two_months_future.html'
 
 
-class CustomersDueLastMonth(generic.ListView):
+class CustomersDueLastMonth(LoginRequiredMixin, generic.ListView):
     model = Customer
     queryset = Customer.objects.filter(next_service__month=(timezone.now().month - 1))\
         .filter(next_service__year=timezone.now().year).filter(is_active=True)
     template_name = 'customer/reports/due_last_month.html'
 
 
-class CustomersDueLastThreeMonths(generic.ListView):
+class CustomersDueLastThreeMonths(LoginRequiredMixin, generic.ListView):
     model = Customer
     queryset = Customer.objects.filter(next_service__gt=(datetime.now() - timedelta(weeks=12)))\
         .filter(next_service__lt=timezone.now()).filter(next_service__year=timezone.now().year).filter(is_active=True)
     template_name = 'customer/reports/due_last_three_months.html'
 
 
-class CustomersDueLastYearThisMonth(generic.ListView):
+class CustomersDueLastYearThisMonth(LoginRequiredMixin, generic.ListView):
     model = Customer
     queryset = Customer.objects.filter(next_service__month=timezone.now().month)\
         .filter(next_service__year=(timezone.now().year - 1)).filter(is_active=True)
     template_name = 'customer/reports/due_last_year_this_month.html'
 
 
-class CustomersCustomReport(generic.ListView):
+class CustomersCustomReport(LoginRequiredMixin, generic.ListView):
     model = Customer
     template_name = 'customer/reports/custom_report.html'
 
@@ -77,7 +78,7 @@ class CustomersCustomReport(generic.ListView):
         return self.queryset
 
 
-class AddCustomer(generic.CreateView):
+class AddCustomer(LoginRequiredMixin, generic.CreateView):
     model = Customer
     template_name = 'customer/add_customer.html'
     form_class = AddCustomerForm
@@ -93,7 +94,7 @@ class AddCustomer(generic.CreateView):
             return HttpResponseBadRequest('/customer/add')
 
 
-class ViewCustomer(generic.UpdateView):
+class ViewCustomer(LoginRequiredMixin, generic.UpdateView):
     model = Customer
     template_name = 'customer/view_customer.html'
     form_class = ViewCustomerForm

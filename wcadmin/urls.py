@@ -20,5 +20,6 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.DashboardView.as_view(), name='dashboard'),
-    path('customer/', include('customer.urls'), name='customers')
+    path('customer/', include('customer.urls'), name='customers'),
+    path('users/', include('users.urls'), name='users'),
 ]

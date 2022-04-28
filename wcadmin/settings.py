@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'users',
     'widget_tweaks',
     'equipment.apps.EquipmentConfig',
     'supplier.apps.SupplierConfig',
@@ -114,6 +115,10 @@ TIME_ZONE = 'America/New_York'
 USE_I18N = True
 
 USE_TZ = True
+
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/users/login'
 
 
 # Static files (CSS, JavaScript, Images)

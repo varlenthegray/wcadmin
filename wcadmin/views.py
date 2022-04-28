@@ -1,9 +1,10 @@
 from django.views import generic
 from customer.models import Customer
 from django.utils import timezone
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class DashboardView(generic.ListView):
+class DashboardView(LoginRequiredMixin, generic.ListView):
     model = Customer
     queryset = Customer.objects.filter(next_service__month=timezone.now().month)\
         .filter(next_service__year=timezone.now().year).filter(is_active=True)
