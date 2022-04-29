@@ -1,11 +1,71 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block title %}Your Profile{% endblock %}
 {% block page_header %}Your Profile{% endblock %}
 
 {% block page_content %}
-    Generic blank profile page.
+    <div class="card">
+        <div class="card-body">
+            <h6 class="card-title">Your Profile with WCWT</h6>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="mb-3">
+                            {{ form.username.errors }}
+                            <label class="form-label" for="{{ form.username.id_for_label }}">Username</label>
+                            {{ form.username|add_class:"form-control"|attr:"placeholder:Username"|attr:"autocomplete:off"|attr:"disabled:disabled" }}
+                        </div>
+                    </div><!-- Col -->
+                    <div class="col-sm-4">
+                        <div class="mb-3">
+                            {{ form.first_name.errors }}
+                            <label class="form-label" for="{{ form.first_name.id_for_label }}">First Name</label>
+                            {{ form.first_name|add_class:"form-control"|attr:"placeholder:First Name"|attr:"autocomplete:off" }}
+                        </div>
+                    </div><!-- Col -->
+                    <div class="col-sm-4">
+                        <div class="mb-3">
+                            {{ form.last_name.errors }}
+                            <label class="form-label" for="{{ form.last_name.id_for_label }}">Last Name</label>
+                            {{ form.last_name|add_class:"form-control"|attr:"placeholder:Last Name"|attr:"autocomplete:off" }}
+                        </div>
+                    </div><!-- Col -->
+                </div><!-- Row -->
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="mb-3">
+                            {{ form.email.errors }}
+                            <label class="form-label" for="{{ form.email.id_for_label }}">Email Address</label>
+                            {{ form.email|add_class:"form-control"|attr:"placeholder:Email Address"|attr:"autocomplete:off" }}
+                        </div>
+                    </div><!-- Col -->
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="mb-3">
+                            {{ form.password.errors }}
+                            <label class="form-label" for="{{ form.password.id_for_label }}">Password</label>
+                            {{ form.password|add_class:"form-control"|attr:"placeholder:Password"|attr:"autocomplete:off" }}
+                        </div>
+                    </div><!-- Col -->
+                    <div class="col-sm-4">
+                        <div class="mb-3">
+                            {{ form.password_2.errors }}
+                            <label class="form-label" for="{{ form.password_2.id_for_label }}">Password Again</label>
+                            {{ form.password_2|add_class:"form-control"|attr:"placeholder:Password Again"|attr:"autocomplete:off"|attr:"type:password" }}
+                        </div>
+                    </div><!-- Col -->
+                </div><!-- Row -->
+
+            <button type="submit" class="btn btn-primary submit">Save</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 
 {% block page_script %}{% endblock %}

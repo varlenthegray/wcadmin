@@ -90,7 +90,7 @@ License: For each use you must have a valid license purchased only from above li
                                             </div>
                                             <div class="mb-3">
                                                 <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
-                                                {{ form.password|add_class:"form-control"|attr:"placeholder:Password"|attr:"autocomplete:current-password" }}
+                                                {{ form.password|add_class:"form-control"|attr:"placeholder:Password"|attr:"autocomplete:current-password"|attr:"data-toggle:password"|attr:"type:password" }}
                                             </div>
                                             <div class="form-check mb-3">
                                                 {{ form.remember_me|add_class:"form-check-input" }}

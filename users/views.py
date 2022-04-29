@@ -1,5 +1,10 @@
+from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
-from .forms import LoginForm
+from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponse
+from django.shortcuts import get_object_or_404
+from .forms import LoginForm, ProfileForm
+from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class Login(LoginView):
@@ -25,3 +30,26 @@ class Login(LoginView):
 class Logout(LogoutView):
     template_name = 'users/login.html'
     next_page = 'login'
+
+
+class Profile(LoginRequiredMixin, generic.UpdateView):
+    template_name = 'users/profile.html'
+    form_class = ProfileForm
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(User, pk=self.request.user.pk)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+
+        if form.is_valid():
+            # Placing the ** before it tells the model to treat form.cleaned_data as a dictionary of keyword arguments
+            u = User.objects.filter(pk=kwargs['pk'])
+            u.update(**form.cleaned_data)
+
+            if form.password:
+                u.set_password(form.password)
+
+            return HttpResponseRedirect('/')
+        else:
+            return HttpResponse(form.errors.values())
