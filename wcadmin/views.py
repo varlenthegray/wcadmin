@@ -1,3 +1,4 @@
+from dateutil.relativedelta import relativedelta
 from django.views import generic
 from customer.models import Customer
 from django.utils import timezone
@@ -32,5 +33,10 @@ class DashboardView(LoginRequiredMixin, generic.ListView):
             .filter(next_service__month=timezone.now().month).filter(is_active=True)
         context["service_refresh"] = context["service_refresh_total"].filter(next_service__gt=timezone.now())\
             .filter(is_active=True)
+
+        context["service_past_due_date"] = timezone.now() - relativedelta(months=1)
+        context["service_due_date"] = timezone.now()
+        context["service_coming_up_date"] = timezone.now() + relativedelta(months=1)
+        context["service_refresh_date"] = timezone.now() - relativedelta(years=1)
 
         return context

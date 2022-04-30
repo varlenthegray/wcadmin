@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}All Installations{% endblock %}
+{% block page_header %}All Installations{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-12 stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-baseline mb-2">
+                        <h6 class="card-title mb-0">All Installations</h6>
+                        <div class="dropdown mb-2">
+                            <button class="btn p-0" type="button" id="dropdownMenuButton7" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton7">
+                                <button id="dt_button_copy" class="dropdown-item d-flex align-items-center"><i data-feather="copy" class="icon-sm me-2"></i> <span class="">Copy</span></button>
+                                <button id="dt_button_csv" class="dropdown-item d-flex align-items-center"><i data-feather="file-text" class="icon-sm me-2"></i> <span class="">Download CSV</span></button>
+                                <button id="dt_button_excel" class="dropdown-item d-flex align-items-center"><i data-feather="columns" class="icon-sm me-2"></i> <span class="">Download Excel</span></button>
+                                <button id="dt_button_pdf" class="dropdown-item d-flex align-items-center"><i data-feather="pen-tool" class="icon-sm me-2"></i> <span class="">Download PDF</span></button>
+                                <button id="dt_button_print" class="dropdown-item d-flex align-items-center"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print Table</span></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table" id="customerDatatable">
+                            <thead>
+                            <tr>
+                                <th>Actions</th>
+                                <th>Contact Name</th>
+                                <th>Address</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Next Service Date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for installation in object_list %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'viewInstallation' pk=installation.pk %}" class="btn btn-inverse-info btn-xs btn-icon" title="View Customer Record"><i class="mdi mdi-wrench"></i></a>
+                                    </td>
+                                    <td>{{ installation.name }}</td>
+                                    <td>{{ installation.address }}<br>{{ installation.city }}, {{ installation.state }} {{ installation.zip }}</td>
+                                    <td><a href="tel:1{{ installation.phone_number }}">{{ installation.phone_number }}</a></td>
+                                    <td><a href="mailto:{{ installation.email }}">{{ installation.email }}</a></td>
+                                    <td>{{ installation.next_service_date }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

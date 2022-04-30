@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'installation',
     'users',
     'widget_tweaks',
     'equipment.apps.EquipmentConfig',
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'customer.apps.CustomerConfig',
+    'dateutil',
 ]
 
 MIDDLEWARE = [

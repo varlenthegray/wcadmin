@@ -7,3 +7,4 @@ wheel~=0.37.1
 gunicorn~=20.1.0
 fontawesomefree~=6.1.1
 django-widget-tweaks~=1.4.12
+python-dateutil~=2.8.2
