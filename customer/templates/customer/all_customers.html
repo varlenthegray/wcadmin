@@ -36,7 +36,6 @@
                                 <th>Address</th>
                                 <th>Phone</th>
                                 <th>Email</th>
-                                <th>Next Service Date</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -50,7 +49,6 @@
                                     <td>{{ customer.billing_address_1 }}<br>{{ customer.billing_city }}, {{ customer.billing_state }} {{ customer.billing_zip }}</td>
                                     <td><a href="tel:1{{ customer.main_phone }}">{{ customer.main_phone }}</a></td>
                                     <td><a href="mailto:{{ customer.email }}">{{ customer.email }}</a></td>
-                                    <td>{{ customer.next_service }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>

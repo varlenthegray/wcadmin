@@ -71,55 +71,14 @@
                         <div class="mb-3">
                             <ul class="nav nav-tabs" id="addCustomerTabs" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="jobsite-tab" data-bs-toggle="tab" href="#jobsite" role="tab" aria-controls="jobsite" aria-selected="true">Jobsite</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="billing-tab" data-bs-toggle="tab" href="#billing" role="tab" aria-controls="billing" aria-selected="false">Billing</a>
+                                    <a class="nav-link active" id="billing-tab" data-bs-toggle="tab" href="#billing" role="tab" aria-controls="billing" aria-selected="false">Billing</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="extraInfo-tab" data-bs-toggle="tab" href="#extraInfo" role="tab" aria-controls="extraInfo" aria-selected="false">Extra Info</a>
                                 </li>
                             </ul>
                             <div class="tab-content border border-top-0 p-3" id="myTabContent">
-                                <div class="tab-pane fade show active" id="jobsite" role="tabpanel" aria-labelledby="jobsite-tab">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="mb-3">
-                                                {{ form.jobsite_address_1.errors }}
-                                                <label class="form-label" for="{{ form.jobsite_address_1.id_for_label }}">Jobsite Address 1</label>
-                                                {{ form.jobsite_address_1|add_class:"form-control"|attr:"placeholder:1234 Hard Street" }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            {{ form.jobsite_city.errors }}
-                                            <label class="form-label" for="{{ form.jobsite_city.id_for_label }}">Jobsite City</label>
-                                            {{ form.jobsite_city|add_class:"form-control"|attr:"placeholder:Weaverville" }}
-                                        </div><!-- Col -->
-                                        <div class="col-sm-4">
-                                            {{ form.jobsite_state.errors }}
-                                            <label class="form-label" for="{{ form.jobsite_state.id_for_label }}">Jobsite State</label>
-                                            {{ form.jobsite_state|add_class:"form-control"|attr:"placeholder:NC"|attr:"value:NC" }}
-                                        </div><!-- Col -->
-                                        <div class="col-sm-4">
-                                            {{ form.jobsite_zip.errors }}
-                                            <label class="form-label" for="{{ form.jobsite_zip.id_for_label }}">Jobsite Zip</label>
-                                            {{ form.jobsite_zip|add_class:"form-control"|attr:"placeholder:28806" }}
-                                        </div><!-- Col -->
-                                    </div><!-- Row -->
-                                </div>
-
-                                <div class="tab-pane fade" id="billing" role="tabpanel" aria-labelledby="billing-tab">
-                                    <div class="row">
-                                        <div class="col-sm-2">
-                                            <div class="form-check mb-3">
-                                                <input type="checkbox" class="form-check-input" id="{{ form.billing_address_same_as_jobsite.id_for_label }}" checked="checked">
-                                                <label class="form-check-label" for="{{ form.billing_address_same_as_jobsite.id_for_label }}">Same as Jobsite</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                <div class="tab-pane fade show active" id="billing" role="tabpanel" aria-labelledby="billing-tab">
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="mb-3">
@@ -168,13 +127,6 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-sm-4">
-                                            <div class="mb-3">
-                                                {{ form.access_code.errors }}
-                                                <label class="form-label" for="{{ form.access_code.id_for_label }}">Access Code</label>
-                                                {{ form.access_code|add_class:"form-control"|attr:"placeholder:Access Code" }}
-                                            </div>
-                                        </div>
                                         <div class="col-sm-4">
                                             <div class="mb-3">
                                                 {{ form.website.errors }}

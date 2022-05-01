@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
-{% block title %}All Installations{% endblock %}
-{% block page_header %}All Installations{% endblock %}
+{% block title %}All Job Sites{% endblock %}
+{% block page_header %}All Job Sites{% endblock %}
 
 {% block page_content %}
     <div class="row">
@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-baseline mb-2">
-                        <h6 class="card-title mb-0">All Installations</h6>
+                        <h6 class="card-title mb-0">All Job Sites</h6>
                         <div class="dropdown mb-2">
                             <button class="btn p-0" type="button" id="dropdownMenuButton7" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
@@ -37,16 +37,16 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for installation in object_list %}
+                            {% for jobsite in object_list %}
                                 <tr>
                                     <td>
-                                        <a href="{% url 'viewInstallation' pk=installation.pk %}" class="btn btn-inverse-info btn-xs btn-icon" title="View Customer Record"><i class="mdi mdi-wrench"></i></a>
+                                        <a href="{% url 'viewJobSite' pk=jobsite.pk %}" class="btn btn-inverse-info btn-xs btn-icon" title="View Customer Record"><i class="mdi mdi-wrench"></i></a>
                                     </td>
-                                    <td>{{ installation.name }}</td>
-                                    <td>{{ installation.address }}<br>{{ installation.city }}, {{ installation.state }} {{ installation.zip }}</td>
-                                    <td><a href="tel:1{{ installation.phone_number }}">{{ installation.phone_number }}</a></td>
-                                    <td><a href="mailto:{{ installation.email }}">{{ installation.email }}</a></td>
-                                    <td>{{ installation.next_service_date }}</td>
+                                    <td>{{ jobsite.name }}</td>
+                                    <td>{{ jobsite.address }}<br>{{ jobsite.city }}, {{ jobsite.state }} {{ jobsite.zip }}</td>
+                                    <td><a href="tel:1{{ jobsite.phone_number }}">{{ jobsite.phone_number }}</a></td>
+                                    <td><a href="mailto:{{ jobsite.email }}">{{ jobsite.email }}</a></td>
+                                    <td>{{ jobsite.next_service_date }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>

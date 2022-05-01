@@ -19,6 +19,9 @@
             <excludedPath path="/wcadmin/equipment/migrations" />
             <excludedPath path="/wcadmin/service/migrations" />
             <excludedPath path="/wcadmin/supplier/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/installation/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/jobsite/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/users/migrations" />
           </excludedPaths>
         </serverdata>
       </paths>

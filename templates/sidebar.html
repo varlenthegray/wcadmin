@@ -11,7 +11,7 @@
 {% url 'customerDueLastThreeMonths' as report_customer_last_three_months_url %}
 {% url 'customerCustomReport' as report_customer_custom_url %}
 {% url 'customerDueLastYearThisMonth' as report_customer_last_year_this_month_url %}
-{% url 'allInstallations' as all_installations_url %}
+{% url 'allJobSites' as all_job_sites_url %}
 
 <div class="sidebar-header">
     <a href="#" class="sidebar-brand">WCWT<span>Admin</span></a>
@@ -40,11 +40,11 @@
                 <i class="link-arrow" data-feather="chevron-down"></i>
             </a>
 
-            <div class="collapse {% if request.get_full_path == add_customer_url or request.get_full_path == all_customers_url or request.get_full_path == all_installations_url %}show{% endif %}" id="uiCustomers">
+            <div class="collapse {% if request.get_full_path == add_customer_url or request.get_full_path == all_customers_url or request.get_full_path == all_job_sites_url %}show{% endif %}" id="uiCustomers">
                 <ul class="nav sub-menu">
                     <li class="nav-item"><a href="{{ add_customer_url }}" class="nav-link {% if request.get_full_path == add_customer_url %}active{% endif %}">Add New</a></li>
                     <li class="nav-item"><a href="{{ all_customers_url }}" class="nav-link {% if request.get_full_path == all_customers_url %}active{% endif %}">All Customers</a></li>
-                    <li class="nav-item"><a href="{{ all_installations_url }}" class="nav-link {% if request.get_full_path == all_installations_url %}active{% endif %}">Installations</a></li>
+                    <li class="nav-item"><a href="{{ all_job_sites_url }}" class="nav-link {% if request.get_full_path == all_job_sites_url %}active{% endif %}">All Job Sites</a></li>
                 </ul>
             </div>
         </li>

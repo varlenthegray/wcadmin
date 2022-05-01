@@ -31,19 +31,22 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'installation',
+    'customer',
+    'equipment',
+    'jobsite',
+    'service',
+    'supplier',
     'users',
-    'widget_tweaks',
-    'equipment.apps.EquipmentConfig',
-    'supplier.apps.SupplierConfig',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'customer.apps.CustomerConfig',
+
     'dateutil',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
