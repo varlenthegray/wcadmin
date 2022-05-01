@@ -39,7 +39,7 @@
                             {% for equipment in object_list %}
                                 <tr>
                                     <td>
-                                        <a href="{% url 'viewEquipment' pk=equipment.pk %}" class="btn btn-inverse-secondary btn-xs btn-icon" title="View Customer Record"><i data-feather="eye"></i></a>
+                                        <a href="{% url 'viewEquipment' pk=equipment.pk %}" class="btn btn-inverse-secondary btn-xs btn-icon" title="View Equipment Record"><i data-feather="eye"></i></a>
                                     </td>
                                     <td>{{ equipment.name }}</td>
                                     <td>{{ equipment.cost }}</td>

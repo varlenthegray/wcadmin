@@ -20,8 +20,8 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.DashboardView.as_view(), name='dashboard'),
-    path('customer/', include('customer.urls'), name='customers'),
+    path('customers/', include('customer.urls'), name='customers'),
     path('users/', include('users.urls'), name='users'),
-    path('jobsite/', include('jobsite.urls'), name='jobsite'),
+    path('job_sites/', include('jobsite.urls'), name='jobsite'),
     path('equipment/', include('equipment.urls'), name='equipment'),
 ]

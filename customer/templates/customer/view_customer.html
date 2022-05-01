@@ -2,8 +2,8 @@
 {% load widget_tweaks %}
 {% load static %}
 
-{% block title %}{{ object.first_name }} {{ object.last_name }}{% endblock %}
-{% block page_header %}Editing <abbr title="Database ID: {{ object.pk }}, Quickbooks ID: {{ object.quickbooks_id }}">{{ object.first_name }} {{ object.last_name }}</abbr>{% endblock %}
+{% block title %}Edit Customer {{ object.first_name }} {{ object.last_name }}{% endblock %}
+{% block page_header %}Editing Customer <abbr title="Database ID: {{ object.pk }}, Quickbooks ID: {{ object.quickbooks_id }}">{{ object.first_name }} {{ object.last_name }}</abbr>{% endblock %}
 
 {% block css_plugins %}
     <link rel="stylesheet" href="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css' %}">
@@ -166,25 +166,56 @@
         </div>
 
         <div class="col-sm-4">
-            <div class="card">
-                <div class="card-header">Notes <button type="button" class="btn btn-link btn-icon float-end"><i data-feather="plus-circle"></i></button></div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Summary</th>
-                            <th>Author</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>12/23/22</td>
-                            <td>In leau of water...</td>
-                            <td>Ben Beach</td>
-                        </tr>
-                        </tbody>
-                    </table>
+            <div class="row">
+                <div class="col-sm-12 mb-3">
+                    <div class="card">
+                        <div class="card-header">
+                            Job Sites <button type="button" class="btn btn-link btn-icon float-end"><i data-feather="edit"></i></button>
+                        </div>
+
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Equipment Count</th>
+                                    <th>Installed On</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>John Smith</td>
+                                    <td>3</td>
+                                    <td>12/23/22</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header">Notes <button type="button" class="btn btn-link btn-icon float-end"><i data-feather="plus-circle"></i></button></div>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Summary</th>
+                                    <th>Author</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>12/23/22</td>
+                                    <td>In leau of water...</td>
+                                    <td>Ben Beach</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

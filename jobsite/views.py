@@ -15,3 +15,9 @@ class ViewJobSite(LoginRequiredMixin, generic.UpdateView):
     model = JobSite
     form_class = ViewJobSiteForm
     template_name = 'jobsite/view_jobsite.html'
+
+
+class AddJobSite(LoginRequiredMixin, generic.CreateView):
+    model = JobSite
+    form_class = ViewJobSiteForm
+    template_name = 'jobsite/add_jobsite.html'

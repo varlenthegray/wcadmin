@@ -2,17 +2,14 @@
 {% load widget_tweaks %}
 {% load static %}
 
-{% block title %}Service Record for {{ object.name }}{% endblock %}
-{% block page_header %}Service Record for <abbr title="Database ID: {{ object.pk }}">{{ object.name }}</abbr>{% endblock %}
+{% block title %}New Job Site{% endblock %}
+{% block page_header %}New Job Site{% endblock %}
 
 {% block css_plugins %}
     <link rel="stylesheet" href="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css' %}">
 {% endblock %}
 
 {% block page_content %}
-    {% if not form.is_active.value %}<div class="alert alert-danger" role="alert">Service is inactive or deleted.</div>{% endif %}
-    {% if form.requires_supporting_technician.value %}<div class="alert alert-warning" role="alert">Requires two technicians!</div>{% endif %}
-
     <div class="row">
         <div class="col-sm-8">
             <div class="card">

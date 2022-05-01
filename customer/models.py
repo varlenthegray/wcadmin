@@ -39,6 +39,9 @@ class Customer(models.Model):
     requires_supporting_technician = models.BooleanField(default=False)
     primary_technician = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
+    def __str__(self):
+        return "%s %s" % (self.first_name, self.last_name)
+
 
 class CustomerEquipment(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)

@@ -1,20 +1,5 @@
 {% load static %}
 
-{# This defines the URL's in the sidebar, used for active and conditional display #}
-{% url 'dashboard' as dashboard_url %}
-{% url 'allCustomers' as all_customers_url %}
-{% url 'addCustomer' as add_customer_url %}
-{% url 'customersDueThisMonth' as report_customer_this_month_url %}
-{% url 'customersDueNextMonth' as report_customer_next_month_url %}
-{% url 'customerDueTwoMonthsFuture' as report_customer_two_months_future_url %}
-{% url 'customerDueLastMonth' as report_customer_last_month_url %}
-{% url 'customerDueLastThreeMonths' as report_customer_last_three_months_url %}
-{% url 'customerCustomReport' as report_customer_custom_url %}
-{% url 'customerDueLastYearThisMonth' as report_customer_last_year_this_month_url %}
-{% url 'allJobSites' as all_job_sites_url %}
-{% url 'allEquipment' as all_equipment_url %}
-{% url 'addEquipment' as add_equipment_url %}
-
 <div class="sidebar-header">
     <a href="#" class="sidebar-brand">WCWT<span>Admin</span></a>
 
@@ -28,38 +13,51 @@
 <div class="sidebar-body">
     <ul class="nav">
         <li class="nav-item nav-category">Main</li>
-        <li class="nav-item {% if request.get_full_path == dashboard_url %}active{% endif %}">
-            <a href="{{ dashboard_url }}" class="nav-link">
-                <i class="link-icon" data-feather="box"></i>
+        <li class="nav-item">
+            <a href="{% url 'dashboard' %}" class="nav-link">
+                <i class="link-icon" data-feather="layout"></i>
                 <span class="link-title">Dashboard</span>
             </a>
         </li>
         <li class="nav-item nav-category">Apps</li>
-        <li class="nav-item {% if request.get_full_path == add_customer_url or request.get_full_path == all_customers_url %}active{% endif %}">
+        <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#uiCustomers" role="button" aria-expanded="false" aria-controls="uiCustomers">
                 <i class="link-icon" data-feather="users"></i>
                 <span class="link-title">Customers</span>
                 <i class="link-arrow" data-feather="chevron-down"></i>
             </a>
 
-            <div class="collapse {% if request.get_full_path == add_customer_url or request.get_full_path == all_customers_url or request.get_full_path == all_job_sites_url %}show{% endif %}" id="uiCustomers">
+            <div class="collapse" id="uiCustomers">
                 <ul class="nav sub-menu">
-                    <li class="nav-item"><a href="{{ add_customer_url }}" class="nav-link {% if request.get_full_path == add_customer_url %}active{% endif %}">Add New</a></li>
-                    <li class="nav-item"><a href="{{ all_customers_url }}" class="nav-link {% if request.get_full_path == all_customers_url %}active{% endif %}">All Customers</a></li>
-                    <li class="nav-item"><a href="{{ all_job_sites_url }}" class="nav-link {% if request.get_full_path == all_job_sites_url %}active{% endif %}">All Job Sites</a></li>
+                    <li class="nav-item"><a href="{% url 'addCustomer' %}" class="nav-link">Add Customer</a></li>
+                    <li class="nav-item"><a href="{% url 'allCustomers' %}" class="nav-link">All Customers</a></li>
                 </ul>
             </div>
         </li>
-        <li class="nav-item {% if request.get_full_path == all_equipment_url %}active{% endif %}">
-            <a class="nav-link" data-bs-toggle="collapse" href="#uiEquipment" role="button" aria-expanded="false" aria-controls="uiEquipment">
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#uiJobSites" role="button" aria-expanded="false" aria-controls="uiJobSites">
                 <i class="link-icon" data-feather="truck"></i>
+                <span class="link-title">Job Sites</span>
+                <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+
+            <div class="collapse" id="uiJobSites">
+                <ul class="nav sub-menu">
+                    <li class="nav-item"><a href="{% url 'addJobSite' %}" class="nav-link">Add Job Site</a></li>
+                    <li class="nav-item"><a href="{% url 'allJobSites' %}" class="nav-link">All Job Sites</a></li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#uiEquipment" role="button" aria-expanded="false" aria-controls="uiEquipment">
+                <i class="link-icon" data-feather="package"></i>
                 <span class="link-title">Equipment</span>
                 <i class="link-arrow" data-feather="chevron-down"></i>
             </a>
-            <div class="collapse {% if request.get_full_path == all_equipment_url or request.get_full_path == add_equipment_url %}show{% endif %}" id="uiEquipment">
+            <div class="collapse" id="uiEquipment">
                 <ul class="nav sub-menu">
-                    <li class="nav-item"><a href="{{ all_equipment_url }}" class="nav-link {% if request.get_full_path == all_equipment_url %}active{% endif %}">All Equipment</a></li>
-                    <li class="nav-item"><a href="{{ add_equipment_url }}" class="nav-link {% if request.get_full_path == add_equipment_url %}active{% endif %}">Add Equipment</a></li>
+                    <li class="nav-item"><a href="{% url 'allEquipment' %}" class="nav-link">All Equipment</a></li>
+                    <li class="nav-item"><a href="{% url 'addEquipment' %}" class="nav-link">Add Equipment</a></li>
                 </ul>
             </div>
         </li>
@@ -71,13 +69,13 @@
             </a>
             <div class="collapse" id="uiReports">
                 <ul class="nav sub-menu">
-                    <li class="nav-item"><a href="{{ report_customer_this_month_url }}" class="nav-link">Due This Month</a></li>
-                    <li class="nav-item"><a href="{{ report_customer_next_month_url }}" class="nav-link">Due Next Month</a></li>
-                    <li class="nav-item"><a href="{{ report_customer_two_months_future_url }}" class="nav-link">Due +2 Months</a></li>
-                    <li class="nav-item"><a href="{{ report_customer_last_month_url }}" class="nav-link">Due Last Month</a></li>
-                    <li class="nav-item"><a href="{{ report_customer_last_three_months_url }}" class="nav-link">Due Last 3 Months</a></li>
-                    <li class="nav-item"><a href="{{ report_customer_last_year_this_month_url }}" class="nav-link">Due Last Year This Month</a></li>
-                    <li class="nav-item"><a href="{{ report_customer_custom_url }}" class="nav-link">Custom Report</a></li>
+                    <li class="nav-item"><a href="{% url 'customersDueThisMonth' %}" class="nav-link">Due This Month</a></li>
+                    <li class="nav-item"><a href="{% url 'customersDueNextMonth' %}" class="nav-link">Due Next Month</a></li>
+                    <li class="nav-item"><a href="{% url 'customerDueTwoMonthsFuture' %}" class="nav-link">Due +2 Months</a></li>
+                    <li class="nav-item"><a href="{% url 'customerDueLastMonth' %}" class="nav-link">Due Last Month</a></li>
+                    <li class="nav-item"><a href="{% url 'customerDueLastThreeMonths' %}" class="nav-link">Due Last 3 Months</a></li>
+                    <li class="nav-item"><a href="{% url 'customerDueLastYearThisMonth' %}" class="nav-link">Due Last Year This Month</a></li>
+                    <li class="nav-item"><a href="{% url 'customerCustomReport' %}" class="nav-link">Custom Report</a></li>
                 </ul>
             </div>
         </li>
