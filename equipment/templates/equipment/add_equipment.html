@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %}Add Equipment{% endblock %}
+{% block page_header %}Add Equipment{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <div class="mb-3">
+                                    {{ form.sku.errors }}
+                                    <label class="form-label" for="{{ form.sku.id_for_label }}">SKU</label>
+                                    {{ form.sku|add_class:"form-control"|attr:"placeholder:SKU"|attr:"autocomplete:off" }}
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="mb-3">
+                                    {{ form.name.errors }}
+                                    <label class="form-label" for="{{ form.name.id_for_label }}">Product Name</label>
+                                    {{ form.name|add_class:"form-control"|attr:"placeholder:Product Name"|attr:"autocomplete:off" }}
+                                </div>
+                            </div><!-- Col -->
+                            <div class="col-sm-4">
+                                <div class="mb-3">
+                                    {{ form.url.errors }}
+                                    <label class="form-label" for="{{ form.url.id_for_label }}">Product URL</label>
+                                    {{ form.url|add_class:"form-control"|attr:"placeholder:URL"|attr:"autocomplete:off" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <div class="mb-3">
+                                    {{ form.cost.errors }}
+                                    <label class="form-label" for="{{ form.cost.id_for_label }}">Cost</label>
+                                    {{ form.cost|add_class:"form-control"|attr:"placeholder:$0.00"|attr:"autocomplete:off" }}
+                                </div>
+                            </div><!-- Col -->
+                            <div class="col-sm-2">
+                                <div class="mb-3">
+                                    {{ form.sales_price.errors }}
+                                    <label class="form-label" for="{{ form.sales_price.id_for_label }}">Sale Price</label>
+                                    {{ form.sales_price|add_class:"form-control"|attr:"placeholder:$0.00"|attr:"autocomplete:off" }}
+                                </div>
+                            </div><!-- Col -->
+                            <div class="col-sm-2 text-end">
+                                <div class="mb-3">
+                                    {{ form.is_active.errors }}
+                                    <label class="form-check-label me-2" for="{{ form.is_active.id_for_label }}">Active</label>
+                                    {{ form.is_active|add_class:"form-check-input float-end" }}
+                                </div>
+                            </div><!-- Col -->
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-4 offset-sm-8">
+                                <button type="submit" class="btn btn-primary submit float-end">Create</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page_script %}
+{% endblock %}
+
+{% block page_plugins %}
+    <script src="{% static 'assets/vendors/inputmask/jquery.inputmask.min.js' %}"></script>
+{% endblock %}

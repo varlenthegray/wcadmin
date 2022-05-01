@@ -23487,7 +23487,7 @@ a.badge:hover {
 }
 .btn.btn-icon, .wizard > .actions a.btn-icon, div.tox .btn-icon.tox-button, .swal2-popup .swal2-actions button.btn-icon, .fc .btn-icon.fc-button-primary {
   width: 38px;
-  height: 38px;
+  /* height: 38px; */
   padding: 0;
   display: inline-flex;
   align-items: center;

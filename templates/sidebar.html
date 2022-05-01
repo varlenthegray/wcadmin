@@ -12,6 +12,8 @@
 {% url 'customerCustomReport' as report_customer_custom_url %}
 {% url 'customerDueLastYearThisMonth' as report_customer_last_year_this_month_url %}
 {% url 'allJobSites' as all_job_sites_url %}
+{% url 'allEquipment' as all_equipment_url %}
+{% url 'addEquipment' as add_equipment_url %}
 
 <div class="sidebar-header">
     <a href="#" class="sidebar-brand">WCWT<span>Admin</span></a>
@@ -45,6 +47,19 @@
                     <li class="nav-item"><a href="{{ add_customer_url }}" class="nav-link {% if request.get_full_path == add_customer_url %}active{% endif %}">Add New</a></li>
                     <li class="nav-item"><a href="{{ all_customers_url }}" class="nav-link {% if request.get_full_path == all_customers_url %}active{% endif %}">All Customers</a></li>
                     <li class="nav-item"><a href="{{ all_job_sites_url }}" class="nav-link {% if request.get_full_path == all_job_sites_url %}active{% endif %}">All Job Sites</a></li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item {% if request.get_full_path == all_equipment_url %}active{% endif %}">
+            <a class="nav-link" data-bs-toggle="collapse" href="#uiEquipment" role="button" aria-expanded="false" aria-controls="uiEquipment">
+                <i class="link-icon" data-feather="truck"></i>
+                <span class="link-title">Equipment</span>
+                <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+            <div class="collapse {% if request.get_full_path == all_equipment_url or request.get_full_path == add_equipment_url %}show{% endif %}" id="uiEquipment">
+                <ul class="nav sub-menu">
+                    <li class="nav-item"><a href="{{ all_equipment_url }}" class="nav-link {% if request.get_full_path == all_equipment_url %}active{% endif %}">All Equipment</a></li>
+                    <li class="nav-item"><a href="{{ add_equipment_url }}" class="nav-link {% if request.get_full_path == add_equipment_url %}active{% endif %}">Add Equipment</a></li>
                 </ul>
             </div>
         </li>

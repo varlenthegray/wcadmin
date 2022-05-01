@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Equipment{% endblock %}
+{% block page_header %}All Equipment{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-12 stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-baseline mb-2">
+                        <h6 class="card-title mb-0">Equipment</h6>
+                        <div class="dropdown mb-2">
+                            <button class="btn p-0" type="button" id="dropdownMenuButton7" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton7">
+                                <button id="dt_button_copy" class="dropdown-item d-flex align-items-center"><i data-feather="copy" class="icon-sm me-2"></i> <span class="">Copy</span></button>
+                                <button id="dt_button_csv" class="dropdown-item d-flex align-items-center"><i data-feather="file-text" class="icon-sm me-2"></i> <span class="">Download CSV</span></button>
+                                <button id="dt_button_excel" class="dropdown-item d-flex align-items-center"><i data-feather="columns" class="icon-sm me-2"></i> <span class="">Download Excel</span></button>
+                                <button id="dt_button_pdf" class="dropdown-item d-flex align-items-center"><i data-feather="pen-tool" class="icon-sm me-2"></i> <span class="">Download PDF</span></button>
+                                <button id="dt_button_print" class="dropdown-item d-flex align-items-center"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print Table</span></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table" id="customerDatatable">
+                            <thead>
+                            <tr>
+                                <th width="5%">Actions</th>
+                                <th>Name</th>
+                                <th>Cost</th>
+                                <th>Sale Price</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for equipment in object_list %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'viewEquipment' pk=equipment.pk %}" class="btn btn-inverse-secondary btn-xs btn-icon" title="View Customer Record"><i data-feather="eye"></i></a>
+                                    </td>
+                                    <td>{{ equipment.name }}</td>
+                                    <td>{{ equipment.cost }}</td>
+                                    <td>{{ equipment.sales_price }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page_script %}{% endblock %}
