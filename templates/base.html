@@ -45,8 +45,8 @@ License: For each use you must have a valid license purchased only from above li
 
     <!-- inject:css -->
     <link rel="stylesheet" href="{% static 'assets/fonts/feather-font/css/iconfont.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/vendors/mdi/css/materialdesignicons.min.css' %}">
     {#    <script src="{% static 'fontawesomefree/js/all.min.js' %}"></script>#}
+    <script src="https://kit.fontawesome.com/cde8bda604.js" crossorigin="anonymous"></script>
     <!-- endinject -->
 
     <!-- Layout styles -->
@@ -61,7 +61,7 @@ License: For each use you must have a valid license purchased only from above li
 
     <div class="page-wrapper">
         <nav class="navbar">
-            <a href="#" class="sidebar-toggler"><i data-feather="menu"></i></a>
+            <a href="#" class="sidebar-toggler"><i class="fa fa-hamburger"></i></a>
 
             <div class="navbar-content">
                 <div class="search-form">
@@ -71,7 +71,7 @@ License: For each use you must have a valid license purchased only from above li
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
                         <button class="nav-link dropdown-toggle btn btn-link btn-icon-text" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="icon-lg btn-icon-prepend" data-feather="user"></i>
+                            <i class="icon-lg btn-icon-prepend fa fa-user-o"></i>
                             <span>{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %}</span>
                         </button>
                         <div class="dropdown-menu p-0" aria-labelledby="profileDropdown">
@@ -83,11 +83,11 @@ License: For each use you must have a valid license purchased only from above li
                             </div>
                             <div class="d-grid gap-2 p-1">
                                 <button onclick="location.href='admin/auth/user/{{ user.pk }}/change/'" type="button" class="text-start btn btn-link ms-0">
-                                    <i class="me-2 icon-md" data-feather="edit"></i>
+                                    <i class="me-2 icon-md fa fa-user-edit"></i>
                                     <span>Edit Profile</span>
                                 </button>
                                 <button onclick="location.href='{% url 'logout' %}'" type="button" class="text-start btn btn-link ms-0">
-                                    <i class="me-2 icon-md" data-feather="log-out"></i>
+                                    <i class="me-2 icon-md fa fa-right-from-bracket"></i>
                                     <span>Log Out</span>
                                 </button>
                             </div>
@@ -112,7 +112,7 @@ License: For each use you must have a valid license purchased only from above li
                                         <div class="d-flex align-items-baseline">
                                             <a href="{% url 'customerDueLastMonth' %}" class="text-danger">
                                                 <span>See All</span>
-                                                <i data-feather="arrow-right" class="icon-sm mb-1"></i>
+                                                <i class="icon-sm mb-1 fa fa-arrow-right"></i>
                                             </a>
                                         </div>
                                     </div>
@@ -135,7 +135,7 @@ License: For each use you must have a valid license purchased only from above li
                                         <div class="d-flex align-items-baseline">
                                             <a href="{% url 'customersDueThisMonth' %}" class="text-primary">
                                                 <span>See All</span>
-                                                <i data-feather="arrow-right" class="icon-sm mb-1"></i>
+                                                <i class="icon-sm mb-1 fa fa-arrow-right"></i>
                                             </a>
                                         </div>
                                     </div>
@@ -158,7 +158,7 @@ License: For each use you must have a valid license purchased only from above li
                                         <div class="d-flex align-items-baseline">
                                             <a href="{% url 'customersDueNextMonth' %}" class="text-secondary">
                                                 <span>See All</span>
-                                                <i data-feather="arrow-right" class="icon-sm mb-1"></i>
+                                                <i class="icon-sm mb-1 fa fa-arrow-right"></i>
                                             </a>
                                         </div>
                                     </div>
@@ -181,7 +181,7 @@ License: For each use you must have a valid license purchased only from above li
                                         <div class="d-flex align-items-baseline">
                                             <a href="{% url 'customerDueLastYearThisMonth' %}" class="text-info">
                                                 <span>See All</span>
-                                                <i data-feather="arrow-right" class="icon-sm mb-1"></i>
+                                                <i class="icon-sm mb-1 fa fa-arrow-right"></i>
                                             </a>
                                         </div>
                                     </div>
@@ -202,14 +202,14 @@ License: For each use you must have a valid license purchased only from above li
                                     <h6 class="card-title mb-0">Service Due</h6>
                                     <div class="dropdown mb-2">
                                         <button class="btn p-0" type="button" id="dropdownMenuButton7" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                                            <i class="icon-lg text-muted pb-3px fa fa-ellipsis"></i>
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton7">
-                                            <button id="dt_button_copy" class="dropdown-item d-flex align-items-center"><i data-feather="copy" class="icon-sm me-2"></i> <span class="">Copy</span></button>
-                                            <button id="dt_button_csv" class="dropdown-item d-flex align-items-center"><i data-feather="file-text" class="icon-sm me-2"></i> <span class="">Download CSV</span></button>
-                                            <button id="dt_button_excel" class="dropdown-item d-flex align-items-center"><i data-feather="columns" class="icon-sm me-2"></i> <span class="">Download Excel</span></button>
-                                            <button id="dt_button_pdf" class="dropdown-item d-flex align-items-center"><i data-feather="pen-tool" class="icon-sm me-2"></i> <span class="">Download PDF</span></button>
-                                            <button id="dt_button_print" class="dropdown-item d-flex align-items-center"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print Table</span></button>
+                                            <button id="dt_button_copy" class="dropdown-item d-flex align-items-center"><i class="icon-sm me-2 fa fa-copy fa-fw"></i> <span class="">Copy</span></button>
+                                            <button id="dt_button_csv" class="dropdown-item d-flex align-items-center"><i class="icon-sm me-2 fa fa-file-text fa-fw"></i> <span class="">Download CSV</span></button>
+                                            <button id="dt_button_excel" class="dropdown-item d-flex align-items-center"><i class="icon-sm me-2 fa fa-file-excel fa-fw"></i> <span class="">Download Excel</span></button>
+                                            <button id="dt_button_pdf" class="dropdown-item d-flex align-items-center"><i class="icon-sm me-2 fa fa-file-pdf fa-fw"></i> <span class="">Download PDF</span></button>
+                                            <button id="dt_button_print" class="dropdown-item d-flex align-items-center"><i class="icon-sm me-2 fa fa-print fa-fw"></i> <span class="">Print Table</span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -230,7 +230,7 @@ License: For each use you must have a valid license purchased only from above li
                                             <tr>
                                                 <td>
                                                     <a href="#" class="btn btn-inverse-primary btn-xs btn-icon" title="Open in QuickBooks">QB</a>
-                                                    <a href="{% url 'viewCustomer' pk=customer.pk %}" class="btn btn-inverse-secondary btn-xs btn-icon" title="View Customer Record"><i data-feather="eye"></i></a>
+                                                    <a href="{% url 'viewCustomer' pk=customer.pk %}" class="btn btn-inverse-secondary btn-xs btn-icon" title="View Customer Record"><i class="fa fa-eye"></i></a>
                                                 </td>
                                                 <td>{{ customer.first_name }} {{ customer.last_name }}<br><i>{{ customer.company }}</i></td>
                                                 <td>{{ customer.billing_address_1 }}<br>{{ customer.billing_city }}, {{ customer.billing_state }} {{ customer.billing_zip }}</td>
@@ -251,7 +251,7 @@ License: For each use you must have a valid license purchased only from above li
         <!-- partial:../../partials/_footer.html -->
         <footer class="footer d-flex flex-column flex-md-row align-items-center justify-content-between px-4 py-3 border-top small">
             <p class="text-muted mb-1 mb-md-0">Copyright © 2022 <a href="https://www.wcwater.com" target="_blank">WCWater</a></p>
-            <p class="text-muted">Handcrafted With <i class="mb-1 text-primary mx-1 icon-sm" data-feather="heart"></i> by <a href="https://innovated.tech">Innovated Tech</a></p>
+            <p class="text-muted">Handcrafted With <i class="mb-1 text-primary mx-1 icon-sm fa fa-heart-o"></i> by <a href="https://innovated.tech">Innovated Tech</a></p>
         </footer>
         <!-- partial -->
     </div>

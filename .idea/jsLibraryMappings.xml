@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavaScriptLibraryMappings">
-    <file url="file://$PROJECT_DIR$" libraries="{buttons.html5, buttons.print, dataTables.buttons, jquery, jszip, luxon, pdfmake}" />
+    <file url="file://$PROJECT_DIR$" libraries="{buttons.html5, buttons.print, cde8bda604, dataTables.buttons, jquery, jszip, luxon, pdfmake}" />
     <file url="PROJECT" libraries="{buttons.html5, buttons.print, dataTables.buttons, jquery, jszip, luxon, pdfmake}" />
   </component>
 </project>

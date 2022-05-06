@@ -1,0 +1,229 @@
+{% load widget_tweaks %}
+
+<div class="card">
+    <div class="card-header">
+        <div class="btn-group" style="height:20px;padding:0;">
+            <button type="button" class="btn btn-primary dropdown-toggle btn-sm px-2 me-2" style="padding:0;" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Job Sites
+            </button>
+
+            <span class="badge rounded-pill bg-primary">{{ all_job_sites.count }}</span>
+
+            <div class="vr ms-3 bg-secondary opacity-100"></div>
+
+            <div class="dropdown-menu">
+                {% for job_site in all_job_sites %}
+                    <button type="button" data-job="{{ job_site.pk }}" class="dropdown-item btn btn-sm btn-primary btn-icon-text job_site_load {% if job_site.pk == job_site_id %}active{% endif %}">
+                        <i class="btn-icon-prepend pb-2px fa fa-truck"></i>
+                        {{ job_site.name }}
+                    </button>
+                {% endfor %}
+                <div class="dropdown-divider"></div>
+                <button type="button" class="dropdown-item btn btn-sm btn-primary btn-icon-text">
+                    <i class="btn-icon-prepend pb-2px fa fa-plus"></i> Add New Job Site
+                </button>
+            </div>
+        </div>
+
+        <strong class="ms-2">Viewing: {{ form2.name.value }}</strong>
+
+        <button type="button" class="btn btn-link btn-icon float-end"><i class="fa fa-plus-circle"></i></button>
+    </div>
+
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            {{ form2.non_field_errors }}
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="mb-3">
+                        {{ form2.name.errors }}
+                        <label class="form-label" for="{{ form2.name.id_for_label }}">Contact Name</label>
+                        {{ form2.name|add_class:"form-control"|attr:"placeholder:Contact Name"|attr:"autocomplete:off" }}
+                    </div>
+                </div><!-- Col -->
+                <div class="col-sm-4">
+                    <div class="mb-3">
+                        {{ form2.phone_number.errors }}
+                        <label class="form-label" for="{{ form2.phone_number.id_for_label }}">Contact Phone</label>
+                        {{ form2.phone_number|add_class:"form-control"|attr:"placeholder:(___) ___-____"|attr:"autocomplete:off" }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="mb-3">
+                        {{ form2.email.errors }}
+                        <label class="form-label" for="{{ form2.email.id_for_label }}">Contact Email</label>
+                        {{ form2.email|add_class:"form-control"|attr:"placeholder:abc@abc.com"|attr:"type:email"|attr:"autocomplete:off" }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    {{ form2.next_service_date.errors }}
+                    <label class="form-label" for="{{ form2.next_service_date.id_for_label }}">Next Service Date</label>
+                    <div class="input-group date datepicker mb-3" id="datePickerServiceDate">
+                        {{ form2.next_service_date|add_class:"form-control"|attr:"placeholder:Next Service Date"|attr:"autocomplete:off" }}
+                        <span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="mb-3">
+                        {{ form2.service_interval.errors }}
+                        <label class="form-label" for="{{ form2.service_interval.id_for_label }}">Service Interval</label>
+                        {{ form2.service_interval|add_class:"form-control"|attr:"placeholder:12"|attr:"autocomplete:off"|attr:"type:number"|attr:"min:2"|attr:"max:120" }}
+                    </div>
+                </div>
+                <div class="col-sm-5 text-end">
+                    <div class="mb-3 form-check">
+                        {{ form2.active.errors }}
+                        <label class="form-check-label me-4" for="{{ form2.active.id_for_label }}">Active</label>
+                        {{ form2.active|add_class:"form-check-input float-end" }}
+                    </div>
+                    <div class="mb-3 form-check">
+                        {{ form2.requires_supporting_technician.errors }}
+                        <label class="form-check-label me-4" for="{{ form2.requires_supporting_technician.id_for_label }}">Requires Two Technicians</label>
+                        {{ form2.requires_supporting_technician|add_class:"form-check-input float-end" }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="mb-3">
+                        {{ form2.address.errors }}
+                        <label class="form-label" for="{{ form2.address.id_for_label }}">Installation Address</label>
+                        {{ form2.address|add_class:"form-control"|attr:"placeholder:1234 Hard Street"|attr:"autocomplete:off" }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3 pb-2">
+                <div class="col-sm-4">
+                    {{ form2.city.errors }}
+                    <label class="form-label" for="{{ form2.city.id_for_label }}">Installation City</label>
+                    {{ form2.city|add_class:"form-control"|attr:"placeholder:Weaverville"|attr:"autocomplete:off" }}
+                </div><!-- Col -->
+                <div class="col-sm-4">
+                    {{ form2.state.errors }}
+                    <label class="form-label" for="{{ form2.state.id_for_label }}">Installation State</label>
+                    {{ form2.state|add_class:"form-control"|attr:"placeholder:NC"|attr:"value:NC"|attr:"autocomplete:off" }}
+                </div><!-- Col -->
+                <div class="col-sm-4">
+                    {{ form2.zip.errors }}
+                    <label class="form-label" for="{{ form2.zip.id_for_label }}">Installation Zip</label>
+                    {{ form2.zip|add_class:"form-control"|attr:"placeholder:28806"|attr:"autocomplete:off" }}
+                </div><!-- Col -->
+            </div><!-- Row -->
+
+            <hr class="bg-secondary opacity-100" />
+
+            <div class="row pt-2 mb-3">
+                <div class="col-sm-12 table-responsive">
+                    <h5 class="mb-2">
+                        Equipment
+                        <button type="button" class="btn btn-link btn-icon float-end"><i class="fa fa-plus-circle"></i></button>
+                        <button type="button" class="btn btn-link btn-icon float-end"><i class="fa fa-edit"></i></button>
+                    </h5>
+
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>First Name</th>
+                            <th>LAST NAME</th>
+                            <th>USERNAME</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th>1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                        <tr>
+                            <th>2</th>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                        </tr>
+                        <tr>
+                            <th>3</th>
+                            <td>Larry</td>
+                            <td>the Bird</td>
+                            <td>@twitter</td>
+                        </tr>
+                        <tr>
+                            <th>4</th>
+                            <td>Larry</td>
+                            <td>Jellybean</td>
+                            <td>@lajelly</td>
+                        </tr>
+                        <tr>
+                            <th>5</th>
+                            <td>Larry</td>
+                            <td>Kikat</td>
+                            <td>@lakitkat</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4 offset-sm-8">
+                    <button type="submit" class="btn btn-primary submit float-end">Update Installation</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+  $(function() {
+    let datePickerNextDate = $("#{{ form2.next_service_date.id_for_label }}");
+
+    datePickerNextDate.inputmask("99-99-9999");
+
+    if(datePickerNextDate.length) {
+      let date = new Date({{ form2.next_service_date.value|date:'Y' }}, ({{ form2.next_service_date.value|date:'m' }} - 1), {{ form2.next_service_date.value|date:'d' }});
+
+      datePickerNextDate.datepicker({
+        format: "mm-dd-yyyy",
+        todayHighlight: true,
+        autoclose: true
+      });
+
+      datePickerNextDate.datepicker('setDate', date);
+    }
+
+    let currentServiceInt = {{ form2.service_interval.value }},
+        serviceIntField = $("#{{ form2.service_interval.id_for_label }}"),
+        serviceIntModal = new bootstrap.Modal($("#modalCalculateService"));
+
+    serviceIntField.on("blur", function() {
+      if(Number(this.value) !== currentServiceInt) {
+        serviceIntModal.toggle();
+      }
+    });
+
+    $("#modalCalculateServiceYes").on("click", function() {
+      let currentServiceDate = luxon.DateTime.fromISO('{{ form2.next_service_date.value|date:'Y-m-d' }}');
+      let newServiceDate = currentServiceDate.plus({ months: Number(serviceIntField.val()) });
+
+      $("#{{ form2.next_service_date.id_for_label }}").val(newServiceDate.toFormat('LL-dd-yyyy'));
+
+      serviceIntModal.toggle();
+    });
+
+    $(".job_site_load").on("click", function() {
+      let call = "{% url 'viewSpecificJobSite' pk=999999999 %}".replace(/999999999/, $(this).data('job'));
+
+      $.ajax(call).done(function(response) {
+        $("#customerJobSiteCard").html(response);
+      });
+    });
+  });
+</script>

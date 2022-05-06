@@ -36,7 +36,7 @@ $(function() {
           '<i class="fa fa-thumbs-up"></i> Great!',
         confirmButtonAriaLabel: 'Thumbs up, great!',
         cancelButtonText:
-          '<i data-feather="thumbs-up"></i>',
+          '<i class="fa fa-thumbs-up"></i>',
         cancelButtonAriaLabel: 'Thumbs down',
       });
       feather.replace();

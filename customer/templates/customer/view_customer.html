@@ -2,20 +2,22 @@
 {% load widget_tweaks %}
 {% load static %}
 
-{% block title %}Edit Customer {{ object.first_name }} {{ object.last_name }}{% endblock %}
-{% block page_header %}Editing Customer <abbr title="Database ID: {{ object.pk }}, Quickbooks ID: {{ object.quickbooks_id }}">{{ object.first_name }} {{ object.last_name }}</abbr>{% endblock %}
+{% block title %}Edit Customer {{ form.first_name.value }} {{ form.last_name.value }}{% endblock %}
+{% block page_header %}Editing Customer <u>{{ form.first_name.value }} {{ form.last_name.value }}</u>{% endblock %}
 
 {% block css_plugins %}
     <link rel="stylesheet" href="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css' %}">
 {% endblock %}
 
 {% block page_content %}
-    {% if not form.is_active.value %}<div class="alert alert-danger" role="alert">Customer is inactive or deleted.</div>{% endif %}
-    {% if form.requires_supporting_technician.value %}<div class="alert alert-warning" role="alert">Requires two technicians!</div>{% endif %}
+    {% if not form.is_active.value %}<div class="alert alert-danger" role="alert"><i class="fa fa-user-alt"></i>Customer is inactive or deleted.</div>{% endif %}
+    {% if form.requires_supporting_technician.value %}<div class="alert alert-warning" role="alert"><i class="fa fa-2"></i>Requires two technicians!</div>{% endif %}
 
-    <div class="row">
-        <div class="col-sm-8">
+    <div class="row mb-3">
+        <div class="col-sm-6">
             <div class="card">
+                <div class="card-header">Customer Information</div>
+
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
@@ -79,14 +81,40 @@
                             <div class="col-sm-12">
                                 <ul class="nav nav-tabs" id="addCustomerTabs" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active" id="billing-tab" data-bs-toggle="tab" href="#billing" role="tab" aria-controls="billing" aria-selected="false">Billing</a>
+                                        <a class="nav-link active" id="notes-tab" data-bs-toggle="tab" href="#notes" role="tab" aria-controls="notes" aria-selected="false">Notes</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="billing-tab" data-bs-toggle="tab" href="#billing" role="tab" aria-controls="billing" aria-selected="false">Billing</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" id="extraInfo-tab" data-bs-toggle="tab" href="#extraInfo" role="tab" aria-controls="extraInfo" aria-selected="false">Extra Info</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content border border-top-0 p-3" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="billing" role="tabpanel" aria-labelledby="billing-tab">
+                                    <div class="tab-pane fade show active" id="notes" role="tabpanel" aria-labelledby="notes-tab">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th width="10%">Date</th>
+                                                        <th>Summary</th>
+                                                        <th width="20%">Author</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>12/23/22</td>
+                                                        <td>In leau of water...</td>
+                                                        <td>Ben Beach</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="billing" role="tabpanel" aria-labelledby="billing-tab">
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <div class="mb-3">
@@ -165,59 +193,8 @@
             </div>
         </div>
 
-        <div class="col-sm-4">
-            <div class="row">
-                <div class="col-sm-12 mb-3">
-                    <div class="card">
-                        <div class="card-header">
-                            Job Sites <button type="button" class="btn btn-link btn-icon float-end"><i data-feather="edit"></i></button>
-                        </div>
-
-                        <div class="card-body">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Equipment Count</th>
-                                    <th>Installed On</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>John Smith</td>
-                                    <td>3</td>
-                                    <td>12/23/22</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-12">
-                    <div class="card">
-                        <div class="card-header">Notes <button type="button" class="btn btn-link btn-icon float-end"><i data-feather="plus-circle"></i></button></div>
-                        <div class="card-body">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Summary</th>
-                                    <th>Author</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>12/23/22</td>
-                                    <td>In leau of water...</td>
-                                    <td>Ben Beach</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="col-sm-6 mb-3" id="customerJobSiteCard">
+            {% include 'customer/view_customer/job_site.html' %}
         </div>
     </div>
 
@@ -241,60 +218,11 @@
 {% endblock %}
 
 {% block page_script %}
-    <script src="{% static 'js/customer-billing-checkbox.js' %}"></script>
-
     <script>
       $(function() {
         $("#{{ form.main_phone.id_for_label }}").inputmask("(999) 999-9999");
         $("#{{ form.alternate_phone.id_for_label }}").inputmask("(999) 999-9999");
         $("#{{ form.fax_number.id_for_label }}").inputmask("(999) 999-9999");
-
-        customerBillingCheckbox.init(
-            '{{ form.billing_address_1.id_for_label }}',
-            '{{ form.billing_city.id_for_label }}',
-            '{{ form.billing_state.id_for_label }}',
-            '{{ form.billing_zip.id_for_label }}',
-            '{{ form.jobsite_address_1.id_for_label }}',
-            '{{ form.jobsite_city.id_for_label }}',
-            '{{ form.jobsite_state.id_for_label }}',
-            '{{ form.jobsite_zip.id_for_label }}',
-            '{{ form.billing_address_same_as_jobsite.id_for_label }}'
-        );
-
-        let datePickerNextDate = $("#{{ form.next_service.id_for_label }}");
-
-        datePickerNextDate.inputmask("99-99-9999");
-
-        if(datePickerNextDate.length) {
-          let date = new Date({{ form.next_service.value|date:'Y' }}, ({{ form.next_service.value|date:'m' }} - 1), {{ form.next_service.value|date:'d' }});
-
-          datePickerNextDate.datepicker({
-            format: "mm-dd-yyyy",
-            todayHighlight: true,
-            autoclose: true
-          });
-
-          datePickerNextDate.datepicker('setDate', date);
-        }
-
-        let currentServiceInt = {{ form.service_interval.value }},
-            serviceIntField = $("#{{ form.service_interval.id_for_label }}"),
-            serviceIntModal = new bootstrap.Modal($("#modalCalculateService"));
-
-        serviceIntField.on("blur", function() {
-          if(Number(this.value) !== currentServiceInt) {
-            serviceIntModal.toggle();
-          }
-        });
-
-        $("#modalCalculateServiceYes").on("click", function() {
-          let currentServiceDate = luxon.DateTime.fromISO('{{ form.next_service.value|date:'Y-m-d' }}');
-          let newServiceDate = currentServiceDate.plus({ months: Number(serviceIntField.val()) });
-
-          $("#{{ form.next_service.id_for_label }}").val(newServiceDate.toFormat('LL-dd-yyyy'));
-
-          serviceIntModal.toggle();
-        });
       });
     </script>
 {% endblock %}
@@ -304,3 +232,5 @@
     <script src="{% static 'assets/vendors/inputmask/jquery.inputmask.min.js' %}"></script>
     <script src="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js' %}"></script>
 {% endblock %}
+
+{% block add_page_plugins %}{% endblock %}

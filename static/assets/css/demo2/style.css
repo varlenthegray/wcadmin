@@ -5045,7 +5045,7 @@ div.tox .btn-group-vertical > .btn-group:not(:first-child) > .tox-button,
 .btn .badge, .wizard > .actions a .badge, div.tox .tox-button .badge, .swal2-popup .swal2-actions button .badge, .fc .fc-button-primary .badge {
   position: relative;
   top: -1px;
-}
+margin-top: -20px;}
 
 .alert {
   position: relative;

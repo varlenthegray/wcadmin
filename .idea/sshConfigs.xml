@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="SshConfigs">
-    <configs>
-      <sshConfig authType="PASSWORD" host="hosting.innovated.tech" id="2ec23c8b-fc4f-4430-9c40-e534ef597346" port="22" nameFormat="DESCRIPTIVE" username="innovated" useOpenSSHConfig="true" />
-    </configs>
-  </component>
-</project>

@@ -60,7 +60,7 @@
                                 <label class="form-label" for="{{ form.next_service_date.id_for_label }}">Next Service Date</label>
                                 <div class="input-group date datepicker mb-3" id="datePickerServiceDate">
                                     {{ form.next_service_date|add_class:"form-control"|attr:"placeholder:Next Service Date"|attr:"autocomplete:off" }}
-                                    <span class="input-group-text input-group-addon"><i data-feather="calendar"></i></span>
+                                    <span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
                                 </div>
                             </div>
                             <div class="col-sm-2">
@@ -133,7 +133,7 @@
             <div class="row">
                 <div class="col-sm-12 mb-3">
                     <div class="card">
-                        <div class="card-header">Equipment <button type="button" class="btn btn-link btn-icon float-end" style="height:20px;"><i data-feather="plus-circle"></i></button></div>
+                        <div class="card-header">Equipment <button type="button" class="btn btn-link btn-icon float-end" style="height:20px;"><i class="fa fa-calendar"></i></button></div>
                         <div class="card-body">
                             <table class="table">
                                 <thead>
@@ -159,7 +159,7 @@
             <div class="row">
                 <div class="col-sm-12 mb-3">
                     <div class="card">
-                        <div class="card-header">Notes <button type="button" class="btn btn-link btn-icon float-end" style="height:20px;"><i data-feather="plus-circle"></i></button></div>
+                        <div class="card-header">Notes <button type="button" class="btn btn-link btn-icon float-end" style="height:20px;"><i class="fa fa-calendar"></i></button></div>
                         <div class="card-body">
                             <table class="table">
                                 <thead>
@@ -186,4 +186,30 @@
 {% endblock %}
 
 {% block page_script %}
+    <script>
+      $(function() {
+        $("#{{ form.phone_number.id_for_label }}").inputmask("(999) 999-9999");
+
+        let datePickerNextDate = $("#{{ form.next_service_date.id_for_label }}");
+
+        datePickerNextDate.inputmask("99-99-9999");
+
+        if(datePickerNextDate.length) {
+          let date = new Date({{ form.next_service_date.value|date:'Y' }}, ({{ form.next_service_date.value|date:'m' }} - 1), {{ form.next_service_date.value|date:'d' }});
+
+          datePickerNextDate.datepicker({
+            format: "mm-dd-yyyy",
+            todayHighlight: true,
+            autoclose: true
+          });
+
+          datePickerNextDate.datepicker('setDate', date);
+        }
+      });
+    </script>
+{% endblock %}
+
+{% block add_page_plugins %}
+    <script src="{% static 'assets/vendors/inputmask/jquery.inputmask.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js' %}"></script>
 {% endblock %}

@@ -25,6 +25,8 @@
     <orderEntry type="library" name="buttons.html5" level="application" />
     <orderEntry type="library" name="buttons.print" level="application" />
     <orderEntry type="library" name="luxon" level="application" />
+    <orderEntry type="library" name="cde8bda604" level="application" />
+    <orderEntry type="module" module-name="demo2" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
