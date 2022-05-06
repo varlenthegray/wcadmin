@@ -9,6 +9,14 @@
     <link rel="stylesheet" href="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css' %}">
 {% endblock %}
 
+{% block page_css %}
+    <style>
+        .delete-equipment {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
 {% block page_content %}
     {% if not form.is_active.value %}<div class="alert alert-danger" role="alert"><i class="fa fa-user-alt"></i>Customer is inactive or deleted.</div>{% endif %}
     {% if form.requires_supporting_technician.value %}<div class="alert alert-warning" role="alert"><i class="fa fa-2"></i>Requires two technicians!</div>{% endif %}
@@ -213,6 +221,18 @@
                     <button type="button" class="btn btn-primary" id="modalCalculateServiceYes">Yes</button>
                 </div>
             </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block toast %}
+    <div class="toast alert-fill-success" role="alert" aria-live="assertive" aria-atomic="true" id="deletedToastSuccess">
+        <div class="toast-header alert-fill-light">
+            <strong class="me-auto">Deleted Equipment</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Equipment has been deleted and job site has been updated.
         </div>
     </div>
 {% endblock %}

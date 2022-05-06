@@ -5570,7 +5570,7 @@ margin-top: -20px;}
   opacity: 0;
 }
 .toast:not(.show) {
-  display: none;
+  display: show;
 }
 
 .toast-container {

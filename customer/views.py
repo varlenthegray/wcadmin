@@ -2,8 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from .models import Customer
-from jobsite.models import JobSite
-from django.http import HttpResponseRedirect, HttpResponseBadRequest
+from jobsite.models import JobSite, JobSiteEquipment
+from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponse
 from .forms import AddCustomerForm, ViewCustomerForm, ViewJobSiteForm
 from django.utils import timezone
 from datetime import datetime, timedelta
@@ -113,11 +113,14 @@ def view_customer(request, pk):
     else:
         jspk = 0
 
+    all_equipment = JobSiteEquipment.objects.filter(job_site=jspk)
+
     context = {
         'form': edit_customer,
         'form2': edit_job_site,
         'all_job_sites': all_job_sites,
-        'job_site_id': jspk
+        'job_site_id': jspk,
+        'all_equipment': all_equipment
     }
 
     return render(request, 'customer/view_customer.html', context=context)
@@ -130,7 +133,18 @@ class ViewSpecificJobSite(LoginRequiredMixin, generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form2'] = ViewJobSiteForm(instance=JobSite.objects.get(pk=self.object.pk))
         context['job_site_id'] = self.object.pk
+        context['form2'] = ViewJobSiteForm(instance=JobSite.objects.get(pk=context['job_site_id']))
         context['all_job_sites'] = JobSite.objects.filter(customer=self.object.customer)
+        context['all_equipment'] = JobSiteEquipment.objects.filter(job_site=context['job_site_id'])
         return context
+
+
+class ViewDeleteEquipmentFromJobSite(LoginRequiredMixin, generic.DeleteView):
+    model = JobSiteEquipment
+    template_name = 'customer/view_customer/job_site.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return HttpResponse('success')

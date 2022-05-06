@@ -1,10 +1,10 @@
 from django.db import models
 from django.conf import settings
-from customer.models import Customer
+from customer.models import Customer, Equipment
 
 
 class JobSite(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=200)
     city = models.CharField(max_length=100)
@@ -19,3 +19,11 @@ class JobSite(models.Model):
     access_code = models.CharField(max_length=10)
     bill_parent = models.BooleanField(default=False)
     requires_supporting_technician = models.BooleanField(default=False)
+
+
+class JobSiteEquipment(models.Model):
+    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    job_site = models.ForeignKey(JobSite, on_delete=models.CASCADE)
+    added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    installed_on = models.DateField(auto_now_add=True)

@@ -43,27 +43,8 @@ class Customer(models.Model):
         return "%s %s" % (self.first_name, self.last_name)
 
 
-class CustomerEquipment(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
-    installation_date = models.DateField()
-    is_active = models.BooleanField(default=True)
-
-
-class CustomerEquipmentPhotos(models.Model):
-    customer_equipment = models.ForeignKey(CustomerEquipment, on_delete=models.CASCADE)
-    photo = models.URLField()
-    created_on = models.DateField(editable=False, auto_now_add=True)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, editable=False)
-
-
-class CustomerNotesCategory(models.Model):
-    category_name = models.CharField(max_length=100)
-
-
 class CustomerNotes(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    category = models.ForeignKey(CustomerNotesCategory, on_delete=models.CASCADE)
     subject = models.CharField(max_length=100)
     timestamp = models.DateTimeField(editable=False, auto_now_add=True)
     note = models.TextField()

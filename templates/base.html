@@ -54,6 +54,8 @@ License: For each use you must have a valid license purchased only from above li
     <!-- End layout styles -->
 
     <link rel="shortcut icon" href="{% static 'assets/images/favicon.png' %}" />
+
+    {% block page_css %}{% endblock %}
 </head>
 <body>
 <div class="main-wrapper">
@@ -246,6 +248,10 @@ License: For each use you must have a valid license purchased only from above li
                     </div>
                 </div>
             {% endblock %}
+
+        <div class="toast-container position-absolute bottom-0 end-0 p-3">
+            {% block toast %}{% endblock %}
+        </div>
         </div>
 
         <!-- partial:../../partials/_footer.html -->
