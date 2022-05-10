@@ -107,7 +107,7 @@ def view_customer(request, pk):
     edit_job_site = ViewJobSiteForm(instance=job_site, prefix='job')
 
     if request.method == 'POST':
-        if 'edit_customer' in request.POST:
+        if 'customer-edit_customer' in request.POST:
             edit_customer = ViewCustomerForm(request.POST, instance=customer, prefix='customer')
 
             if edit_customer.is_valid():
