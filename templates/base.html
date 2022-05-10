@@ -45,8 +45,8 @@ License: For each use you must have a valid license purchased only from above li
 
     <!-- inject:css -->
     <link rel="stylesheet" href="{% static 'assets/fonts/feather-font/css/iconfont.css' %}">
-    {#    <script src="{% static 'fontawesomefree/js/all.min.js' %}"></script>#}
     <script src="https://kit.fontawesome.com/cde8bda604.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.css" integrity="sha512-NXUhxhkDgZYOMjaIgd89zF2w51Mub53Ru3zCNp5LTlEzMbNNAjTjDbpURYGS5Mop2cU4b7re1nOIucsVlrx9fA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- endinject -->
 
     <!-- Layout styles -->
@@ -248,10 +248,6 @@ License: For each use you must have a valid license purchased only from above li
                     </div>
                 </div>
             {% endblock %}
-
-        <div class="toast-container position-absolute bottom-0 end-0 p-3">
-            {% block toast %}{% endblock %}
-        </div>
         </div>
 
         <!-- partial:../../partials/_footer.html -->
@@ -294,6 +290,7 @@ License: For each use you must have a valid license purchased only from above li
 <!-- inject:js -->
 <script src="{% static 'assets/vendors/feather-icons/feather.min.js' %}"></script>
 <script src="{% static 'assets/js/template.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js" integrity="sha512-lOrm9FgT1LKOJRUXF3tp6QaMorJftUjowOWiDcG5GFZ/q7ukof19V0HKx/GWzXCdt9zYju3/KhBNdCLzK8b90Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- endinject -->
 
 {% block page_script %}{% endblock %}

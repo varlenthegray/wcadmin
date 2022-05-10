@@ -7,12 +7,15 @@
 
 {% block css_plugins %}
     <link rel="stylesheet" href="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/jquery-tags-input/jquery.tagsinput.min.css' %}">
 {% endblock %}
 
 {% block page_content %}
     <div class="row">
         <div class="col-sm-8">
             <div class="card">
+                <div class="card-header"><span class="card-title">Add Equipment</span></div>
+
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
@@ -56,13 +59,21 @@
                                     {{ form.sales_price|add_class:"form-control"|attr:"placeholder:$0.00"|attr:"autocomplete:off" }}
                                 </div>
                             </div><!-- Col -->
-                            <div class="col-sm-2 text-end">
+                            <div class="col-sm-2 d-flex align-items-center">
                                 <div class="mb-3">
                                     {{ form.is_active.errors }}
                                     <label class="form-check-label me-2" for="{{ form.is_active.id_for_label }}">Active</label>
                                     {{ form.is_active|add_class:"form-check-input float-end" }}
                                 </div>
                             </div><!-- Col -->
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-sm-12">
+                                {{ form.tags.errors }}
+                                <label class="form-label" for="{{ form.tags.id_for_label }}">Tags</label>
+                                {{ form.tags|add_class:"form-control"|attr:"placeholder:Enter some tags"|attr:"autocomplete:off" }}
+                            </div>
                         </div>
 
                         <div class="row">
@@ -77,8 +88,24 @@
     </div>
 {% endblock %}
 
-{% block page_script %}{% endblock %}
-
 {% block page_plugins %}
     <script src="{% static 'assets/vendors/inputmask/jquery.inputmask.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/jquery-tags-input/jquery.tagsinput.min.js' %}"></script>
+{% endblock %}
+
+{% block page_script %}
+    <script>
+      $(function() {
+        $('#{{ form.tags.id_for_label }}').tagsInput({
+          'width': '100%',
+          'height': '60%',
+          'interactive': true,
+          'defaultText': 'Add More',
+          'removeWithBackspace': true,
+          'minChars': 0,
+          'maxChars': 50,
+          'placeholderColor': '#666666'
+        });
+      });
+    </script>
 {% endblock %}

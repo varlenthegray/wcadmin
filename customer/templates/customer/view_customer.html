@@ -7,14 +7,7 @@
 
 {% block css_plugins %}
     <link rel="stylesheet" href="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css' %}">
-{% endblock %}
-
-{% block page_css %}
-    <style>
-        .delete-equipment {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'assets/vendors/jquery-tags-input/jquery.tagsinput.min.css' %}">
 {% endblock %}
 
 {% block page_content %}
@@ -24,12 +17,13 @@
     <div class="row mb-3">
         <div class="col-sm-6">
             <div class="card">
-                <div class="card-header">Customer Information</div>
+                <div class="card-header"><span class="card-title">Customer Information</span></div>
 
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
                         {{ form.non_field_errors }}
+                        {{ form.edit_customer }}
                         <div class="row">
                             <div class="col-sm-2">
                                 <div class="mb-3">
@@ -225,18 +219,6 @@
     </div>
 {% endblock %}
 
-{% block toast %}
-    <div class="toast alert-fill-success" role="alert" aria-live="assertive" aria-atomic="true" id="deletedToastSuccess">
-        <div class="toast-header alert-fill-light">
-            <strong class="me-auto">Deleted Equipment</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-            Equipment has been deleted and job site has been updated.
-        </div>
-    </div>
-{% endblock %}
-
 {% block page_script %}
     <script>
       $(function() {
@@ -251,6 +233,7 @@
     <script src="https://cdn.jsdelivr.net/npm/luxon@2.3.2/build/global/luxon.min.js"></script>
     <script src="{% static 'assets/vendors/inputmask/jquery.inputmask.min.js' %}"></script>
     <script src="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/jquery-tags-input/jquery.tagsinput.min.js' %}"></script>
 {% endblock %}
 
 {% block add_page_plugins %}{% endblock %}

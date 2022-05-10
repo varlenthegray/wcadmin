@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <strong class="ms-2">Viewing: {{ form2.name.value }}</strong>
+        <strong class="ms-2 card-title">Viewing: <abbr title="ID: {{ job_site_id }}">{{ form2.name.value }}</abbr></strong>
 
         <button type="button" class="btn btn-link btn-icon float-end"><i class="fa fa-plus-circle"></i></button>
     </div>
@@ -34,6 +34,8 @@
         <form method="post">
             {% csrf_token %}
             {{ form2.non_field_errors }}
+            {{ form2.edit_job_site }}
+            <input type="hidden" name="temp_value" id="{{ job_site_id }}" />
 
             <div class="row">
                 <div class="col-sm-4">
@@ -123,37 +125,38 @@
                 <div class="col-sm-12 table-responsive">
                     <h5 class="mb-2">
                         Equipment
-                        <button type="button" class="btn btn-link btn-icon float-end"><i class="fa fa-plus-circle"></i></button>
-                        <button type="button" class="btn btn-link btn-icon float-end" id="enableEditEquipment"><i class="fa fa-edit"></i></button>
+                        <button type="button" class="btn btn-link btn-icon float-end" id="addEquipment"><i class="fa fa-plus-circle"></i></button>
                     </h5>
 
                     <table class="table table-sm">
                         <thead>
                         <tr>
-                            <th class="delete-equipment"></th>
-                            <th>SKU</th>
+                            <th width="2%"></th>
                             <th>Name</th>
-                            <th>Installed On</th>
+                            <th width="20%">Installed On</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% if all_equipment %}
-                            {% for equipment_line in all_equipment %}
+                        {% if existing_equipment %}
+                            {% for equipment_line in existing_equipment %}
                                 <tr>
-                                    <td class="delete-equipment">
-                                        <button type="button" class="btn btn-danger btn-icon deleteEquipmentRow" data-equip-id="{{ equipment_line.pk }}">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
+                                    <td>
+                                        <button type="button" class="btn btn-link btn-icon editEquipmentRow" data-equip-id="{{ equipment_line.pk }}"><i class="fa fa-pencil"></i></button>
                                     </td>
-                                    <td>{{ equipment_line.equipment.sku }}</td>
-                                    <td>{{ equipment_line.equipment.name }}</td>
+                                    <td>
+                                        {{ equipment_line.equipment.name }}
+
+                                        {% if equipment_line.tags %}
+                                            {% for tag in equipment_line.tags_as_list %}
+                                                <span class="badge bg-primary {% if forloop.first %}ms-2{% elif forloop.last %}me-2{% endif %}">{{ tag }}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </td>
                                     <td>{{ equipment_line.installed_on }}</td>
                                 </tr>
                             {% endfor %}
                         {% else %}
-                            <tr>
-                                <td colspan="3" class="text-center"><i>No equipment found.</i></td>
-                            </tr>
+                            <tr><td colspan="3" class="text-center"><i>No equipment found.</i></td></tr>
                         {% endif %}
                         </tbody>
                     </table>
@@ -182,6 +185,35 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-danger" id="confirmedDeleteEquipment">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" id="editProductTag"></div>
+
+<div class="modal" tabindex="-1" id="addEquipmentJobSite">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Equipment to JobSite</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    {% for equipment_line in all_equipment %}
+                        <div class="col-sm-6">
+                            <div class="form-check mb-3">
+                                <input type="checkbox" class="form-check-input" id="{{ equipment_line.pk }}" value="{{ equipment_line.pk }}">
+                                <label class="form-check-label" for="{{ equipment_line.pk }}"><abbr title="{{ equipment_line.sku }} ">{{ equipment_line.name }}</abbr></label>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Add Equipment</button>
             </div>
         </div>
     </div>
@@ -232,26 +264,35 @@
       });
     });
 
-    $("#enableEditEquipment").on("click", function() {
-      $(".delete-equipment").toggle();
+    $("#addEquipment").on("click", function() {
+      $("#addEquipmentJobSite").modal('show');
     });
 
-    let deleteEquipmentRowID = null, deleteClickedRow = null;
+    let editEquipmentRowID = null, editEquipmentRow = null;
 
-    $(".deleteEquipmentRow").on("click", function(e) {
-      deleteEquipmentRowID = $(this).data('equip-id');
-      deleteClickedRow = $(this);
-      $("#confirmDeleteEquipmentModal").modal('show');
-    });
-
-    $("#confirmedDeleteEquipment").on("click", function() {
-      let call = "{% url 'viewJobSiteDeleteEquipment' pk=999999999 %}".replace(/999999999/, deleteEquipmentRowID);
+    $(".editEquipmentRow").on("click", function() {
+      editEquipmentRowID = $(this).data('equip-id');
+      editEquipmentRow = $(this);
+      let call = "{% url 'viewEditEquipmentLine' pk=999999999 %}".replace(/999999999/, editEquipmentRowID);
 
       $.ajax(call).done(function(response) {
-        deleteClickedRow.parents('tr').html('');
-        $("#confirmDeleteEquipmentModal").modal('hide');
+        $("#editProductTag").html(response).modal('show');
+      });
+    });
 
-        $("#deletedToastSuccess").toast('show');
+    $("#editProductTag").on("click", "#editDeleteEquipment", function() {
+      let call = "{% url 'viewJobSiteDeleteEquipment' pk=999999999 %}".replace(/999999999/, editEquipmentRowID);
+
+      $.ajax(call).done(function() {
+        editEquipmentRow.parents('tr').html('');
+
+        $("#editProductTag").modal('hide');
+
+        new Noty({
+          text: "Successfully deleted equipment and saved Job Site.",
+          theme: 'bootstrap-v4',
+          type: 'success'
+        }).show();
       });
     });
   });

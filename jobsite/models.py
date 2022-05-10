@@ -20,10 +20,20 @@ class JobSite(models.Model):
     bill_parent = models.BooleanField(default=False)
     requires_supporting_technician = models.BooleanField(default=False)
 
+    def __str__(self):
+        return '%s' % self.name
+
 
 class JobSiteEquipment(models.Model):
     equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     job_site = models.ForeignKey(JobSite, on_delete=models.CASCADE)
-    added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    installed_on = models.DateField(auto_now_add=True)
+    tags = models.CharField(max_length=512, blank=True, null=True)
+    added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, editable=False)
+    installed_on = models.DateField(blank=True, null=True)
+
+    def tags_as_list(self):
+        return self.tags.split(',')
+
+    def __str__(self):
+        return '%s (%s)' % (self.job_site.name, self.equipment)

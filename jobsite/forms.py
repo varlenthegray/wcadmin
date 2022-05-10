@@ -1,5 +1,5 @@
 from django import forms
-from .models import JobSite
+from .models import JobSite, JobSiteEquipment
 
 
 class ViewJobSiteForm(forms.ModelForm):

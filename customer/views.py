@@ -3,8 +3,9 @@ from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from .models import Customer
 from jobsite.models import JobSite, JobSiteEquipment
+from equipment.models import Equipment
 from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponse
-from .forms import AddCustomerForm, ViewCustomerForm, ViewJobSiteForm
+from .forms import AddCustomerForm, ViewCustomerForm, ViewJobSiteForm, EditJobSiteEquipment
 from django.utils import timezone
 from datetime import datetime, timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -106,21 +107,42 @@ def view_customer(request, pk):
     edit_job_site = ViewJobSiteForm(instance=job_site)
 
     if request.method == 'POST':
-        pass
+        if 'edit_customer' in request.POST:
+            edit_customer = ViewCustomerForm(request.POST, instance=customer)
+
+            if edit_customer.is_valid():
+                edit_customer.save()
+
+        if 'edit_job_site' in request.POST:
+            print("Editing Job Site")
+            edit_job_site = ViewJobSiteForm(request.POST, instance=job_site)
+            print(request.POST)
+
+            if edit_job_site.is_valid():
+                edit_job_site.save()
+                print("Saving Jobsite")
+
+        if 'edit_job_site_equipment' in request.POST:
+            job_site_equipment_line = JobSiteEquipment.objects.filter(request.POST['equipment_line_id'])
+            edit_job_site_equipment = EditJobSiteEquipment(request.POST, instance=job_site_equipment_line)
+
+            if edit_job_site_equipment.is_valid():
+                edit_job_site_equipment.save()
 
     if job_site:
         jspk = job_site.pk
     else:
         jspk = 0
 
-    all_equipment = JobSiteEquipment.objects.filter(job_site=jspk)
+    existing_equipment = JobSiteEquipment.objects.filter(job_site=jspk)
 
     context = {
         'form': edit_customer,
         'form2': edit_job_site,
         'all_job_sites': all_job_sites,
         'job_site_id': jspk,
-        'all_equipment': all_equipment
+        'existing_equipment': existing_equipment,
+        'all_equipment': Equipment.objects.all()
     }
 
     return render(request, 'customer/view_customer.html', context=context)
@@ -136,7 +158,8 @@ class ViewSpecificJobSite(LoginRequiredMixin, generic.UpdateView):
         context['job_site_id'] = self.object.pk
         context['form2'] = ViewJobSiteForm(instance=JobSite.objects.get(pk=context['job_site_id']))
         context['all_job_sites'] = JobSite.objects.filter(customer=self.object.customer)
-        context['all_equipment'] = JobSiteEquipment.objects.filter(job_site=context['job_site_id'])
+        context['existing_equipment'] = JobSiteEquipment.objects.filter(job_site=context['job_site_id'])
+        context['all_equipment'] = Equipment.objects.all()
         return context
 
 
@@ -148,3 +171,14 @@ class ViewDeleteEquipmentFromJobSite(LoginRequiredMixin, generic.DeleteView):
         self.object = self.get_object()
         self.object.delete()
         return HttpResponse('success')
+
+
+class ViewEditEquipmentLine(LoginRequiredMixin, generic.UpdateView):
+    model = JobSiteEquipment
+    template_name = 'customer/view_customer/edit_equipment_line.html'
+    form_class = EditJobSiteEquipment
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['equipment_line_id'] = self.object.pk
+        return context
