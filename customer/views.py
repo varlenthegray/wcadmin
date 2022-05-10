@@ -103,19 +103,19 @@ def view_customer(request, pk):
     customer = get_object_or_404(Customer, id=pk)
     job_site = JobSite.objects.filter(customer=pk).first()
     all_job_sites = JobSite.objects.filter(customer=pk)
-    edit_customer = ViewCustomerForm(instance=customer)
-    edit_job_site = ViewJobSiteForm(instance=job_site)
+    edit_customer = ViewCustomerForm(instance=customer, prefix='customer')
+    edit_job_site = ViewJobSiteForm(instance=job_site, prefix='job')
 
     if request.method == 'POST':
         if 'edit_customer' in request.POST:
-            edit_customer = ViewCustomerForm(request.POST, instance=customer)
+            edit_customer = ViewCustomerForm(request.POST, instance=customer, prefix='customer')
 
             if edit_customer.is_valid():
                 edit_customer.save()
 
-        if 'edit_job_site' in request.POST:
+        if 'job-edit_job_site' in request.POST:
             print("Editing Job Site")
-            edit_job_site = ViewJobSiteForm(request.POST, instance=job_site)
+            edit_job_site = ViewJobSiteForm(request.POST, prefix='job')
             print(request.POST)
 
             if edit_job_site.is_valid():
