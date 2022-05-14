@@ -20,7 +20,7 @@
                 <div class="card-header"><span class="card-title">Customer Information</span></div>
 
                 <div class="card-body">
-                    <form method="post">
+                    <form method="post" id="customerForm">
                         {% csrf_token %}
                         {{ form.non_field_errors }}
                         {{ form.edit_customer }}
@@ -187,7 +187,7 @@
 
                         <div class="row">
                             <div class="col-sm-4 offset-sm-8">
-                                <button type="submit" class="btn btn-primary submit float-end">Update Customer</button>
+                                <button type="submit" class="btn btn-primary submit float-end" id="updateCustomerBtn" style="display:none;">Update Customer</button>
                             </div>
                         </div>
                     </form>
@@ -225,6 +225,10 @@
         $("#{{ form.main_phone.id_for_label }}").inputmask("(999) 999-9999");
         $("#{{ form.alternate_phone.id_for_label }}").inputmask("(999) 999-9999");
         $("#{{ form.fax_number.id_for_label }}").inputmask("(999) 999-9999");
+      });
+
+      $("#customerForm").on("keyup", function() {
+        $("#updateCustomerBtn").show();
       });
     </script>
 {% endblock %}

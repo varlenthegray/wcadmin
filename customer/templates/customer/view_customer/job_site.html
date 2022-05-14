@@ -19,7 +19,7 @@
                     </button>
                 {% endfor %}
                 <div class="dropdown-divider"></div>
-                <button type="button" class="dropdown-item btn btn-sm btn-primary btn-icon-text">
+                <button type="button" class="dropdown-item btn btn-sm btn-primary btn-icon-text" data-bs-toggle="modal" data-bs-target="#addJobSiteModal">
                     <i class="btn-icon-prepend pb-2px fa fa-plus"></i> Add New Job Site
                 </button>
             </div>
@@ -27,164 +27,67 @@
 
         <strong class="ms-2 card-title">Viewing: <abbr title="ID: {{ job_site_id }}">{{ form2.name.value }}</abbr></strong>
 
-        <button type="button" class="btn btn-link btn-icon float-end"><i class="fa fa-plus-circle"></i></button>
+        <button type="button" class="btn btn-link btn-icon float-end" data-bs-toggle="modal" data-bs-target="#addJobSiteModal"><i class="fa fa-plus-circle"></i></button>
     </div>
 
     <div class="card-body">
-        <form method="post">
+        <form method="post" id="jobsiteForm">
             {% csrf_token %}
             {{ form2.non_field_errors }}
             {{ form2.edit_job_site }}
-            <input type="hidden" name="temp_value" id="{{ job_site_id }}" />
+            <input type="hidden" value="{{ job_site_id }}" name="job_id" />
+            {{ form2.customer|attr:"hidden" }}
 
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="mb-3">
-                        {{ form2.name.errors }}
-                        <label class="form-label" for="{{ form2.name.id_for_label }}">Contact Name</label>
-                        {{ form2.name|add_class:"form-control"|attr:"placeholder:Contact Name"|attr:"autocomplete:off" }}
-                    </div>
-                </div><!-- Col -->
-                <div class="col-sm-4">
-                    <div class="mb-3">
-                        {{ form2.phone_number.errors }}
-                        <label class="form-label" for="{{ form2.phone_number.id_for_label }}">Contact Phone</label>
-                        {{ form2.phone_number|add_class:"form-control"|attr:"placeholder:(___) ___-____"|attr:"autocomplete:off" }}
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="mb-3">
-                        {{ form2.email.errors }}
-                        <label class="form-label" for="{{ form2.email.id_for_label }}">Contact Email</label>
-                        {{ form2.email|add_class:"form-control"|attr:"placeholder:abc@abc.com"|attr:"type:email"|attr:"autocomplete:off" }}
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-4">
-                    {{ form2.next_service_date.errors }}
-                    <label class="form-label" for="{{ form2.next_service_date.id_for_label }}">Next Service Date</label>
-                    <div class="input-group date datepicker mb-3" id="datePickerServiceDate">
-                        {{ form2.next_service_date|add_class:"form-control"|attr:"placeholder:Next Service Date"|attr:"autocomplete:off" }}
-                        <span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="mb-3">
-                        {{ form2.service_interval.errors }}
-                        <label class="form-label" for="{{ form2.service_interval.id_for_label }}">Service Interval</label>
-                        {{ form2.service_interval|add_class:"form-control"|attr:"placeholder:12"|attr:"autocomplete:off"|attr:"type:number"|attr:"min:2"|attr:"max:120" }}
-                    </div>
-                </div>
-                <div class="col-sm-5 text-end">
-                    <div class="mb-3 form-check">
-                        {{ form2.active.errors }}
-                        <label class="form-check-label me-4" for="{{ form2.active.id_for_label }}">Active</label>
-                        {{ form2.active|add_class:"form-check-input float-end" }}
-                    </div>
-                    <div class="mb-3 form-check">
-                        {{ form2.requires_supporting_technician.errors }}
-                        <label class="form-check-label me-4" for="{{ form2.requires_supporting_technician.id_for_label }}">Requires Two Technicians</label>
-                        {{ form2.requires_supporting_technician|add_class:"form-check-input float-end" }}
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="mb-3">
-                        {{ form2.address.errors }}
-                        <label class="form-label" for="{{ form2.address.id_for_label }}">Installation Address</label>
-                        {{ form2.address|add_class:"form-control"|attr:"placeholder:1234 Hard Street"|attr:"autocomplete:off" }}
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mb-3 pb-2">
-                <div class="col-sm-4">
-                    {{ form2.city.errors }}
-                    <label class="form-label" for="{{ form2.city.id_for_label }}">Installation City</label>
-                    {{ form2.city|add_class:"form-control"|attr:"placeholder:Weaverville"|attr:"autocomplete:off" }}
-                </div><!-- Col -->
-                <div class="col-sm-4">
-                    {{ form2.state.errors }}
-                    <label class="form-label" for="{{ form2.state.id_for_label }}">Installation State</label>
-                    {{ form2.state|add_class:"form-control"|attr:"placeholder:NC"|attr:"value:NC"|attr:"autocomplete:off" }}
-                </div><!-- Col -->
-                <div class="col-sm-4">
-                    {{ form2.zip.errors }}
-                    <label class="form-label" for="{{ form2.zip.id_for_label }}">Installation Zip</label>
-                    {{ form2.zip|add_class:"form-control"|attr:"placeholder:28806"|attr:"autocomplete:off" }}
-                </div><!-- Col -->
-            </div><!-- Row -->
-
-            <hr class="bg-secondary opacity-100" />
-
-            <div class="row pt-2 mb-3">
-                <div class="col-sm-12 table-responsive">
-                    <h5 class="mb-2">
-                        Equipment
-                        <button type="button" class="btn btn-link btn-icon float-end" id="addEquipment"><i class="fa fa-plus-circle"></i></button>
-                    </h5>
-
-                    <table class="table table-sm">
-                        <thead>
-                        <tr>
-                            <th width="2%"></th>
-                            <th>Name</th>
-                            <th width="20%">Installed On</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% if existing_equipment %}
-                            {% for equipment_line in existing_equipment %}
-                                <tr>
-                                    <td>
-                                        <button type="button" class="btn btn-link btn-icon editEquipmentRow" data-equip-id="{{ equipment_line.pk }}"><i class="fa fa-pencil"></i></button>
-                                    </td>
-                                    <td>
-                                        {{ equipment_line.equipment.name }}
-
-                                        {% if equipment_line.tags %}
-                                            {% for tag in equipment_line.tags_as_list %}
-                                                <span class="badge bg-primary {% if forloop.first %}ms-2{% elif forloop.last %}me-2{% endif %}">{{ tag }}</span>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ equipment_line.installed_on }}</td>
-                                </tr>
-                            {% endfor %}
-                        {% else %}
-                            <tr><td colspan="3" class="text-center"><i>No equipment found.</i></td></tr>
-                        {% endif %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            {% include 'customer/view_customer/job_site_form.html' %}
 
             <div class="row">
                 <div class="col-sm-4 offset-sm-8">
-                    <button type="submit" class="btn btn-primary submit float-end">Update Installation</button>
+                    <button type="submit" class="btn btn-primary submit float-end" style="display:none;" id="updateJobSiteBtn">Update Job Site</button>
                 </div>
             </div>
         </form>
-    </div>
-</div>
 
-<div class="modal" tabindex="-1" id="confirmDeleteEquipmentModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Really remove product?</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete this equipment?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmedDeleteEquipment">Yes</button>
+        <hr class="bg-secondary opacity-100" />
+
+        <div class="row pt-2 mb-3">
+            <div class="col-sm-12 table-responsive">
+                <h5 class="mb-2">
+                    Equipment
+                    <button type="button" class="btn btn-link btn-icon float-end" id="addEquipment"><i class="fa fa-plus-circle"></i></button>
+                </h5>
+
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th width="2%"></th>
+                        <th>Name</th>
+                        <th width="20%">Installed On</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if existing_equipment %}
+                        {% for equipment_line in existing_equipment %}
+                            <tr>
+                                <td>
+                                    <button type="button" class="btn btn-link btn-icon editEquipmentRow" data-equip-id="{{ equipment_line.pk }}"><i class="fa fa-pencil"></i></button>
+                                </td>
+                                <td>
+                                    {{ equipment_line.equipment.name }}
+
+                                    {% if equipment_line.tags %}
+                                        {% for tag in equipment_line.tags_as_list %}
+                                            <span class="badge bg-primary {% if forloop.first %}ms-2{% elif forloop.last %}me-2{% endif %}">{{ tag }}</span>
+                                        {% endfor %}
+                                    {% endif %}
+                                </td>
+                                <td>{{ equipment_line.installed_on }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="3" class="text-center"><i>No equipment found.</i></td></tr>
+                    {% endif %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -192,31 +95,33 @@
 
 <div class="modal" tabindex="-1" id="editProductTag"></div>
 
-<div class="modal" tabindex="-1" id="addEquipmentJobSite">
+<div class="modal" tabindex="-1" id="addJobSiteModal">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Equipment to JobSite</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    {% for equipment_line in all_equipment %}
-                        <div class="col-sm-6">
-                            <div class="form-check mb-3">
-                                <input type="checkbox" class="form-check-input" id="{{ equipment_line.pk }}" value="{{ equipment_line.pk }}">
-                                <label class="form-check-label" for="{{ equipment_line.pk }}"><abbr title="{{ equipment_line.sku }} ">{{ equipment_line.name }}</abbr></label>
-                            </div>
-                        </div>
-                    {% endfor %}
+            <form method="post" id="addJobSiteCustomerForm" action="{% url 'saveJobSiteToCustomer' %}">
+                {% csrf_token %}
+                <input type="hidden" value="{{ customer_id }}" name="job-customer" disabled />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Job Site to Customer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Add Equipment</button>
-            </div>
+
+                <div class="modal-body">
+                    {% include 'customer/view_customer/job_site_form.html' %}
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Job Site</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+
+<div class="modal" tabindex="-1" id="addEquipmentJobSite">
+    {% include 'customer/view_customer/add_equipment_jobsite.html' %}
 </div>
 
 <script>
@@ -235,6 +140,22 @@
       });
 
       datePickerNextDate.datepicker('setDate', date);
+    }
+
+    let equipmentDatePicker = $("#{{ add_equipment_form.installed_on.id_for_label }}");
+
+    equipmentDatePicker.inputmask("99-99-9999");
+
+    if(equipmentDatePicker.length) {
+      let date = new Date();
+
+      equipmentDatePicker.datepicker({
+        format: "mm-dd-yyyy",
+        todayHighlight: true,
+        autoclose: true
+      });
+
+      equipmentDatePicker.datepicker('setDate', date);
     }
 
     let currentServiceInt = {{ form2.service_interval.value }},
@@ -264,7 +185,7 @@
       });
     });
 
-    $("#addEquipment").on("click", function() {
+    $("#customerJobSiteCard").on("click", "#addEquipment", function() {
       $("#addEquipmentJobSite").modal('show');
     });
 
@@ -294,6 +215,31 @@
           type: 'success'
         }).show();
       });
+    });
+
+    $("#jobsiteForm").on("keyup", function() {
+      $("#updateJobSiteBtn").show();
+    });
+
+    $('#{{ add_equipment_form.tags.id_for_label }}').tagsInput({
+      'width': '100%',
+      'height': '60%',
+      'interactive': true,
+      'defaultText': 'Add Tags',
+      'removeWithBackspace': true,
+      'minChars': 0,
+      'maxChars': 50,
+      'placeholderColor': '#666666'
+    });
+
+    let addJobSiteModal = document.getElementById('addJobSiteModal');
+
+    addJobSiteModal.addEventListener('shown.bs.modal', function() {
+      $(':input','#addJobSiteCustomerForm')
+          .not(':button, :submit, :reset, :hidden')
+          .val('')
+          .prop('checked', false)
+          .prop('selected', false);
     });
   });
 </script>

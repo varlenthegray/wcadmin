@@ -5,6 +5,8 @@
         <form method="post">
             {% csrf_token %}
             {{ form.edit_job_site_equipment }}
+            <input type="hidden" value="{{ equipment_line_id }}" name="equipment_line_id" />
+
             <div class="modal-header">
                 <h5 class="modal-title">Edit Tags for <u>{{ object.equipment.name }}</u></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>

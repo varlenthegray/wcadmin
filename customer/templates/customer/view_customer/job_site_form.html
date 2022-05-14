@@ -1,0 +1,73 @@
+{% load widget_tweaks %}
+
+<div class="row mb-3">
+    <div class="col-sm-4">
+        {{ form2.name.errors }}
+        <label class="form-label" for="{{ form2.name.id_for_label }}">Contact Name</label>
+        {{ form2.name|add_class:"form-control"|attr:"placeholder:Contact Name"|attr:"autocomplete:off" }}
+    </div><!-- Col -->
+    <div class="col-sm-4">
+        {{ form2.phone_number.errors }}
+        <label class="form-label" for="{{ form2.phone_number.id_for_label }}">Contact Phone</label>
+        {{ form2.phone_number|add_class:"form-control"|attr:"placeholder:(___) ___-____"|attr:"autocomplete:off" }}
+    </div>
+    <div class="col-sm-4">
+        {{ form2.email.errors }}
+        <label class="form-label" for="{{ form2.email.id_for_label }}">Contact Email</label>
+        {{ form2.email|add_class:"form-control"|attr:"placeholder:abc@abc.com"|attr:"type:email"|attr:"autocomplete:off" }}
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-sm-4">
+        {{ form2.next_service_date.errors }}
+        <label class="form-label" for="{{ form2.next_service_date.id_for_label }}">Next Service Date</label>
+        <div class="input-group date datepicker" id="datePickerServiceDate">
+            {{ form2.next_service_date|add_class:"form-control"|attr:"placeholder:Next Service Date"|attr:"autocomplete:off" }}
+            <span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        {{ form2.service_interval.errors }}
+        <label class="form-label" for="{{ form2.service_interval.id_for_label }}">Service Interval</label>
+        {{ form2.service_interval|add_class:"form-control"|attr:"placeholder:12"|attr:"autocomplete:off"|attr:"type:number"|attr:"min:2"|attr:"max:120" }}
+    </div>
+    <div class="col-sm-5 text-end">
+        <div class="form-check">
+            {{ form2.active.errors }}
+            <label class="form-check-label me-4" for="{{ form2.active.id_for_label }}">Active</label>
+            {{ form2.active|add_class:"form-check-input float-end" }}
+        </div>
+        <div class="form-check">
+            {{ form2.requires_supporting_technician.errors }}
+            <label class="form-check-label me-4" for="{{ form2.requires_supporting_technician.id_for_label }}">Requires Two Technicians</label>
+            {{ form2.requires_supporting_technician|add_class:"form-check-input float-end" }}
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-sm-12">
+        {{ form2.address.errors }}
+        <label class="form-label" for="{{ form2.address.id_for_label }}">Installation Address</label>
+        {{ form2.address|add_class:"form-control"|attr:"placeholder:1234 Hard Street"|attr:"autocomplete:off" }}
+    </div>
+</div>
+
+<div class="row mb-3 pb-2">
+    <div class="col-sm-4">
+        {{ form2.city.errors }}
+        <label class="form-label" for="{{ form2.city.id_for_label }}">Installation City</label>
+        {{ form2.city|add_class:"form-control"|attr:"placeholder:Weaverville"|attr:"autocomplete:off" }}
+    </div><!-- Col -->
+    <div class="col-sm-4">
+        {{ form2.state.errors }}
+        <label class="form-label" for="{{ form2.state.id_for_label }}">Installation State</label>
+        {{ form2.state|add_class:"form-control"|attr:"placeholder:NC"|attr:"value:NC"|attr:"autocomplete:off" }}
+    </div><!-- Col -->
+    <div class="col-sm-4">
+        {{ form2.zip.errors }}
+        <label class="form-label" for="{{ form2.zip.id_for_label }}">Installation Zip</label>
+        {{ form2.zip|add_class:"form-control"|attr:"placeholder:28806"|attr:"autocomplete:off" }}
+    </div><!-- Col -->
+</div><!-- Row -->
