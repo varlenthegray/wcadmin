@@ -20,7 +20,6 @@ class ViewCustomerForm(forms.ModelForm):
 
 
 class ViewJobSiteForm(forms.ModelForm):
-    edit_job_site = forms.BooleanField(widget=forms.HiddenInput, initial=True)
     next_service_date = forms.DateField(widget=forms.DateInput(format='%m-%d-%Y'), input_formats=['%m-%d-%Y'])
     template_name = 'customer/view_customer/job_site_form.html'
 
@@ -42,12 +41,11 @@ class AddJobSiteForm(forms.ModelForm):
 
 
 class EditJobSiteEquipment(forms.ModelForm):
-    edit_job_site_equipment = forms.BooleanField(widget=forms.HiddenInput, initial=True)
     installed_on = forms.DateField(widget=forms.DateInput(format='%m-%d-%Y'), input_formats=['%m-%d-%Y'])
 
     class Meta:
         model = JobSiteEquipment
-        fields = ['tags', 'installed_on', 'edit_job_site_equipment']
+        fields = ['tags', 'installed_on']
 
 
 class AddJobSiteEquipment(forms.ModelForm):

@@ -1,5 +1,14 @@
 {% load widget_tweaks %}
 
+{% if not jobsite.active.value or jobsite.requires_supporting_technician.value %}
+    <div class="row">
+        <div class="col-sm-12">
+            {% if not jobsite.active.value %}<div class="alert alert-danger" role="alert"><i class="fa fa-user-alt"></i>Job Site is inactive or deleted.</div>{% endif %}
+            {% if jobsite.requires_supporting_technician.value %}<div class="alert alert-warning" role="alert"><i class="fa fa-users"></i>Requires two technicians!</div>{% endif %}
+        </div>
+    </div>
+{% endif %}
+
 <div class="card">
     <div class="card-header">
         <div class="btn-group" style="height:20px;padding:0;">
@@ -33,9 +42,8 @@
         <form method="post" id="jobsiteForm" action="{% url 'updateJobSite' pk=job_site_id %}">
             {% csrf_token %}
             {{ jobsite.non_field_errors }}
-            {{ jobsite.edit_job_site }}
             <input type="hidden" value="{{ job_site_id }}" name="job_id" />
-            {{ jobsite.customer|attr:"hidden" }}
+            {# Shake a stick at this later, if it makes you angry. Duplicate ID's are found here. #}
 
             {% include 'customer/view_customer/job_site_form.html' %}
 
@@ -54,8 +62,6 @@
         </div>
     </div>
 </div>
-
-<div class="modal" tabindex="-1" id="editProductTag"></div>
 
 <div class="modal" tabindex="-1" id="addJobSiteModal">
     <div class="modal-dialog modal-lg">
@@ -92,51 +98,15 @@
       window.location.href = "{% url 'viewSpecificJobSite' pk=999999999 %}".replace(/999999999/, $(this).data('job'));
     });
 
-    $("#jobSiteCard").on("click", "#addEquipment", function() {
-      $("#addEquipmentJobSite").modal('show');
-    });
-
     $("#jobsiteForm").on("keyup change", function() {
       $("#jobSiteFormActions").show();
     }).on("reset", function() {
       $("#jobSiteFormActions").hide();
     });
 
-    let editEquipmentRowID = null, editEquipmentRow = null;
-
-    $(".editEquipmentRow").on("click", function() {
-      editEquipmentRowID = $(this).data('equip-id');
-      editEquipmentRow = $(this);
-      let call = "{% url 'viewEditEquipmentLine' pk=999999999 %}".replace(/999999999/, editEquipmentRowID);
-
-      $.ajax(call).done(function(response) {
-        $("#editProductTag").html(response).modal('show');
-      });
-    });
-
-    $("#editProductTag").on("click", "#editDeleteEquipment", function() {
-      let call = "{% url 'viewJobSiteDeleteEquipment' pk=999999999 %}".replace(/999999999/, editEquipmentRowID);
-
-      $.ajax(call).done(function() {
-        editEquipmentRow.parents('tr').html('');
-
-        $("#editProductTag").modal('hide');
-
-        new Noty({
-          text: "Successfully deleted equipment and saved Job Site.",
-          theme: 'bootstrap-v4',
-          type: 'success'
-        }).show();
-      });
-    });
-
     let addJobSiteModal = document.getElementById('addJobSiteModal');
     addJobSiteModal.addEventListener('shown.bs.modal', function() {
-      $(':input','#addJobSiteCustomerForm')
-          .not(':button, :submit, :reset, :hidden')
-          .val('')
-          .prop('checked', false)
-          .prop('selected', false);
+      $(':input','#addJobSiteCustomerForm').not(':button, :submit, :reset, :hidden').val('').prop('checked', false).prop('selected', false);
     });
   });
 </script>

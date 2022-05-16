@@ -1,5 +1,13 @@
 {% load widget_tweaks %}
 
+{% if not customer.is_active.value %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-danger" role="alert"><i class="fa fa-user-alt"></i>Customer is inactive or deleted.</div>
+        </div>
+    </div>
+{% endif %}
+
 <div class="card">
     <div class="card-header"><span class="card-title">Customer Information</span></div>
 

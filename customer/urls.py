@@ -13,6 +13,7 @@ urlpatterns = [
     path('update/job_site/<int:pk>', views.UpdateJobSite.as_view(), name='updateJobSite'),
 
     path('view/job_site/edit_equipment/<int:pk>', views.ViewEditEquipmentLine.as_view(), name='viewEditEquipmentLine'),
+    path('view/job_site/save_equipment/<int:pk>', views.SaveEquipmentChanges.as_view(), name='saveEquipmentChanges'),
     path('view/job_site/add_equipment', views.AddEquipmentToJobSite.as_view(), name='addJobSiteEquipment'),
     path('view/job_site/delete_equipment/<int:pk>', views.ViewDeleteEquipmentFromJobSite.as_view(),
          name='viewJobSiteDeleteEquipment'),

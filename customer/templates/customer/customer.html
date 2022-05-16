@@ -2,8 +2,8 @@
 {% load widget_tweaks %}
 {% load static %}
 
-{% block title %}Edit Customer {{ form.first_name.value }} {{ form.last_name.value }}{% endblock %}
-{% block page_header %}Editing Customer <u>{{ form.first_name.value }} {{ form.last_name.value }}</u>{% endblock %}
+{% block title %}Edit Customer {{ customer.first_name.value }} {{ customer.last_name.value }}{% endblock %}
+{% block page_header %}Editing Customer <u>{{ customer.first_name.value }} {{ customer.last_name.value }}</u>{% endblock %}
 
 {% block css_plugins %}
     <link rel="stylesheet" href="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css' %}">
@@ -11,9 +11,6 @@
 {% endblock %}
 
 {% block page_content %}
-    {% if not form.is_active.value %}<div class="alert alert-danger" role="alert"><i class="fa fa-user-alt"></i>Customer is inactive or deleted.</div>{% endif %}
-    {% if form.requires_supporting_technician.value %}<div class="alert alert-warning" role="alert"><i class="fa fa-2"></i>Requires two technicians!</div>{% endif %}
-
     <div class="row mb-3">
         <div class="col-sm-6">
             {% include 'customer/view_customer/view_customer.html' %}

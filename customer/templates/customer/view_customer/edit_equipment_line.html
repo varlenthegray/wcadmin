@@ -2,10 +2,8 @@
 
 <div class="modal-dialog">
     <div class="modal-content">
-        <form method="post">
+        <form method="post" action="{% url 'saveEquipmentChanges' pk=equipment_line_id %}">
             {% csrf_token %}
-            {{ form.edit_job_site_equipment }}
-            <input type="hidden" value="{{ equipment_line_id }}" name="equipment_line_id" />
 
             <div class="modal-header">
                 <h5 class="modal-title">Edit Tags for <u>{{ object.equipment.name }}</u></h5>
@@ -21,7 +19,7 @@
                     <div class="col-sm-6">
                         {{ form.installed_on.errors }}
                         <label class="form-label" for="{{ form.installed_on.id_for_label }}">Installed On</label>
-                        {{ form.installed_on|add_class:"form-control"|attr:"placeholder:Enter some tags"|attr:"autocomplete:off" }}
+                        {{ form.installed_on|add_class:"form-control"|attr:"placeholder:04-01-2029"|attr:"autocomplete:off" }}
                     </div>
                 </div>
             </div>

@@ -1,5 +1,3 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from .models import Customer
 from jobsite.models import JobSite, JobSiteEquipment
@@ -99,56 +97,6 @@ class AddCustomer(LoginRequiredMixin, generic.CreateView):
             return HttpResponseBadRequest('/customer/add')
 
 
-@login_required
-def view_customer(request, pk):
-    customer = get_object_or_404(Customer, id=pk)
-    customer_id = pk
-    job_site = JobSite.objects.filter(customer=pk).first()
-    all_job_sites = JobSite.objects.filter(customer=pk)
-    edit_customer = ViewCustomerForm(instance=customer, prefix='customer')
-    edit_job_site = ViewJobSiteForm(instance=job_site, prefix='job')
-    add_equipment_job_site = AddJobSiteEquipment(prefix='equipment')
-
-    if request.method == 'POST':
-        if 'job-edit_job_site' in request.POST:
-            current_job_site = JobSite.objects.get(pk=request.POST['job_id'])
-            edit_job_site = ViewJobSiteForm(request.POST, instance=current_job_site, prefix='job')
-
-            if edit_job_site.is_valid():
-                edit_job_site.save()
-            else:
-                return HttpResponseBadRequest(edit_job_site.errors)
-
-        if 'edit_job_site_equipment' in request.POST:
-            job_site_equipment_line = JobSiteEquipment.objects.get(pk=request.POST['equipment_line_id'])
-            edit_job_site_equipment = EditJobSiteEquipment(request.POST, instance=job_site_equipment_line)
-
-            if edit_job_site_equipment.is_valid():
-                edit_job_site_equipment.save()
-            else:
-                return HttpResponseBadRequest(edit_job_site_equipment.errors)
-
-    if job_site:
-        jspk = job_site.pk
-    else:
-        jspk = 0
-
-    existing_equipment = JobSiteEquipment.objects.filter(job_site=jspk)
-
-    context = {
-        'customer_id': customer_id,
-        'customer': edit_customer,
-        'jobsite': edit_job_site,
-        'all_job_sites': all_job_sites,
-        'job_site_id': jspk,
-        'existing_equipment': existing_equipment,
-        'all_equipment': Equipment.objects.all(),
-        'add_equipment_form': add_equipment_job_site,
-    }
-
-    return render(request, 'customer/customer.html', context=context)
-
-
 class ViewCustomer(LoginRequiredMixin, generic.UpdateView):
     model = Customer
     template_name = 'customer/customer.html'
@@ -163,6 +111,8 @@ class ViewCustomer(LoginRequiredMixin, generic.UpdateView):
         context['job_obj'] = JobSite.objects.filter(customer=context['customer_id']).first()
         context['jobsite'] = ViewJobSiteForm(instance=context['job_obj'], prefix='job')
         context['all_job_sites'] = JobSite.objects.filter(customer=context['customer_id'])
+
+        context['current_date'] = datetime.now()
 
         if context['job_obj']:
             context['job_site_id'] = context['job_obj'].pk
@@ -191,6 +141,8 @@ class ViewSpecificJobSite(LoginRequiredMixin, generic.UpdateView):
         context['existing_equipment'] = JobSiteEquipment.objects.filter(job_site=context['job_site_id'])
         context['all_equipment'] = Equipment.objects.all()
         context['add_equipment_form'] = AddJobSiteEquipment(prefix='equipment')
+
+        context['current_date'] = datetime.now()
 
         return context
 
@@ -242,10 +194,8 @@ class SaveJobSiteToCustomer(LoginRequiredMixin, generic.CreateView):
             jobsite_save = add_job_site_customer.save(commit=False)
             jobsite_save.customer = customer
             jobsite_save.save()
-            print("Saved job site successfully.")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
-            print("Unable to save job site to customer")
             return HttpResponseBadRequest(add_job_site_customer.errors)
 
 
@@ -281,30 +231,37 @@ class SaveCustomer(LoginRequiredMixin, generic.CreateView):
             return HttpResponseBadRequest(update_customer.errors)
 
 
+class SaveEquipmentChanges(LoginRequiredMixin, generic.UpdateView):
+    model = JobSiteEquipment
+    template_name = 'customer/view_customer/edit_equipment_line.html'
+    form_class = EditJobSiteEquipment
+
+    def post(self, request, *args, **kwargs):
+        equipment = JobSiteEquipment.objects.get(pk=self.kwargs['pk'])
+        save_equipment = EditJobSiteEquipment(request.POST, instance=equipment)
+
+        if save_equipment.is_valid():
+            save_equipment.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            return HttpResponseBadRequest(save_equipment.errors)
+
+
 class AddEquipmentToJobSite(LoginRequiredMixin, generic.CreateView):
     model = JobSiteEquipment
     template_name = 'customer/view_customer/add_equipment_jobsite.html'
     form_class = AddJobSiteEquipment
 
     def post(self, request, *args, **kwargs):
-        jobsite = JobSite.objects.get(pk=request.POST['job_id'])
-        add_equipment_jobsite = AddJobSiteEquipment(request.POST, instance=jobsite, prefix='equipment')
+        add_equipment_jobsite = AddJobSiteEquipment(request.POST, prefix='equipment')
 
         if add_equipment_jobsite.is_valid():
             data = add_equipment_jobsite.save(commit=False)
 
             data.added_by = request.user
-            data.job_site = jobsite
+            data.job_site = JobSite.objects.get(pk=request.POST['job_id'])
 
             data.save()
-
-            # JobSiteEquipment.objects.create(
-            #     tags=data['tags'],
-            #     installed_on=data['installed_on'],
-            #     added_by=request.user,
-            #     equipment=data['equipment'],
-            #     job_site=jobsite
-            # )
 
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:

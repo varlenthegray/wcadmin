@@ -39,3 +39,21 @@
         </form>
     </div>
 </div>
+
+<script>
+  $(function() {
+    $("#{{ add_equipment_form.installed_on.id_for_label }}").datepicker({
+      format: "mm-dd-yyyy",
+      todayHighlight: true,
+      autoclose: true,
+      setDate: new Date()
+    }).val(function() {
+      let today = new Date(),
+          dd = String(today.getDate()).padStart(2, '0'),
+          mm = String(today.getMonth() + 1).padStart(2, '0'),
+          yyyy = today.getFullYear();
+
+      return mm + "-" + dd + "-" + yyyy;
+    });
+  });
+</script>

@@ -19,14 +19,14 @@
                         <button type="button" class="btn btn-link btn-icon editEquipmentRow" data-equip-id="{{ equipment_line.pk }}"><i class="fa fa-pencil"></i></button>
                     </td>
                     <td>
-                        {{ equipment_line.equipment.name|truncatechars:"17" }}
+                        {% if equipment_line.equipment.name|length > 17 %}<abbr title="{{ equipment_line.equipment.name }}">{% endif %}{{ equipment_line.equipment.name|truncatechars:"17" }}</abbr>
 
                         {% if equipment_line.tags %}
                             {% for tag in equipment_line.tags_as_list %}
-                                <span class="badge bg-primary {% if forloop.first %}ms-2{% elif forloop.last and equipment_line.tags_as_list|length < 5 %}me-2{% endif %}">{{ tag|truncatechars:"6" }}</span>
+                                <span class="badge bg-primary {% if forloop.first %}ms-2{% elif forloop.last and equipment_line.tags_as_list|length < 5 %}me-2{% endif %}">{% if tag|length > 6 %}<abbr title="{{ tag }}">{% endif %}{{ tag|truncatechars:"6" }}</abbr></span>
                             {% endfor %}
 
-                            {% if equipment_line.tags_as_list|length > 5 %}<span class="badge bg-primary me-2">...</span>{% endif %}
+                            {% if equipment_line.tags_as_list|length > 5 %}<span class="badge bg-primary me-2"><abbr title="More Tags Assigned">...</abbr></span>{% endif %}
                         {% endif %}
                     </td>
                     <td>{{ equipment_line.installed_on }}</td>
@@ -39,6 +39,8 @@
     </table>
 </div>
 
+<div class="modal" tabindex="-1" id="editProductTag"></div>
+
 <script>
   $(function() {
     $('#{{ add_equipment_form.tags.id_for_label }}').tagsInput({
@@ -50,6 +52,38 @@
       'minChars': 0,
       'maxChars': 50,
       'placeholderColor': '#666666'
+    });
+
+    $("#jobSiteCard").on("click", "#addEquipment", function() {
+      $("#addEquipmentJobSite").modal('show');
+    });
+
+    let editEquipmentRowID = null, editEquipmentRow = null;
+
+    $(".editEquipmentRow").on("click", function() {
+      editEquipmentRowID = $(this).data('equip-id');
+      editEquipmentRow = $(this);
+      let call = "{% url 'viewEditEquipmentLine' pk=999999999 %}".replace(/999999999/, editEquipmentRowID);
+
+      $.ajax(call).done(function(response) {
+        $("#editProductTag").html(response).modal('show');
+      });
+    });
+
+    $("#editProductTag").on("click", "#editDeleteEquipment", function() {
+      let call = "{% url 'viewJobSiteDeleteEquipment' pk=999999999 %}".replace(/999999999/, editEquipmentRowID);
+
+      $.ajax(call).done(function() {
+        editEquipmentRow.parents('tr').html('');
+
+        $("#editProductTag").modal('hide');
+
+        new Noty({
+          text: "Successfully deleted equipment and saved Job Site.",
+          theme: 'bootstrap-v4',
+          type: 'warning'
+        }).show();
+      });
     });
   });
 </script>
