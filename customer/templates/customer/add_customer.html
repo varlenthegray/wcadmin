@@ -163,6 +163,8 @@
 
     <script>
       $(function() {
+        $("#{{ customer.main_phone.id_for_label }}").inputmask("(999) 999-9999");
+
         customerBillingCheckbox.init(
             '{{ form.billing_address_1.id_for_label }}',
             '{{ form.billing_city.id_for_label }}',

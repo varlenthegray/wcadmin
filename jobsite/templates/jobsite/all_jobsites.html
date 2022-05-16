@@ -40,7 +40,7 @@
                             {% for jobsite in object_list %}
                                 <tr>
                                     <td>
-                                        <a href="{% url 'viewJobSite' pk=jobsite.pk %}" class="btn btn-inverse-info btn-xs btn-icon" title="View Service Record"><i class="fa fa-wrench"></i></a>
+                                        <a href="{% url 'viewSpecificJobSite' pk=jobsite.pk %}" class="btn btn-inverse-info btn-xs btn-icon" title="View Service Record"><i class="fa fa-wrench"></i></a>
                                     </td>
                                     <td>{{ jobsite.name }}</td>
                                     <td>{{ jobsite.address }}<br>{{ jobsite.city }}, {{ jobsite.state }} {{ jobsite.zip }}</td>

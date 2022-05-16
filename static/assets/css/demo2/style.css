@@ -6687,7 +6687,7 @@ margin-top: -20px;}
 }
 
 .d-none, .navbar .search-form {
-  display: none !important;
+  /* display: none !important; */
 }
 
 .shadow {

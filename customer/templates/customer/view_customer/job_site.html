@@ -8,14 +8,12 @@
             </button>
 
             <span class="badge rounded-pill bg-primary">{{ all_job_sites.count }}</span>
-
             <div class="vr ms-3 bg-secondary opacity-100"></div>
 
             <div class="dropdown-menu">
                 {% for job_site in all_job_sites %}
                     <button type="button" data-job="{{ job_site.pk }}" class="dropdown-item btn btn-sm btn-primary btn-icon-text job_site_load {% if job_site.pk == job_site_id %}active{% endif %}">
-                        <i class="btn-icon-prepend pb-2px fa fa-truck"></i>
-                        {{ job_site.name }}
+                        <i class="btn-icon-prepend pb-2px fa fa-truck"></i> {{ job_site.name }}
                     </button>
                 {% endfor %}
                 <div class="dropdown-divider"></div>
@@ -25,24 +23,26 @@
             </div>
         </div>
 
-        <strong class="ms-2 card-title">Viewing: <abbr title="ID: {{ job_site_id }}">{{ form2.name.value }}</abbr></strong>
-
-        <button type="button" class="btn btn-link btn-icon float-end" data-bs-toggle="modal" data-bs-target="#addJobSiteModal"><i class="fa fa-plus-circle"></i></button>
+        <strong class="ms-2 card-title">Viewing: <abbr title="ID: {{ job_site_id }}">{{ jobsite.name.value }}</abbr></strong>
+        <button type="button" class="btn btn-link btn-icon float-end" data-bs-toggle="modal" data-bs-target="#addJobSiteModal">
+            <i class="fa fa-plus-circle"></i>
+        </button>
     </div>
 
-    <div class="card-body">
-        <form method="post" id="jobsiteForm">
+    <div class="card-body" id="jobSiteCard">
+        <form method="post" id="jobsiteForm" action="{% url 'updateJobSite' pk=job_site_id %}">
             {% csrf_token %}
-            {{ form2.non_field_errors }}
-            {{ form2.edit_job_site }}
+            {{ jobsite.non_field_errors }}
+            {{ jobsite.edit_job_site }}
             <input type="hidden" value="{{ job_site_id }}" name="job_id" />
-            {{ form2.customer|attr:"hidden" }}
+            {{ jobsite.customer|attr:"hidden" }}
 
             {% include 'customer/view_customer/job_site_form.html' %}
 
-            <div class="row">
-                <div class="col-sm-4 offset-sm-8">
-                    <button type="submit" class="btn btn-primary submit float-end" style="display:none;" id="updateJobSiteBtn">Update Job Site</button>
+            <div class="row" id="jobSiteFormActions" style="display:none;">
+                <div class="col-sm-6 offset-sm-6">
+                    <button type="submit" class="btn btn-success submit float-end">Update Job Site</button>
+                    <button type="reset" class="btn btn-outline-warning float-end mx-2">Reset</button>
                 </div>
             </div>
         </form>
@@ -50,45 +50,7 @@
         <hr class="bg-secondary opacity-100" />
 
         <div class="row pt-2 mb-3">
-            <div class="col-sm-12 table-responsive">
-                <h5 class="mb-2">
-                    Equipment
-                    <button type="button" class="btn btn-link btn-icon float-end" id="addEquipment"><i class="fa fa-plus-circle"></i></button>
-                </h5>
-
-                <table class="table table-sm">
-                    <thead>
-                    <tr>
-                        <th width="2%"></th>
-                        <th>Name</th>
-                        <th width="20%">Installed On</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% if existing_equipment %}
-                        {% for equipment_line in existing_equipment %}
-                            <tr>
-                                <td>
-                                    <button type="button" class="btn btn-link btn-icon editEquipmentRow" data-equip-id="{{ equipment_line.pk }}"><i class="fa fa-pencil"></i></button>
-                                </td>
-                                <td>
-                                    {{ equipment_line.equipment.name }}
-
-                                    {% if equipment_line.tags %}
-                                        {% for tag in equipment_line.tags_as_list %}
-                                            <span class="badge bg-primary {% if forloop.first %}ms-2{% elif forloop.last %}me-2{% endif %}">{{ tag }}</span>
-                                        {% endfor %}
-                                    {% endif %}
-                                </td>
-                                <td>{{ equipment_line.installed_on }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr><td colspan="3" class="text-center"><i>No equipment found.</i></td></tr>
-                    {% endif %}
-                    </tbody>
-                </table>
-            </div>
+            {% include 'customer/view_customer/job_site_equipment.html' %}
         </div>
     </div>
 </div>
@@ -100,7 +62,7 @@
         <div class="modal-content">
             <form method="post" id="addJobSiteCustomerForm" action="{% url 'saveJobSiteToCustomer' %}">
                 {% csrf_token %}
-                <input type="hidden" value="{{ customer_id }}" name="job-customer" disabled />
+                <input type="hidden" value="{{ customer_id }}" name="customer_id" />
 
                 <div class="modal-header">
                     <h5 class="modal-title">Add Job Site to Customer</h5>
@@ -126,67 +88,18 @@
 
 <script>
   $(function() {
-    let datePickerNextDate = $("#{{ form2.next_service_date.id_for_label }}");
-
-    datePickerNextDate.inputmask("99-99-9999");
-
-    if(datePickerNextDate.length) {
-      let date = new Date({{ form2.next_service_date.value|date:'Y' }}, ({{ form2.next_service_date.value|date:'m' }} - 1), {{ form2.next_service_date.value|date:'d' }});
-
-      datePickerNextDate.datepicker({
-        format: "mm-dd-yyyy",
-        todayHighlight: true,
-        autoclose: true
-      });
-
-      datePickerNextDate.datepicker('setDate', date);
-    }
-
-    let equipmentDatePicker = $("#{{ add_equipment_form.installed_on.id_for_label }}");
-
-    equipmentDatePicker.inputmask("99-99-9999");
-
-    if(equipmentDatePicker.length) {
-      let date = new Date();
-
-      equipmentDatePicker.datepicker({
-        format: "mm-dd-yyyy",
-        todayHighlight: true,
-        autoclose: true
-      });
-
-      equipmentDatePicker.datepicker('setDate', date);
-    }
-
-    let currentServiceInt = {{ form2.service_interval.value }},
-        serviceIntField = $("#{{ form2.service_interval.id_for_label }}"),
-        serviceIntModal = new bootstrap.Modal($("#modalCalculateService"));
-
-    serviceIntField.on("blur", function() {
-      if(Number(this.value) !== currentServiceInt) {
-        serviceIntModal.toggle();
-      }
-    });
-
-    $("#modalCalculateServiceYes").on("click", function() {
-      let currentServiceDate = luxon.DateTime.fromISO('{{ form2.next_service_date.value|date:'Y-m-d' }}');
-      let newServiceDate = currentServiceDate.plus({ months: Number(serviceIntField.val()) });
-
-      $("#{{ form2.next_service_date.id_for_label }}").val(newServiceDate.toFormat('LL-dd-yyyy'));
-
-      serviceIntModal.toggle();
-    });
-
     $(".job_site_load").on("click", function() {
-      let call = "{% url 'viewSpecificJobSite' pk=999999999 %}".replace(/999999999/, $(this).data('job'));
-
-      $.ajax(call).done(function(response) {
-        $("#customerJobSiteCard").html(response);
-      });
+      window.location.href = "{% url 'viewSpecificJobSite' pk=999999999 %}".replace(/999999999/, $(this).data('job'));
     });
 
-    $("#customerJobSiteCard").on("click", "#addEquipment", function() {
+    $("#jobSiteCard").on("click", "#addEquipment", function() {
       $("#addEquipmentJobSite").modal('show');
+    });
+
+    $("#jobsiteForm").on("keyup change", function() {
+      $("#jobSiteFormActions").show();
+    }).on("reset", function() {
+      $("#jobSiteFormActions").hide();
     });
 
     let editEquipmentRowID = null, editEquipmentRow = null;
@@ -217,23 +130,7 @@
       });
     });
 
-    $("#jobsiteForm").on("keyup", function() {
-      $("#updateJobSiteBtn").show();
-    });
-
-    $('#{{ add_equipment_form.tags.id_for_label }}').tagsInput({
-      'width': '100%',
-      'height': '60%',
-      'interactive': true,
-      'defaultText': 'Add Tags',
-      'removeWithBackspace': true,
-      'minChars': 0,
-      'maxChars': 50,
-      'placeholderColor': '#666666'
-    });
-
     let addJobSiteModal = document.getElementById('addJobSiteModal');
-
     addJobSiteModal.addEventListener('shown.bs.modal', function() {
       $(':input','#addJobSiteCustomerForm')
           .not(':button, :submit, :reset, :hidden')

@@ -1,0 +1,55 @@
+<div class="col-sm-12 table-responsive">
+    <h5 class="mb-2">
+        Equipment <button type="button" class="btn btn-link btn-icon float-end" id="addEquipment"><i class="fa fa-plus-circle"></i></button>
+    </h5>
+
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th width="2%"></th>
+            <th>Name</th>
+            <th width="20%">Installed On</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if existing_equipment %}
+            {% for equipment_line in existing_equipment %}
+                <tr>
+                    <td>
+                        <button type="button" class="btn btn-link btn-icon editEquipmentRow" data-equip-id="{{ equipment_line.pk }}"><i class="fa fa-pencil"></i></button>
+                    </td>
+                    <td>
+                        {{ equipment_line.equipment.name|truncatechars:"17" }}
+
+                        {% if equipment_line.tags %}
+                            {% for tag in equipment_line.tags_as_list %}
+                                <span class="badge bg-primary {% if forloop.first %}ms-2{% elif forloop.last and equipment_line.tags_as_list|length < 5 %}me-2{% endif %}">{{ tag|truncatechars:"6" }}</span>
+                            {% endfor %}
+
+                            {% if equipment_line.tags_as_list|length > 5 %}<span class="badge bg-primary me-2">...</span>{% endif %}
+                        {% endif %}
+                    </td>
+                    <td>{{ equipment_line.installed_on }}</td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr><td colspan="3" class="text-center"><i>No equipment found.</i></td></tr>
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+  $(function() {
+    $('#{{ add_equipment_form.tags.id_for_label }}').tagsInput({
+      'width': '100%',
+      'height': '60%',
+      'interactive': true,
+      'defaultText': 'Add Tags',
+      'removeWithBackspace': true,
+      'minChars': 0,
+      'maxChars': 50,
+      'placeholderColor': '#666666'
+    });
+  });
+</script>

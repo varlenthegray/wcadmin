@@ -1,0 +1,180 @@
+{% load widget_tweaks %}
+
+<div class="card">
+    <div class="card-header"><span class="card-title">Customer Information</span></div>
+
+    <div class="card-body">
+        <form method="post" id="customerForm" action="{% url 'saveCustomer' %}">
+            {% csrf_token %}
+            {{ customer.non_field_errors }}
+            <input type="hidden" name="customer_id" value="{{ customer_id }}">
+
+            <div class="row mb-3">
+                <div class="col-sm-2">
+                    {{ customer.title.errors }}
+                    <label class="form-label" for="{{ customer.title.id_for_label }}">Title</label>
+                    {{ customer.title|add_class:"form-control"|attr:"placeholder:Title"|attr:"autocomplete:off" }}
+                </div>
+                <div class="col-sm-4">
+                    {{ customer.first_name.errors }}
+                    <label class="form-label" for="{{ customer.first_name.id_for_label }}"><abbr title="Primary Contact">First Name</abbr></label>
+                    {{ customer.first_name|add_class:"form-control"|attr:"placeholder:First Name"|attr:"autocomplete:off" }}
+                </div><!-- Col -->
+                <div class="col-sm-2">
+                    {{ customer.middle_name.errors }}
+                    <label class="form-label" for="{{ customer.middle_name.id_for_label }}"><abbr title="Middle Initials">MI</abbr></label>
+                    {{ customer.middle_name|add_class:"form-control"|attr:"placeholder:MI"|attr:"autocomplete:off" }}
+                </div>
+                <div class="col-sm-4">
+                    {{ customer.last_name.errors }}
+                    <label class="form-label" for="{{ customer.last_name.id_for_label }}">Last Name</label>
+                    {{ customer.last_name|add_class:"form-control"|attr:"placeholder:Last Name"|attr:"autocomplete:off" }}
+                </div><!-- Col -->
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-4">
+                    {{ customer.company.errors }}
+                    <label class="form-label" for="{{ customer.company.id_for_label }}">Company Name</label>
+                    {{ customer.company|add_class:"form-control"|attr:"placeholder:Company Name"|attr:"autocomplete:off" }}
+                </div>
+                <div class="col-sm-4">
+                    {{ customer.main_phone.errors }}
+                    <label class="form-label" for="{{ customer.main_phone.id_for_label }}">Primary Phone</label>
+                    {{ customer.main_phone|add_class:"form-control"|attr:"placeholder:(___) ___-____"|attr:"autocomplete:off" }}
+                </div>
+                <div class="col-sm-4">
+                    {{ customer.email.errors }}
+                    <label class="form-label" for="{{ customer.email.id_for_label }}">Primary Email</label>
+                    {{ customer.email|add_class:"form-control"|attr:"placeholder:abc@abc.com"|attr:"type:email"|attr:"autocomplete:off" }}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <ul class="nav nav-tabs" id="addCustomerTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="notes-tab" data-bs-toggle="tab" href="#notes" role="tab" aria-controls="notes" aria-selected="false">Notes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="billing-tab" data-bs-toggle="tab" href="#billing" role="tab" aria-controls="billing" aria-selected="false">Billing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="extraInfo-tab" data-bs-toggle="tab" href="#extraInfo" role="tab" aria-controls="extraInfo" aria-selected="false">Extra Info</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content border border-top-0 p-3" id="myTabContent">
+                        <div class="tab-pane fade show active" id="notes" role="tabpanel" aria-labelledby="notes-tab">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th width="10%">Date</th>
+                                            <th>Summary</th>
+                                            <th width="20%">Author</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>12/23/22</td>
+                                            <td>In leau of water...</td>
+                                            <td>Ben Beach</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="billing" role="tabpanel" aria-labelledby="billing-tab">
+                            <div class="row mb-3">
+                                <div class="col-sm-12">
+                                    {{ customer.billing_address_1.errors }}
+                                    <label class="form-label" for="{{ customer.billing_address_1.id_for_label }}">Billing Address 1</label>
+                                    {{ customer.billing_address_1|add_class:"form-control"|attr:"placeholder:1234 Easy Street"|attr:"autocomplete:off" }}
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    {{ customer.billing_city.errors }}
+                                    <label class="form-label" for="{{ customer.billing_city.id_for_label }}">Billing City</label>
+                                    {{ customer.billing_city|add_class:"form-control"|attr:"placeholder:Aronld"|attr:"autocomplete:off" }}
+                                </div><!-- Col -->
+                                <div class="col-sm-4">
+                                    {{ customer.billing_state.errors }}
+                                    <label class="form-label" for="{{ customer.billing_state.id_for_label }}">Billing State</label>
+                                    {{ customer.billing_state|add_class:"form-control"|attr:"placeholder:NC"|attr:"value:NC"|attr:"autocomplete:off" }}
+                                </div><!-- Col -->
+                                <div class="col-sm-4">
+                                    {{ customer.billing_zip.errors }}
+                                    <label class="form-label" for="{{ customer.billing_zip.id_for_label }}">Billing Zip</label>
+                                    {{ customer.billing_zip|add_class:"form-control"|attr:"placeholder:28801"|attr:"autocomplete:off" }}
+                                </div><!-- Col -->
+                            </div><!-- Row -->
+                        </div>
+
+                        <div class="tab-pane fade" id="extraInfo" role="tabpanel" aria-labelledby="extraInfo-tab">
+                            <div class="row mb-3">
+                                <div class="col-sm-6">
+                                    {{ customer.secondary_contact_name.errors }}
+                                    <label class="form-label" for="{{ customer.secondary_contact_name.id_for_label }}">Secondary Contact Name</label>
+                                    {{ customer.secondary_contact_name|add_class:"form-control"|attr:"placeholder:Secondary Contact Name" }}
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ customer.alternate_phone.errors }}
+                                    <label class="form-label" for="{{ customer.alternate_phone.id_for_label }}">Secondary Contact Phone</label>
+                                    {{ customer.alternate_phone|add_class:"form-control"|attr:"placeholder:(___) ___-____" }}
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    {{ customer.website.errors }}
+                                    <label class="form-label" for="{{ customer.website.id_for_label }}">Website</label>
+                                    {{ customer.website|add_class:"form-control"|attr:"placeholder:https://www.widgets.inc/" }}
+                                </div>
+                                <div class="col-sm-4">
+                                    {{ customer.fax_number.errors }}
+                                    <label class="form-label" for="{{ customer.fax_number.id_for_label }}">Fax Number</label>
+                                    {{ customer.fax_number|add_class:"form-control"|attr:"placeholder:(___) ___-____" }}
+                                </div>
+                                <div class="col-sm-4 form-check">
+                                    {{ customer.is_active.errors }}
+                                    <div class="float-end">
+                                        <label class="form-check-label me-4" for="{{ customer.is_active.id_for_label }}">Active</label>
+                                        {{ customer.is_active|add_class:"form-check-input" }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="customerFormActions" style="display:none;">
+                <div class="col-sm-6 offset-sm-6">
+                    <button type="submit" class="btn btn-success submit float-end">Update Customer</button>
+                    <button type="reset" class="btn btn-outline-warning float-end mx-2">Reset</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+  $(function() {
+    $("#{{ customer.main_phone.id_for_label }}").inputmask("(999) 999-9999");
+    $("#{{ customer.billing_state.id_for_label }}").inputmask("AA");
+    $("#{{ customer.billing_zip.id_for_label }}").inputmask("99999-9999");
+    $("#{{ customer.alternate_phone.id_for_label }}").inputmask("(999) 999-9999");
+    $("#{{ customer.fax_number.id_for_label }}").inputmask("(999) 999-9999");
+
+    $("#customerForm").on("keyup change", function() {
+      $("#customerFormActions").show();
+    }).on("reset", function() {
+      $("#customerFormActions").hide();
+    });
+  });
+</script>
