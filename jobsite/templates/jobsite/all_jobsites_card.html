@@ -1,0 +1,28 @@
+<div class="table-responsive">
+    <table class="table" id="customerDatatable">
+        <thead>
+        <tr>
+            <th>Actions</th>
+            <th>Contact Name</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Next Service Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for jobsite in object_list %}
+            <tr>
+                <td>
+                    <a href="{% url 'viewSpecificJobSite' pk=jobsite.pk %}" class="btn btn-inverse-info btn-xs btn-icon" title="View Service Record"><i class="fa fa-wrench"></i></a>
+                </td>
+                <td>{{ jobsite.name }}</td>
+                <td>{{ jobsite.address }}<br>{{ jobsite.city }}, {{ jobsite.state }} {{ jobsite.zip }}</td>
+                <td><a href="tel:1{{ jobsite.phone_number }}">{{ jobsite.phone_number }}</a></td>
+                <td><a href="mailto:{{ jobsite.email }}">{{ jobsite.email }}</a></td>
+                <td>{{ jobsite.next_service_date }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

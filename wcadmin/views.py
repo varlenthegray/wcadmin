@@ -1,38 +1,39 @@
 from dateutil.relativedelta import relativedelta
 from django.views import generic
 from customer.models import Customer
+from jobsite.models import JobSite
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class DashboardView(LoginRequiredMixin, generic.ListView):
-    model = Customer
-    queryset = Customer.objects.filter(next_service__month=timezone.now().month)\
-        .filter(next_service__year=timezone.now().year).filter(is_active=True)
+    model = JobSite
+    queryset = JobSite.objects.filter(next_service_date__month=timezone.now().month)\
+        .filter(next_service_date__year=timezone.now().year).filter(active=True)
     template_name = "base.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["service_past_due_total"] = Customer.objects.filter(next_service__year=timezone.now().year)\
-            .filter(next_service__month=(timezone.now().month - 1)).filter(is_active=True)
-        context["service_past_due"] = context["service_past_due_total"].filter(next_service__lt=timezone.now())\
-            .filter(is_active=True)
+        context["service_past_due_total"] = JobSite.objects.filter(next_service_date__year=timezone.now().year)\
+            .filter(next_service_date__month=(timezone.now().month - 1)).filter(active=True)
+        context["service_past_due"] = context["service_past_due_total"].filter(next_service_date__lt=timezone.now())\
+            .filter(active=True)
 
-        context["service_due_total"] = Customer.objects.filter(next_service__year=timezone.now().year)\
-            .filter(next_service__month=timezone.now().month).filter(is_active=True)
-        context["service_due"] = context["service_due_total"].filter(next_service__lt=timezone.now())\
-            .filter(is_active=True)
+        context["service_due_total"] = JobSite.objects.filter(next_service_date__year=timezone.now().year)\
+            .filter(next_service_date__month=timezone.now().month).filter(active=True)
+        context["service_due"] = context["service_due_total"].filter(next_service_date__lt=timezone.now())\
+            .filter(active=True)
 
-        context["service_coming_up_total"] = Customer.objects.filter(next_service__year=timezone.now().year)\
-            .filter(next_service__month=(timezone.now().month + 1)).filter(is_active=True)
-        context["service_coming_up"] = context["service_coming_up_total"].filter(next_service__lt=timezone.now())\
-            .filter(is_active=True)
+        context["service_coming_up_total"] = JobSite.objects.filter(next_service_date__year=timezone.now().year)\
+            .filter(next_service_date__month=(timezone.now().month + 1)).filter(active=True)
+        context["service_coming_up"] = context["service_coming_up_total"].filter(next_service_date__lt=timezone.now())\
+            .filter(active=True)
 
-        context["service_refresh_total"] = Customer.objects.filter(next_service__year=(timezone.now().year - 1))\
-            .filter(next_service__month=timezone.now().month).filter(is_active=True)
-        context["service_refresh"] = context["service_refresh_total"].filter(next_service__gt=timezone.now())\
-            .filter(is_active=True)
+        context["service_refresh_total"] = JobSite.objects.filter(next_service_date__year=(timezone.now().year - 1))\
+            .filter(next_service_date__month=timezone.now().month).filter(active=True)
+        context["service_refresh"] = context["service_refresh_total"].filter(next_service_date__gt=timezone.now())\
+            .filter(active=True)
 
         context["service_past_due_date"] = timezone.now() - relativedelta(months=1)
         context["service_due_date"] = timezone.now()

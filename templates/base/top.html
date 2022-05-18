@@ -1,0 +1,94 @@
+<div class="row flex-grow-1">
+    <div class="col-md-3 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <h6 class="card-title mb-0">Missed Last Month ({{ service_past_due_date|date:"M" }})</h6>
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        <h3 class="mb-2">{{ service_past_due_total.count }}</h3>
+                        <div class="d-flex align-items-baseline">
+                            <a href="{% url 'customerDueLastMonth' %}" class="text-danger">
+                                <span>See All</span>
+                                <i class="icon-sm mb-1 fa fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <span class="donut" data-peity='{ "fill": ["rgb(255,51,102)", "rgba(255,51,102,.2)"], "innerRadius": 15, "radius": 25 }'>{{ service_past_due.count }}/{{ service_past_due_total.count }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <h6 class="card-title mb-0">Due This Month ({{ service_due_date|date:"M" }})</h6>
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        <h3 class="mb-2">{{ service_due_total.count }}</h3>
+                        <div class="d-flex align-items-baseline">
+                            <a href="{% url 'customersDueThisMonth' %}" class="text-primary">
+                                <span>See All</span>
+                                <i class="icon-sm mb-1 fa fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <span class="donut" data-peity='{ "fill": ["rgb(101, 113, 255)", "rgba(101, 113, 255,.2)"], "innerRadius": 15, "radius": 25 }'>{{ service_due.count }}/{{ service_due_total.count }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <h6 class="card-title mb-0">Service Coming Up ({{ service_coming_up_date|date:"M" }})</h6>
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        <h3 class="mb-2">{{ service_coming_up_total.count }}</h3>
+                        <div class="d-flex align-items-baseline">
+                            <a href="{% url 'customersDueNextMonth' %}" class="text-secondary">
+                                <span>See All</span>
+                                <i class="icon-sm mb-1 fa fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <span class="donut" data-peity='{ "fill": ["rgb(121, 135, 161)", "rgba(121, 135, 161,.2)"], "innerRadius": 15, "radius": 25 }'>{{ service_coming_up.count }}/{{ service_coming_up_total.count }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <h6 class="card-title mb-0">Service Refresh ({{ service_refresh_date|date:"M Y" }})</h6>
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        <h3 class="mb-2">{{ service_refresh_total.count }}</h3>
+                        <div class="d-flex align-items-baseline">
+                            <a href="{% url 'customerDueLastYearThisMonth' %}" class="text-info">
+                                <span>See All</span>
+                                <i class="icon-sm mb-1 fa fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <span class="donut" data-peity='{ "fill": ["rgb(102, 209, 209)", "rgba(102, 209, 209,.2)"], "innerRadius": 15, "radius": 25 }'>{{ service_refresh.count }}/{{ service_refresh_total.count }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
