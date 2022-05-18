@@ -5,4 +5,4 @@ from .models import Equipment
 class AddEquipmentForm(forms.ModelForm):
     class Meta:
         model = Equipment
-        fields = ['sku', 'name', 'url', 'cost', 'default_image', 'sales_price', 'tags', 'is_active']
+        fields = ['sku', 'name', 'url', 'cost', 'default_image', 'sales_price', 'is_active']

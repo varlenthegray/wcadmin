@@ -12,7 +12,6 @@ class Equipment(models.Model):
     cost = models.FloatField()
     default_image = models.URLField(blank=True, null=True)
     sales_price = models.FloatField()
-    tags = models.CharField(max_length=512, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated_on = models.DateTimeField(auto_now=True, editable=False)
