@@ -1,4 +1,4 @@
-from wcadmin.settings.common import *
+from wcadmin.settings import *
 
 # SECURITY WARNING: keep the secret key used in production secret!
 with open('/home/innovated/domains/wcadmin.innovated.tech/public_html/secret_key.txt') as f:

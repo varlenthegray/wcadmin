@@ -18,6 +18,7 @@
             <excludedPath local="true" path="$PROJECT_DIR$/qb/migrations" />
             <excludedPath local="true" path="$PROJECT_DIR$/wcadmin/wsgi.py" />
             <excludedPath local="true" path="$PROJECT_DIR$/manage.py" />
+            <excludedPath local="true" path="$PROJECT_DIR$/wcadmin/asgi.py" />
           </excludedPaths>
         </serverdata>
       </paths>
