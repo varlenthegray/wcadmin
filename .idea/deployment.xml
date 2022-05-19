@@ -8,20 +8,16 @@
             <mapping deploy="/wcadmin" local="$PROJECT_DIR$" web="/" />
           </mappings>
           <excludedPaths>
-            <excludedPath path="/wcadmin/wcadmin/settings.py" />
-            <excludedPath local="true" path="$PROJECT_DIR$/wcadmin/settings.py" />
             <excludedPath local="true" path="$PROJECT_DIR$/db.sqlite3" />
             <excludedPath local="true" path="$PROJECT_DIR$/customer/migrations" />
             <excludedPath local="true" path="$PROJECT_DIR$/equipment/migrations" />
             <excludedPath local="true" path="$PROJECT_DIR$/service/migrations" />
             <excludedPath local="true" path="$PROJECT_DIR$/supplier/migrations" />
-            <excludedPath path="/wcadmin/customer/migrations" />
-            <excludedPath path="/wcadmin/equipment/migrations" />
-            <excludedPath path="/wcadmin/service/migrations" />
-            <excludedPath path="/wcadmin/supplier/migrations" />
-            <excludedPath local="true" path="$PROJECT_DIR$/installation/migrations" />
             <excludedPath local="true" path="$PROJECT_DIR$/jobsite/migrations" />
             <excludedPath local="true" path="$PROJECT_DIR$/users/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/qb/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/wcadmin/wsgi.py" />
+            <excludedPath local="true" path="$PROJECT_DIR$/manage.py" />
           </excludedPaths>
         </serverdata>
       </paths>
