@@ -2,6 +2,15 @@
 
 {% block title %}QuickBooks Integration{% endblock %}
 {% block page_header %}QuickBooks Dashboard{% endblock %}
+{% block css_plugins %}{% endblock %}
 
 {% block page_content %}
+    Welcome to QB Integration
+
+    {% for qbcustomer in customers %}
+        {{ qbcustomer }}
+    {% endfor %}
 {% endblock %}
+
+{% block page_plugins %}{% endblock %}
+{% block add_page_plugins %}{% endblock %}
