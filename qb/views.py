@@ -18,6 +18,7 @@ from qb.services import qbo_api_call
 from dotenv import load_dotenv
 
 from customer.models import Customer
+from jobsite.models import JobSite
 
 import os
 
@@ -199,7 +200,9 @@ def insert_qb_customers(request):
 
     try:
         customers = qbCustomer.all(qb=client)
-
+    except QuickbooksException as e:
+        return HttpResponse(str(e.error_code) + ' - ' + e.message)
+    else:
         for customer in customers:
             cust = Customer(
                 quickbooks_id=customer.Id,
@@ -248,7 +251,36 @@ def insert_qb_customers(request):
                 existing_cust.save()
             except ObjectDoesNotExist:
                 cust.save()
+            finally:
+                try:
+                    existing_job_site = JobSite.objects.get(name=cust.first_name + ' ' + cust.last_name)
 
-        return HttpResponse(customers)
-    except QuickbooksException as e:
-        return HttpResponse(str(e.error_code) + ' - ' + e.message)
+                    existing_job_site.address = cust.billing_address_1
+                    existing_job_site.address_2 = cust.billing_address_2
+                    existing_job_site.city = cust.billing_city
+                    existing_job_site.state = cust.billing_state
+                    existing_job_site.zip = cust.billing_zip
+                    existing_job_site.phone_number = cust.main_phone
+                    existing_job_site.email = cust.email
+                    existing_job_site.active = cust.is_active
+
+                    existing_job_site.save()
+                except ObjectDoesNotExist:
+                    job_customer = Customer.objects.get(first_name=cust.first_name, last_name=cust.last_name)
+
+                    new_job_site = JobSite(
+                        name=cust.first_name + ' ' + cust.last_name,
+                        address=cust.billing_address_1,
+                        address_2=cust.billing_address_2,
+                        city=cust.billing_city,
+                        state=cust.billing_state,
+                        zip=cust.billing_zip,
+                        phone_number=cust.main_phone,
+                        email=cust.email,
+                        active=cust.is_active,
+                        customer=job_customer
+                    )
+
+                    new_job_site.save()
+                else:
+                    return HttpResponse('Successfully updated Job Site and Customer')
