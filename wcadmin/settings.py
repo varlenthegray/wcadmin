@@ -129,3 +129,10 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# QBO Base URLs
+QBO_BASE_SANDBOX = 'https://sandbox-quickbooks.api.intuit.com'
+QBO_BASE_PROD = 'https://quickbooks.api.intuit.com'
+
+# QBO Refresh Token
+

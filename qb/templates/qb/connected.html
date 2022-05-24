@@ -1,0 +1,72 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <title>OAuth2 Sample App - Intuit</title>
+    <link rel="stylesheet" type="text/css" href="{% static "assets/css/qb/style.css" %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+      if (window.opener) {
+        window.opener.location.href = '/qb/connected'
+        window.close()
+      }
+    </script>
+    <script>
+      function apiCall() {
+        $("#result").html('Loading...')
+        $.get("/qb/qbo_request", function (data) {
+          $("#result").html(data)
+        })
+      }
+
+      function revokeCall() {
+        $("#result").html('Loading...');
+
+        $.get("/qb/revoke", function (data) {
+          $("#result").html(data)
+        })
+      }
+
+      function refreshCall() {
+        $("#result").html('Loading...');
+
+        $.get("/qb/refresh", function (data) {
+          $("#result").html(JSON.stringify(data, null, 2))
+        })
+      }
+
+      function getCustomers() {
+        $("#result").html('Loading...');
+
+        $.get("/qb/get_customers", function (data) {
+          $("#result").html(JSON.stringify(data, null, 2))
+        })
+      }
+
+      function userInfoCall() {
+        $("#result").html('Loading...')
+        $.get("/qb/user_info", function (data) {
+          $("#result").html(data)
+        })
+      }
+    </script>
+</head>
+<body>
+<a href="/qb/">Home</a>
+<h3>Connected!</h3>
+<p>Would you like to make a sample API call?</p>
+<div>
+    {% if openid %}
+        <button onclick="userInfoCall()">UserInfo API Call</button>
+    {% else %}
+        <button onclick="apiCall()">QuickBooks API Call</button>
+    {% endif %}
+    <button onclick="refreshCall()">Refresh Token Call</button>
+    <button onclick="getCustomers()">Get Customers</button>
+    <button onclick="revokeCall()">Revoke Token Call</button>
+
+    <br><br>
+    <div><code id="result"></code></div>
+</div>
+</body>
+</html>
