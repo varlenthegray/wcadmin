@@ -5,6 +5,7 @@ from customer.models import Customer, Equipment
 
 class JobSite(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    quickbooks_id = models.IntegerField(editable=False, null=True, blank=True)
     name = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
     address_2 = models.CharField(max_length=200, null=True, blank=True)

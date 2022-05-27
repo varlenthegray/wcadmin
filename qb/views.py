@@ -5,6 +5,7 @@ from intuitlib.enums import Scopes
 from intuitlib.exceptions import AuthClientError
 
 from quickbooks.objects.customer import Customer as qbCustomer
+from quickbooks.objects.invoice import Invoice as qbInvoice
 from quickbooks import QuickBooks
 from quickbooks.exceptions import QuickbooksException
 
@@ -19,6 +20,7 @@ from dotenv import load_dotenv
 
 from customer.models import Customer
 from jobsite.models import JobSite
+from .models import Invoice, InvoiceLine
 
 import os
 
@@ -44,6 +46,14 @@ def auth_client_def(request):
         refresh_token=get_refresh_token(),
         id_token=request.session.get('id_token', None),
         realm_id=request.session.get('realm_id', None),
+    )
+
+
+def qb_client(request):
+    return QuickBooks(
+        auth_client=auth_client_def(request),
+        refresh_token=get_refresh_token(),
+        company_id=os.environ.get('QB_COMPANY_ID'),
     )
 
 
@@ -174,13 +184,7 @@ def revoke(request):
 
 
 def get_qb_customers(request):
-    auth_client = auth_client_def(request)
-
-    client = QuickBooks(
-        auth_client=auth_client,
-        refresh_token=get_refresh_token(),
-        company_id=os.environ.get('QB_COMPANY_ID'),
-    )
+    client = qb_client(request)
 
     try:
         customers = qbCustomer.all(qb=client)
@@ -190,13 +194,7 @@ def get_qb_customers(request):
 
 
 def insert_qb_customers(request):
-    auth_client = auth_client_def(request)
-
-    client = QuickBooks(
-        auth_client=auth_client,
-        refresh_token=get_refresh_token(),
-        company_id=os.environ.get('QB_COMPANY_ID'),
-    )
+    client = qb_client(request)
 
     try:
         customers = qbCustomer.all(qb=client)
@@ -248,13 +246,16 @@ def insert_qb_customers(request):
                     existing_cust.billing_state = cust.billing_state
                     existing_cust.billing_zip = cust.billing_zip
 
-                existing_cust.save()
+                if not customer.ParentRef:
+                    existing_cust.save()
             except ObjectDoesNotExist:
-                cust.save()
+                if not customer.ParentRef:
+                    cust.save()
             finally:
                 try:
                     existing_job_site = JobSite.objects.get(name=cust.first_name + ' ' + cust.last_name)
 
+                    existing_job_site.quickbooks_id = cust.quickbooks_id
                     existing_job_site.address = cust.billing_address_1
                     existing_job_site.address_2 = cust.billing_address_2
                     existing_job_site.city = cust.billing_city
@@ -266,9 +267,13 @@ def insert_qb_customers(request):
 
                     existing_job_site.save()
                 except ObjectDoesNotExist:
-                    job_customer = Customer.objects.get(first_name=cust.first_name, last_name=cust.last_name)
+                    if not customer.ParentRef:
+                        job_customer = Customer.objects.get(first_name=cust.first_name, last_name=cust.last_name)
+                    else:
+                        job_customer = Customer.objects.get(quickbooks_id=customer.ParentRef.value)
 
                     new_job_site = JobSite(
+                        quickbooks_id=cust.quickbooks_id,
                         name=cust.first_name + ' ' + cust.last_name,
                         address=cust.billing_address_1,
                         address_2=cust.billing_address_2,
@@ -282,5 +287,87 @@ def insert_qb_customers(request):
                     )
 
                     new_job_site.save()
-                else:
-                    return HttpResponse('Successfully updated Job Site and Customer')
+
+    return HttpResponse('Successfully updated all customers and job sites.')
+
+
+def get_service_data(request):
+    client = qb_client(request)
+
+    try:
+        invoices = qbInvoice.all(qb=client)
+    except QuickbooksException as e:
+        return HttpResponse(str(e.error_code) + ' - ' + e.message)
+    else:
+        for invoice in invoices:
+            job_site = JobSite.objects.get(quickbooks_id=invoice.CustomerRef.value)
+
+            try:
+                existing_invoice = Invoice.objects.get(invoice_num=invoice.DocNumber)
+
+                existing_invoice.invoice_date = invoice.TxnDate
+                existing_invoice.total = invoice.TotalAmt
+                existing_invoice.job_site = job_site
+
+                if invoice.CustomerMemo:
+                    existing_invoice.memo = invoice.CustomerMemo.value
+
+                if invoice.CustomField:
+                    for cf in invoice.CustomField:
+                        if cf.Name == 'Set Service Int' and cf.StringValue != '':
+                            existing_invoice.service_interval = cf.StringValue
+
+                existing_invoice.save()
+
+                if invoice.Line:
+                    for invoice_line in invoice.Line:
+                        if invoice_line.DetailType == 'SalesItemLineDetail':
+                            try:
+                                existing_invoice_line = InvoiceLine.objects.get(invoice=existing_invoice,
+                                                                                line_id=invoice_line.Id)
+
+                                existing_invoice_line.description = invoice_line.Description
+                                existing_invoice_line.price = invoice_line.Amount
+
+                                existing_invoice_line.save()
+                            except ObjectDoesNotExist:
+                                line = InvoiceLine(
+                                    line_id=invoice_line.Id,
+                                    description=invoice_line.Description,
+                                    price=invoice_line.Amount,
+                                    invoice=existing_invoice
+                                )
+
+                                line.save()
+
+            except ObjectDoesNotExist:
+                create_invoice = Invoice(
+                    invoice_num=invoice.DocNumber,
+                    invoice_date=invoice.TxnDate,
+                    total=invoice.TotalAmt,
+                    job_site=job_site
+                )
+
+                if invoice.CustomerMemo:
+                    create_invoice.memo = invoice.CustomerMemo.value
+
+                if invoice.CustomField:
+                    for cf in invoice.CustomField:
+                        if cf.Name == 'Set Service Int' and cf.StringValue != '':
+                            create_invoice.service_interval = cf.StringValue
+
+                create_invoice.save()
+
+                if invoice.Line:
+                    for invoice_line in invoice.Line:
+                        if invoice_line.DetailType == 'SalesItemLineDetail':
+                            line = InvoiceLine(
+                                line_id=invoice_line.Id,
+                                description=invoice_line.Description,
+                                price=invoice_line.Amount,
+                                invoice=create_invoice
+                            )
+
+                            line.save()
+
+    return HttpResponse('Got data.')
