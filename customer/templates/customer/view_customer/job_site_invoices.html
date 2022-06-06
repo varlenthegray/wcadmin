@@ -14,7 +14,7 @@
                     </h2>
                     <div id="invoice_{{ invoice_line.invoice_num }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="invoice_heading_{{ invoice_line.invoice_num }}" data-bs-parent="#invoiceAccordian">
                         <div class="accordion-body">
-                            {% if invoice_lines %}
+                            {% if invoice_line.invoiceline_set %}
                                 <table class="table">
                                     <thead>
                                     <tr>
