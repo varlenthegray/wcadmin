@@ -110,7 +110,7 @@ class ViewCustomer(LoginRequiredMixin, generic.UpdateView):
         context['jobsite'] = ViewJobSiteForm(instance=context['job_obj'], prefix='job')
         context['all_job_sites'] = JobSite.objects.filter(customer=context['customer_id'])
 
-        context['invoice'] = Invoice.objects.filter(job_site=context['job_obj'])
+        context['invoice'] = Invoice.objects.filter(job_site=context['job_obj']).prefetch_related('invoiceline_set')
         context['invoice_lines'] = InvoiceLine.objects.filter(invoice=context['invoice'][0])
 
         context['current_date'] = datetime.now()

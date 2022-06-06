@@ -43,7 +43,7 @@
             {% csrf_token %}
             {{ jobsite.non_field_errors }}
             <input type="hidden" value="{{ job_site_id }}" name="job_id" />
-            {# Shake a stick at this later, if it makes you angry. Duplicate ID's are found here. #}
+            {# Shake a stick at this later, if it makes you angry. Duplicate HTML ID's are found here. #}
 
             {% include 'customer/view_customer/job_site_form.html' %}
 
