@@ -1,0 +1,54 @@
+<div class="col-sm-12 table-responsive">
+    <h5 class="mb-2">Invoices</h5>
+
+    <div class="accordion" id="invoiceAccordian">
+        {% if invoice %}
+            {% for invoice_line in invoice %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="invoice_heading_{{ invoice_line.invoice_num }}">
+                        <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#invoice_{{ invoice_line.invoice_num }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="invoice_{{ invoice_line.invoice_num }}">
+                            <em>{{ invoice_line.invoice_num }}</em> &nbsp; - {{ invoice_line.invoice_date|date:"m-d-Y" }} &nbsp;&nbsp; | &nbsp;&nbsp; <strong>${{ invoice_line.total }}</strong>
+                        </button>
+                    </h2>
+                    <div id="invoice_{{ invoice_line.invoice_num }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="invoice_heading_{{ invoice_line.invoice_num }}" data-bs-parent="#invoiceAccordian">
+                        <div class="accordion-body">
+                            {% if invoice_lines %}
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Price</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for invoice_line_item in invoice_lines %}
+                                        <tr>
+                                            <td>{{ invoice_line_item.description|truncatechars:40 }}</td>
+                                            <td></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                ¯\_(ツ)_/¯ I looked, but I didn't find any more information. Sorry!
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        No invoices found
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        ¯\_(ツ)_/¯ We looked everywhere, we promise, but we just couldn't find anything!
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
