@@ -25,7 +25,7 @@ from quickbooks.objects.item import Item as qbItem
 from dateutil.relativedelta import relativedelta
 
 from customer.models import Customer
-from jobsite.models import JobSite
+from jobsite.models import JobSite, JobSiteEquipment
 from equipment.models import Equipment
 
 from qb.services import qbo_api_call
@@ -380,8 +380,22 @@ def get_service_data(request):
                                             line_id=invoice_line.Id,
                                             description=invoice_line.Description,
                                             price=invoice_line.Amount,
-                                            invoice=create_invoice
+                                            invoice=create_invoice,
                                         )
+
+                                        try:
+                                            line.quantity = invoice_line.Qty
+                                        except AttributeError:
+                                            pass
+
+                                        line_equipment_id = int(invoice_line.SalesItemLineDetail.ItemRef.value)
+
+                                        try:
+                                            line_equipment = Equipment.objects.get(quickbooks_id=line_equipment_id)
+                                        except ObjectDoesNotExist:
+                                            pass
+                                        else:
+                                            line.equipment = line_equipment
 
                                         line.save()
                     else:
@@ -407,20 +421,49 @@ def get_service_data(request):
                                 if invoice_line.DetailType == 'SalesItemLineDetail' \
                                         and invoice_line.Id and invoice_line.Description:
                                     try:
-                                        existing_invoice_line = InvoiceLine.objects.get(invoice=existing_invoice,
-                                                                                        line_id=invoice_line.Id)
+                                        existing_invoice_line = InvoiceLine.objects.get(
+                                            invoice=existing_invoice, line_id=invoice_line.Id
+                                        )
                                     except ObjectDoesNotExist:
                                         line = InvoiceLine(
                                             line_id=invoice_line.Id,
                                             description=invoice_line.Description,
                                             price=invoice_line.Amount,
-                                            invoice=existing_invoice
+                                            invoice=existing_invoice,
                                         )
+
+                                        try:
+                                            line.quantity = invoice_line.Qty
+                                        except AttributeError:
+                                            pass
+
+                                        line_equipment_id = int(invoice_line.SalesItemLineDetail.ItemRef.value)
+
+                                        try:
+                                            line_equipment = Equipment.objects.get(quickbooks_id=line_equipment_id)
+                                        except ObjectDoesNotExist:
+                                            pass
+                                        else:
+                                            line.equipment = line_equipment
 
                                         line.save()
                                     else:
                                         existing_invoice_line.description = invoice_line.Description
                                         existing_invoice_line.price = invoice_line.Amount
+
+                                        try:
+                                            existing_invoice_line.quantity = invoice_line.Qty
+                                        except AttributeError:
+                                            pass
+
+                                        line_equipment_id = int(invoice_line.SalesItemLineDetail.ItemRef.value)
+
+                                        try:
+                                            line_equipment = Equipment.objects.get(quickbooks_id=line_equipment_id)
+                                        except ObjectDoesNotExist:
+                                            pass
+                                        else:
+                                            existing_invoice_line.equipment = line_equipment
 
                                         existing_invoice_line.save()
 
@@ -440,6 +483,7 @@ def calculate_service_date(request):
             jobsite.save()
 
     return HttpResponse('Success.')
+
 
 @login_required
 def get_equipment_qb(request):
@@ -493,3 +537,20 @@ def get_equipment_qb(request):
                     existing_item.save()
 
         return HttpResponse(f"Total Item Count: {item_count}.\n>>> Updated successfully.")
+
+
+@transaction.atomic
+@login_required
+def attach_equipment_to_job_site(request):
+    equipment_line_items = InvoiceLine.objects.filter(equipment__isnull=False).select_related()
+
+    for line_equipment in equipment_line_items:
+        add_equipment = JobSiteEquipment(
+            added_by=request.user,
+            equipment=line_equipment.equipment,
+            job_site=line_equipment.invoice.job_site,
+        )
+
+        add_equipment.save()
+
+    return HttpResponse("Success.")

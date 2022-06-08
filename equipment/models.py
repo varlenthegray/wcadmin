@@ -22,4 +22,4 @@ class Equipment(models.Model):
     last_updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, editable=False)
 
     def __str__(self):
-        return "%s - %s" % (self.sku, self.name)
+        return f"{self.name}"

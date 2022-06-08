@@ -1,5 +1,6 @@
 from django.db import models
 from jobsite.models import JobSite
+from equipment.models import Equipment
 
 
 class Invoice(models.Model):
@@ -16,3 +17,5 @@ class InvoiceLine(models.Model):
     line_id = models.IntegerField()
     description = models.TextField()
     price = models.FloatField()
+    quantity = models.IntegerField(default=1)
+    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE, blank=True, null=True)

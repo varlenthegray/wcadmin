@@ -19,7 +19,7 @@
                         <button type="button" class="btn btn-link btn-icon editEquipmentRow" data-equip-id="{{ equipment_line.pk }}"><i class="fa fa-pencil"></i></button>
                     </td>
                     <td>
-                        {% if equipment_line.equipment.name|length > 17 %}<abbr title="{{ equipment_line.equipment.name }}">{% endif %}{{ equipment_line.equipment.name|truncatechars:"17" }}</abbr>
+                        {% if equipment_line.equipment.name|length > 30 %}<abbr title="{{ equipment_line.equipment.name }}">{% endif %}{{ equipment_line.equipment.name|truncatechars:30 }}</abbr>
 
                         {% if equipment_line.tags %}
                             {% for tag in equipment_line.tags_as_list %}
