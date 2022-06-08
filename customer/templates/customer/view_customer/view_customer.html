@@ -60,6 +60,14 @@
 
             <div class="row mb-3">
                 <div class="col-sm-12">
+                    {{ customer.notes.errors }}
+                    <label class="form-label" for="{{ customer.notes.id_for_label }}">Notes</label>
+                    {{ customer.notes|add_class:"form-control"|attr:"placeholder:Enter notes here"|attr:"autocomplete:off"|attr:"rows:3" }}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-12">
                     <ul class="nav nav-tabs" id="addCustomerTabs" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="notes-tab" data-bs-toggle="tab" href="#notes" role="tab" aria-controls="notes" aria-selected="false">Notes</a>

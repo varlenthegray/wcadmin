@@ -23,6 +23,7 @@ class Customer(models.Model):
     billing_city = models.CharField(max_length=100, null=True, blank=True)
     billing_state = models.CharField(max_length=50, null=True, blank=True)
     billing_zip = models.CharField(max_length=20, null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):

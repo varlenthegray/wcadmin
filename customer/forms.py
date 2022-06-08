@@ -16,7 +16,7 @@ class ViewCustomerForm(forms.ModelForm):
         model = Customer
         fields = ['company', 'title', 'first_name', 'middle_name', 'last_name', 'secondary_contact_name', 'website',
                   'email', 'main_phone', 'alternate_phone', 'fax_number', 'billing_address_1', 'billing_city',
-                  'billing_state', 'billing_zip', 'is_active']
+                  'billing_state', 'billing_zip', 'is_active', 'notes']
 
 
 class ViewJobSiteForm(forms.ModelForm):

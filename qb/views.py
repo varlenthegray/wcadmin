@@ -10,6 +10,7 @@ from django.core.files import File
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
+from django.db.models import Q
 
 from dotenv import load_dotenv
 
@@ -219,7 +220,8 @@ def insert_qb_customers(request):
                     main_phone=customer.PrimaryPhone,
                     alternate_phone=customer.Mobile,
                     fax_number=customer.Fax,
-                    is_active=customer.Active
+                    is_active=customer.Active,
+                    notes=customer.Notes,
                 )
 
                 if customer.PrimaryEmailAddr:
@@ -232,15 +234,11 @@ def insert_qb_customers(request):
                     cust.billing_state = customer.BillAddr.CountrySubDivisionCode
                     cust.billing_zip = customer.BillAddr.PostalCode
 
-                print(f">> Found {cust.first_name} {cust.last_name}")
-
                 try:
                     existing_cust = Customer.objects.get(quickbooks_id=customer.Id)
                 except ObjectDoesNotExist:
                     if not customer.ParentRef:
                         cust.save()
-                    else:
-                        print(f"Not saving {cust.first_name} {cust.last_name} because it has a parent ref of {customer.ParentRef.value}")
                 else:
                     existing_cust.quickbooks_id = cust.quickbooks_id
                     existing_cust.company = cust.company
@@ -251,6 +249,7 @@ def insert_qb_customers(request):
                     existing_cust.alternate_phone = cust.alternate_phone
                     existing_cust.fax_number = cust.fax_number
                     existing_cust.is_active = cust.is_active
+                    existing_cust.notes = cust.notes
 
                     if customer.BillAddr:
                         existing_cust.billing_address_1 = cust.billing_address_1
@@ -281,7 +280,7 @@ def insert_qb_customers(request):
                             phone_number=cust.main_phone,
                             email=cust.email,
                             active=cust.is_active,
-                            customer=job_customer
+                            customer=job_customer,
                         )
 
                         new_job_site.save()
@@ -298,7 +297,9 @@ def insert_qb_customers(request):
 
                         existing_job_site.save()
 
-    return HttpResponse('Successfully updated all customers and job sites.')
+    get_equipment_qb(request)
+
+    return HttpResponse('Successfully fetched all customers, job sites, and equipment.')
 
 
 @login_required
@@ -366,9 +367,9 @@ def get_service_data(request):
 
                             if invoice.CustomField:
                                 for cf in invoice.CustomField:
-                                    if cf.Name == 'Set Service Int' \
-                                            and cf.StringValue != '' and cf.StringValue.isnumeric():
-                                        create_invoice.service_interval = cf.StringValue
+                                    if cf.Name == 'Set Service Int' and cf.StringValue != '' \
+                                            and cf.StringValue.isnumeric():
+                                        create_invoice.service_interval = int(cf.StringValue)
 
                             create_invoice.save()
 
@@ -410,9 +411,8 @@ def get_service_data(request):
 
                         if invoice.CustomField:
                             for cf in invoice.CustomField:
-                                if cf.Name == 'Set Service Int' \
-                                        and cf.StringValue != '' and cf.StringValue.isnumeric():
-                                    existing_invoice.service_interval = cf.StringValue
+                                if cf.Name == 'Set Service Int' and cf.StringValue != '' and cf.StringValue.isnumeric():
+                                    existing_invoice.service_interval = int(cf.StringValue)
 
                         existing_invoice.save()
 
@@ -473,16 +473,18 @@ def get_service_data(request):
 @transaction.atomic
 @login_required
 def calculate_service_date(request):
+    update_service_interval(request)
+
     all_jobsites = JobSite.objects.all()
 
     for jobsite in all_jobsites:
         last_invoice = Invoice.objects.filter(job_site=jobsite).order_by('-invoice_date').first()
 
         if last_invoice:
-            jobsite.next_service_date = last_invoice.invoice_date + relativedelta(months=last_invoice.service_interval)
+            jobsite.next_service_date = last_invoice.invoice_date + relativedelta(months=jobsite.service_interval)
             jobsite.save()
 
-    return HttpResponse('Success.')
+    return HttpResponse('Successfully calculated service date.')
 
 
 @login_required
@@ -519,7 +521,6 @@ def get_equipment_qb(request):
                 if item.PurchaseDesc:
                     add_item.name = item.PurchaseDesc
                 else:
-                    print(f"Name: {item.Name}, Description: {item.PurchaseDesc}")
                     add_item.name = item.Name
 
                 try:
@@ -536,7 +537,7 @@ def get_equipment_qb(request):
 
                     existing_item.save()
 
-        return HttpResponse(f"Total Item Count: {item_count}.\n>>> Updated successfully.")
+        return HttpResponse(f"Total Item Count: {item_count}.<br>>>> Updated successfully.")
 
 
 @transaction.atomic
@@ -546,6 +547,7 @@ def attach_equipment_to_job_site(request):
 
     for line_equipment in equipment_line_items:
         add_equipment = JobSiteEquipment(
+            installed_on=line_equipment.invoice.invoice_date,
             added_by=request.user,
             equipment=line_equipment.equipment,
             job_site=line_equipment.invoice.job_site,
@@ -553,4 +555,17 @@ def attach_equipment_to_job_site(request):
 
         add_equipment.save()
 
-    return HttpResponse("Success.")
+    return HttpResponse("Successfully tied all equipment to job sites.")
+
+
+@transaction.atomic
+@login_required
+def update_service_interval(request):
+    # Get all records that do not equal 12 for service interval
+    all_non_standard_invoices = Invoice.objects.filter(~Q(service_interval=12)).select_related('job_site')
+
+    for invoice in all_non_standard_invoices:
+        invoice.job_site.service_interval = invoice.service_interval
+        invoice.job_site.save()
+
+    return HttpResponse("Successfully updated service interval.")
