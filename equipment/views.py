@@ -1,8 +1,11 @@
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseBadRequest, HttpResponse
+
 from .models import Equipment
 from .forms import AddEquipmentForm
-from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponse
+
+from jobsite.models import JobSiteEquipment
 
 
 class AllEquipment(LoginRequiredMixin, generic.ListView):
@@ -33,4 +36,6 @@ class ViewEquipment(LoginRequiredMixin, generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['attached_job_sites'] = JobSiteEquipment.objects.filter(equipment=self.object.pk)\
+            .select_related('job_site')
         return context

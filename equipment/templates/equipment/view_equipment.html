@@ -77,6 +77,29 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-header"><span class="card-title">Equipment on Job Sites</span></div>
+
+                <div class="card-body">
+                    <div class="row">
+                    {% if attached_job_sites %}
+                        {% for job_site in attached_job_sites %}
+                            <div class="col-sm-6">
+                                <p><a href="{% url 'viewSpecificJobSite' pk=job_site.job_site.pk %}">
+                                    {% if job_site.job_site.name|length > 25 %}<abbr title="{{ job_site.job_site.name }}">{% endif %}
+                                    {{ job_site.job_site.name|truncatechars:25 }}</abbr>
+                                </a></p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p><em>There are no job sites with this equipment.</em></p>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
