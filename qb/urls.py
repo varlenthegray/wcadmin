@@ -14,4 +14,5 @@ urlpatterns = [
     path('insert_customers_db/', views.insert_qb_customers, name='insert_qb_customers'),
     path('get_service_data/', views.get_service_data, name='get_qb_service_data'),
     path('calculate_service_date/', views.calculate_service_date, name='calculate_service_date'),
+    path('get_equipment/', views.get_equipment_qb, name='get_qb_equipment'),
 ]

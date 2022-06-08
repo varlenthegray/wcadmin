@@ -20,11 +20,14 @@ from quickbooks import QuickBooks
 from quickbooks.exceptions import QuickbooksException
 from quickbooks.objects.customer import Customer as qbCustomer
 from quickbooks.objects.invoice import Invoice as qbInvoice
+from quickbooks.objects.item import Item as qbItem
 
 from dateutil.relativedelta import relativedelta
 
 from customer.models import Customer
 from jobsite.models import JobSite
+from equipment.models import Equipment
+
 from qb.services import qbo_api_call
 from .models import Invoice, InvoiceLine
 
@@ -437,3 +440,56 @@ def calculate_service_date(request):
             jobsite.save()
 
     return HttpResponse('Success.')
+
+@login_required
+def get_equipment_qb(request):
+    client = qb_client(request)
+
+    try:
+        item_count = qbItem.count("ParentRef in ('316', '318')", qb=client)
+    except QuickbooksException as e:
+        return HttpResponse(str(e.error_code) + ' - ' + e.message)
+    else:
+        runs = math.ceil(item_count / max_per_run) + 1
+
+        for current_run in range(1, runs):
+            start_count = (current_run * max_per_run) - max_per_run
+            items = qbItem.query(
+                f"SELECT * FROM Item WHERE ParentRef in ('316', '318') STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
+                qb=client)
+
+            for item in items:
+                add_item = Equipment(
+                    cost=item.UnitPrice,
+                    is_active=item.Active,
+                    quickbooks_id=item.Id,
+                    last_updated_by=request.user,
+                )
+
+                if item.Sku:
+                    add_item.sku = item.Sku
+
+                if item.Description:
+                    add_item.description = item.Description
+
+                if item.PurchaseDesc:
+                    add_item.name = item.PurchaseDesc
+                else:
+                    print(f"Name: {item.Name}, Description: {item.PurchaseDesc}")
+                    add_item.name = item.Name
+
+                try:
+                    existing_item = Equipment.objects.get(quickbooks_id=item.Id)
+                except ObjectDoesNotExist:
+                    add_item.save()
+                else:
+                    existing_item.name = add_item.name
+                    existing_item.cost = add_item.cost
+                    existing_item.is_active = add_item.is_active
+                    existing_item.sku = add_item.sku
+                    existing_item.description = add_item.description
+                    existing_item.last_updated_by = add_item.last_updated_by
+
+                    existing_item.save()
+
+        return HttpResponse(f"Total Item Count: {item_count}.\n>>> Updated successfully.")
