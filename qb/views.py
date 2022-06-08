@@ -203,7 +203,6 @@ def insert_qb_customers(request):
         runs = math.ceil(qb_customer_count / max_per_run) + 1
 
         for current_run in range(1, runs):
-            print(f"Current Run: {current_run}")
             start_count = (current_run * max_per_run) - max_per_run
             customers = qbCustomer.query(f"SELECT * FROM Customer WHERE Active in (True, False) STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
                                          qb=client)
@@ -467,7 +466,7 @@ def get_service_data(request):
 
                                         existing_invoice_line.save()
 
-    return HttpResponse('Got data.')
+    return HttpResponse('Successfully updated all service records, invoices, and associated information.')
 
 
 @transaction.atomic
@@ -484,7 +483,7 @@ def calculate_service_date(request):
             jobsite.next_service_date = last_invoice.invoice_date + relativedelta(months=jobsite.service_interval)
             jobsite.save()
 
-    return HttpResponse('Successfully calculated service date.')
+    return HttpResponse('Successfully calculated service dates.')
 
 
 @login_required
@@ -569,3 +568,9 @@ def update_service_interval(request):
         invoice.job_site.save()
 
     return HttpResponse("Successfully updated service interval.")
+
+
+@transaction.atomic
+@login_required
+def get_latest_changes(request):
+    pass

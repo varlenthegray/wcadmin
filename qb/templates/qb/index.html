@@ -1,10 +1,89 @@
+{% extends 'base.html' %}
 {% load static %}
 
-<html lang="en">
-<head>
-    <title>OAuth2 Sample App - Intuit</title>
-    {#    <link rel="stylesheet" type="text/css" href="{% static "assets/css/qb/style.css" %}">#}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+{% block page_header %}QuickBooks Management{% endblock %}
+{% block title %}QuickBooks Management{% endblock %}
+
+{% block page_content %}
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title">QuickBooks Integration Management</span>
+        </div>
+
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-sm-12 mb-3">
+                    <div id="loggedIn"></div>
+
+                    <a class="imgLink" href="#" onclick="launchPopup('/qb/oauth/')">
+                        <img style="height: 40px" alt="QuickBooks Button" src="{% static 'images/qb/C2QB_white_btn_lg_default.png' %}" />
+                    </a>
+                </div>
+
+                <div class="col-sm-12">
+                    <p>
+                        <i class="fa fa-question-circle"></i> &nbsp;Buttons that are <span class="text-danger">RED</span> may
+                        have an un-desirable impact on the system.<br />
+                        Buttons in <span class="text-success">GREEN</span> may take a while to complete. Please be patient.
+                        Additionally, getting service records/invoices tends to hang the system for a while. Please wait
+                        up to 10 minutes for that action to complete.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <button class="btn btn-primary btn-icon-text" onclick="apiCall()">
+                        <i class="fa fa-bolt btn-icon-prepend"></i>
+                        Test QuickBooks API
+                    </button>
+
+                    <button class="btn btn-secondary btn-icon-text" onclick="refreshCall()">
+                        <i class="fa fa-refresh btn-icon-prepend"></i>
+                        Refresh Token Call
+                    </button>
+
+                    <button class="btn btn-danger btn-icon-text" onclick="revokeCall()">
+                        <i class="fa fa-close btn-icon-prepend"></i>
+                        Revoke Token Call
+                    </button>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <button class="btn btn-success btn-icon-text" onclick="updateUsers()">
+                        <i class="fa fa-1 btn-icon-prepend"></i>
+                        Update Customers/Equipment from QB
+                    </button>
+
+                    <button class="btn btn-success btn-icon-text" onclick="getServiceData()">
+                        <i class="fa fa-2 btn-icon-prepend"></i>
+                        Get Service Data/Invoices from QB
+                    </button>
+
+                    <button class="btn btn-success btn-icon-text" onclick="calculateServiceDates()">
+                        <i class="fa fa-3 btn-icon-prepend"></i>
+                        Calculate Service Dates
+                    </button>
+
+                    <button class="btn btn-danger btn-icon-text" onclick="attachEquipmentJobSite()">
+                        <i class="fa fa-4 btn-icon-prepend"></i>
+                        Attach Equipment to Job Sites
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <code id="result"></code>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page_script %}
     <script>
       if (window.opener) {
         window.opener.location.href = '/qb/'
@@ -12,50 +91,58 @@
       }
 
       function launchPopup(path) {
-        var win;
-        var checkConnect;
-        var parameters = "location=1,width=800,height=650";
+        let parameters = "location=1,width=800,height=650";
         parameters += ",left=" + (screen.width - 800) / 2 + ",top=" + (screen.height - 650) / 2;
 
         // Launch Popup
-        win = window.open(path, 'connectPopup', parameters);
+        window.open(path, 'connectPopup', parameters);
       }
 
-      function migrateCall() {
+      function apiCall() {
         $("#result").html('Loading...')
-        $.get("/qb/migration", function (data) {
+        $.get("/qb/qbo_request", function (data) {
+          $("#result").html(data)
+        })
+      }
+
+      function refreshCall() {
+        $("#result").html('Loading...');
+
+        $.get("/qb/refresh", function (data) {
           $("#result").html(JSON.stringify(data, null, 2))
         })
       }
+
+      function updateUsers() {
+        $("#result").html('Loading...');
+
+        $.get("{% url 'insert_qb_customers' %}", function (data) {
+          $("#result").html(JSON.stringify(data, null, 2))
+        })
+      }
+
+      function getServiceData() {
+        $("#result").html('Loading...');
+
+        $.get("{% url 'get_qb_service_data' %}", function (data) {
+          $("#result").html(data)
+        })
+      }
+
+      function calculateServiceDates() {
+        $("#result").html('Loading...');
+
+        $.get("{% url 'calculate_service_date' %}", function (data) {
+          $("#result").html(data)
+        })
+      }
+
+      function attachEquipmentJobSite() {
+        $("#result").html('Loading...');
+
+        $.get("{% url 'attach_qb_equipment_to_jobsite' %}", function (data) {
+          $("#result").html(data)
+        })
+      }
     </script>
-</head>
-<body>
-<div id="loggedIn" />
-<h3>Welcome to the Intuit OAuth2 Sample App!</h3>
-Before using this app, please make sure you do the following:
-<ul>
-    <li>
-        Update settings.py with your Client ID and Client Secret (found on
-        <a href="https://developer.intuit.com">developer.intuit.com</a>
-        )
-    </li>
-
-    <li>
-        In <a href="https://developer.intuit.com">developer.intuit.com</a>,
-        add an allowed Redirect URI to this sample app! (settings.py value: REDIRECT_URI)
-    </li>
-</ul>
-<br/><br/><br/>
-
-<b>OAuth2 flow</b><br/>
-<a class="imgLink" href="#" onclick="launchPopup('/qb/oauth/')">
-    <img
-            style="height: 40px"
-            src="{% static 'images/qb/C2QB_white_btn_lg_default.png' %}"
-    />
-</a>
-
-<div><code id="result"></code></div>
-<br/><br/><br/>
-</body>
-</html>
+{% endblock %}

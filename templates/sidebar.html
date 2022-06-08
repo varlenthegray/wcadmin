@@ -19,6 +19,14 @@
                 <span class="link-title">Dashboard</span>
             </a>
         </li>
+        {% if request.user.is_superuser %}
+        <li class="nav-item">
+            <a href="{% url 'qbDashboard' %}" class="nav-link">
+                <i class="link-icon fa fa-bolt-lightning"></i>
+                <span class="link-title">QuickBooks</span>
+            </a>
+        </li>
+        {% endif %}
         <li class="nav-item nav-category">Apps</li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#uiCustomers" role="button" aria-expanded="false" aria-controls="uiCustomers">
