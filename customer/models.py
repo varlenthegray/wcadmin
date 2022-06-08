@@ -13,7 +13,7 @@ class Customer(models.Model):
     last_name = models.CharField(max_length=100)
     secondary_contact_name = models.CharField(max_length=100, null=True, blank=True)
     website = models.URLField(null=True, blank=True)
-    email = models.EmailField()
+    email = models.EmailField(null=True, blank=True)
     main_phone = models.CharField(max_length=30, null=True, blank=True)
     alternate_phone = models.CharField(max_length=30, null=True, blank=True)
     fax_number = models.CharField(max_length=30, null=True, blank=True)
@@ -26,7 +26,7 @@ class Customer(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return "%s %s" % (self.first_name, self.last_name)
+        return f"{self.first_name} {self.last_name}"
 
 
 class CustomerNotes(models.Model):

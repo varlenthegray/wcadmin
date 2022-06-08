@@ -7,7 +7,7 @@ from .forms import ViewJobSiteForm
 # Create your views here.
 class AllJobSites(LoginRequiredMixin, generic.ListView):
     model = JobSite
-    queryset = JobSite.objects.all()
+    queryset = JobSite.objects.all().prefetch_related('customer')
     template_name = 'jobsite/all_jobsites.html'
 
 

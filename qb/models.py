@@ -4,7 +4,7 @@ from jobsite.models import JobSite
 
 class Invoice(models.Model):
     job_site = models.ForeignKey(JobSite, on_delete=models.CASCADE)
-    invoice_num = models.IntegerField()
+    invoice_num = models.CharField(max_length=50)
     invoice_date = models.DateField()
     total = models.FloatField(null=True, blank=True)
     memo = models.TextField(null=True, blank=True)

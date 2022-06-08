@@ -2,7 +2,7 @@ from django.views import generic
 from .models import Customer
 from jobsite.models import JobSite, JobSiteEquipment
 from equipment.models import Equipment
-from qb.models import Invoice, InvoiceLine
+from qb.models import Invoice
 from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponse
 from .forms import AddCustomerForm, ViewCustomerForm, ViewJobSiteForm, EditJobSiteEquipment, AddJobSiteEquipment, \
     AddJobSiteForm
@@ -141,6 +141,8 @@ class ViewSpecificJobSite(LoginRequiredMixin, generic.UpdateView):
         context['existing_equipment'] = JobSiteEquipment.objects.filter(job_site=context['job_site_id'])
         context['all_equipment'] = Equipment.objects.all()
         context['add_equipment_form'] = AddJobSiteEquipment(prefix='equipment')
+
+        context['invoice'] = Invoice.objects.filter(job_site=context['job_site_id']).prefetch_related('invoiceline_set')
 
         context['current_date'] = datetime.now()
 

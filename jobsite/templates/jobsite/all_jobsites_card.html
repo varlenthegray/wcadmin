@@ -16,10 +16,10 @@
                 <td>
                     <a href="{% url 'viewSpecificJobSite' pk=jobsite.pk %}" class="btn btn-inverse-info btn-xs btn-icon" title="View Service Record"><i class="fa fa-wrench"></i></a>
                 </td>
-                <td>{{ jobsite.name }}</td>
+                <td>{% if jobsite.name|length > 50 %}<abbr title="{{ jobsite.name }}">{% endif %}{{ jobsite.name|truncatechars:50 }}</abbr> {% if jobsite.customer.company %}<br><em>{{ jobsite.customer.company }}</em>{% endif %}</td>
                 <td>{{ jobsite.address }}<br>{{ jobsite.city }}, {{ jobsite.state }} {{ jobsite.zip }}</td>
                 <td><a href="tel:1{{ jobsite.phone_number }}">{{ jobsite.phone_number }}</a></td>
-                <td><a href="mailto:{{ jobsite.email }}">{{ jobsite.email }}</a></td>
+                <td><a href="mailto:{{ jobsite.email }}">{% if jobsite.email|length > 50 %}<abbr title="{{ jobsite.email }}">{% endif %}{{ jobsite.email|truncatechars:50 }}</abbr></a></td>
                 <td>{{ jobsite.next_service_date }}</td>
             </tr>
         {% endfor %}

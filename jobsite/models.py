@@ -13,7 +13,7 @@ class JobSite(models.Model):
     state = models.CharField(max_length=50, null=True, blank=True)
     zip = models.CharField(max_length=20, null=True, blank=True)
     phone_number = models.CharField(max_length=30, null=True, blank=True)
-    email = models.CharField(max_length=200)
+    email = models.CharField(max_length=200, null=True, blank=True)
     service_interval = models.IntegerField(default=12)
     next_service_date = models.DateField(null=True, blank=True)
     primary_technician = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
@@ -23,7 +23,7 @@ class JobSite(models.Model):
     requires_supporting_technician = models.BooleanField(default=False)
 
     def __str__(self):
-        return '%s' % self.name
+        return f'{self.name}'
 
 
 class JobSiteEquipment(models.Model):
@@ -37,4 +37,4 @@ class JobSiteEquipment(models.Model):
         return self.tags.split(',')
 
     def __str__(self):
-        return '%s (%s)' % (self.job_site.name, self.equipment)
+        return f'{self.job_site.name} ({self.equipment})'

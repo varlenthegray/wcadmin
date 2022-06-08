@@ -5,11 +5,14 @@ import os
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files import File
+from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
+
 from dotenv import load_dotenv
+
 from intuitlib.client import AuthClient
 from intuitlib.enums import Scopes
 from intuitlib.exceptions import AuthClientError
@@ -17,6 +20,8 @@ from quickbooks import QuickBooks
 from quickbooks.exceptions import QuickbooksException
 from quickbooks.objects.customer import Customer as qbCustomer
 from quickbooks.objects.invoice import Invoice as qbInvoice
+
+from dateutil.relativedelta import relativedelta
 
 from customer.models import Customer
 from jobsite.models import JobSite
@@ -180,43 +185,23 @@ def refresh(request):
     return HttpResponse('New refresh_token: {0}'.format(auth_client.refresh_token))
 
 
-@login_required
-def revoke(request):
-    auth_client = auth_client_def(request)
-
-    try:
-        auth_client.revoke()
-    except AuthClientError as e:
-        print(e.status_code)
-        print(e.intuit_tid)
-    return HttpResponse('Revoke successful')
-
-
-@login_required
-def get_qb_customers(request):
-    client = qb_client(request)
-
-    try:
-        customers = qbCustomer.all(qb=client)
-        return HttpResponse(customers)
-    except QuickbooksException as e:
-        return HttpResponse(str(e.error_code) + ' - ' + e.message)
-
-
+@transaction.atomic
 @login_required
 def insert_qb_customers(request):
     client = qb_client(request)
 
     try:
-        qb_customer_count = qbCustomer.count(qb=client)
+        qb_customer_count = qbCustomer.count("Active in (True, False)", qb=client)
+        print(f"Customer Count: {qb_customer_count}")
     except QuickbooksException as e:
         return HttpResponse(str(e.error_code) + ' - ' + e.message)
     else:
-        runs = math.ceil(qb_customer_count / max_per_run)
+        runs = math.ceil(qb_customer_count / max_per_run) + 1
 
         for current_run in range(1, runs):
+            print(f"Current Run: {current_run}")
             start_count = (current_run * max_per_run) - max_per_run
-            customers = qbCustomer.query(f"SELECT * FROM Customer WHERE Active IN (true, false) STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
+            customers = qbCustomer.query(f"SELECT * FROM Customer WHERE Active in (True, False) STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
                                          qb=client)
 
             for customer in customers:
@@ -244,11 +229,15 @@ def insert_qb_customers(request):
                     cust.billing_state = customer.BillAddr.CountrySubDivisionCode
                     cust.billing_zip = customer.BillAddr.PostalCode
 
+                print(f">> Found {cust.first_name} {cust.last_name}")
+
                 try:
-                    existing_cust = Customer.objects.get(first_name=cust.first_name, last_name=cust.last_name)
+                    existing_cust = Customer.objects.get(quickbooks_id=customer.Id)
                 except ObjectDoesNotExist:
                     if not customer.ParentRef:
                         cust.save()
+                    else:
+                        print(f"Not saving {cust.first_name} {cust.last_name} because it has a parent ref of {customer.ParentRef.value}")
                 else:
                     existing_cust.quickbooks_id = cust.quickbooks_id
                     existing_cust.company = cust.company
@@ -271,16 +260,16 @@ def insert_qb_customers(request):
                         existing_cust.save()
                 finally:
                     try:
-                        existing_job_site = JobSite.objects.get(name=cust.first_name + ' ' + cust.last_name)
+                        existing_job_site = JobSite.objects.get(quickbooks_id=customer.Id)
                     except ObjectDoesNotExist:
                         if not customer.ParentRef:
-                            job_customer = Customer.objects.get(first_name=cust.first_name, last_name=cust.last_name)
+                            job_customer = Customer.objects.get(quickbooks_id=customer.Id)
                         else:
                             job_customer = Customer.objects.get(quickbooks_id=customer.ParentRef.value)
 
                         new_job_site = JobSite(
                             quickbooks_id=cust.quickbooks_id,
-                            name=cust.first_name + ' ' + cust.last_name,
+                            name=customer.DisplayName,
                             address=cust.billing_address_1,
                             address_2=cust.billing_address_2,
                             city=cust.billing_city,
@@ -310,6 +299,30 @@ def insert_qb_customers(request):
 
 
 @login_required
+def revoke(request):
+    auth_client = auth_client_def(request)
+
+    try:
+        auth_client.revoke()
+    except AuthClientError as e:
+        print(e.status_code)
+        print(e.intuit_tid)
+    return HttpResponse('Revoke successful')
+
+
+@login_required
+def get_qb_customers(request):
+    client = qb_client(request)
+
+    try:
+        customers = qbCustomer.all(qb=client)
+        return HttpResponse(customers)
+    except QuickbooksException as e:
+        return HttpResponse(str(e.error_code) + ' - ' + e.message)
+
+
+@transaction.atomic
+@login_required
 def get_service_data(request):
     client = qb_client(request)
 
@@ -318,7 +331,7 @@ def get_service_data(request):
     except QuickbooksException as e:
         return HttpResponse(str(e.error_code) + ' - ' + e.message)
     else:
-        runs = math.ceil(invoice_count / max_per_run)
+        runs = math.ceil(invoice_count / max_per_run) + 1
 
         for current_run in range(1, runs):
             start_count = (current_run * max_per_run) - max_per_run
@@ -330,10 +343,12 @@ def get_service_data(request):
                 try:
                     job_site = JobSite.objects.get(quickbooks_id=invoice.CustomerRef.value)
                 except ObjectDoesNotExist:
-                    pass
+                    print(f"Unable to locate job site for QB CustomerRef {invoice.CustomerRef.value}")
                 else:
                     try:
                         existing_invoice = Invoice.objects.get(invoice_num=invoice.DocNumber)
+                    except ValueError:
+                        print(f"Error with QB DocNumber {invoice.DocNumber}, ObjectDoesNotExist.")
                     except ObjectDoesNotExist:
                         if invoice.DocNumber:
                             create_invoice = Invoice(
@@ -348,7 +363,8 @@ def get_service_data(request):
 
                             if invoice.CustomField:
                                 for cf in invoice.CustomField:
-                                    if cf.Name == 'Set Service Int' and cf.StringValue != '':
+                                    if cf.Name == 'Set Service Int' \
+                                            and cf.StringValue != '' and cf.StringValue.isnumeric():
                                         create_invoice.service_interval = cf.StringValue
 
                             create_invoice.save()
@@ -366,6 +382,8 @@ def get_service_data(request):
 
                                         line.save()
                     else:
+                        # On error of page, for instance not enough records, comment the block out below.
+                        # FIXME: Move this to a new view def to "update existing records"
                         existing_invoice.invoice_date = invoice.TxnDate
                         existing_invoice.total = invoice.TotalAmt
                         existing_invoice.job_site = job_site
@@ -375,7 +393,8 @@ def get_service_data(request):
 
                         if invoice.CustomField:
                             for cf in invoice.CustomField:
-                                if cf.Name == 'Set Service Int' and cf.StringValue != '':
+                                if cf.Name == 'Set Service Int' \
+                                        and cf.StringValue != '' and cf.StringValue.isnumeric():
                                     existing_invoice.service_interval = cf.StringValue
 
                         existing_invoice.save()
@@ -403,3 +422,18 @@ def get_service_data(request):
                                         existing_invoice_line.save()
 
     return HttpResponse('Got data.')
+
+
+@transaction.atomic
+@login_required
+def calculate_service_date(request):
+    all_jobsites = JobSite.objects.all()
+
+    for jobsite in all_jobsites:
+        last_invoice = Invoice.objects.filter(job_site=jobsite).order_by('-invoice_date').first()
+
+        if last_invoice:
+            jobsite.next_service_date = last_invoice.invoice_date + relativedelta(months=last_invoice.service_interval)
+            jobsite.save()
+
+    return HttpResponse('Success.')

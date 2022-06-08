@@ -22,7 +22,7 @@
             <div class="dropdown-menu">
                 {% for job_site in all_job_sites %}
                     <button type="button" data-job="{{ job_site.pk }}" class="dropdown-item btn btn-sm btn-primary btn-icon-text job_site_load {% if job_site.pk == job_site_id %}active{% endif %}">
-                        <i class="btn-icon-prepend pb-2px fa fa-truck"></i> {{ job_site.name }}
+                        <i class="btn-icon-prepend pb-2px fa fa-truck"></i> {% if job_site.name|length > 30 %}<abbr title="{{ job_site.name }}">{% endif %}{{ job_site.name|truncatechars:30 }}</abbr>
                     </button>
                 {% endfor %}
                 <div class="dropdown-divider"></div>

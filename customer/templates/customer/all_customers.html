@@ -45,10 +45,10 @@
                                         <a href="#" class="btn btn-inverse-primary btn-xs btn-icon" title="Open in QuickBooks">QB</a>
                                         <a href="{% url 'viewCustomer' pk=customer.pk %}" class="btn btn-inverse-secondary btn-xs btn-icon" title="View Customer Record"><i class="fa fa-eye"></i></a>
                                     </td>
-                                    <td>{{ customer.first_name }} {{ customer.last_name }}<br><i>{{ customer.company }}</i></td>
+                                    <td>{{ customer.first_name }} {{ customer.last_name }}<br><em>{{ customer.company }}</em></td>
                                     <td>{{ customer.billing_address_1 }}<br>{{ customer.billing_city }}, {{ customer.billing_state }} {{ customer.billing_zip }}</td>
                                     <td><a href="tel:1{{ customer.main_phone }}">{{ customer.main_phone }}</a></td>
-                                    <td><a href="mailto:{{ customer.email }}">{{ customer.email }}</a></td>
+                                    <td><a href="mailto:{{ customer.email }}">{% if customer.email|length > 50 %}<abbr title="{{ customer.email }}">{% endif %}{{ customer.email|truncatechars:50 }}</abbr></a></td>
                                 </tr>
                             {% endfor %}
                             </tbody>
