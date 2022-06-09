@@ -586,7 +586,6 @@ def update_service_interval(request):
     return HttpResponse("Successfully updated service interval.")
 
 
-@transaction.atomic
 def update_db_from_changes(request):
     # Get all records that do not equal 12 for service interval
     all_non_standard_invoices = Invoice.objects.filter(~Q(service_interval=12)).select_related('job_site')
