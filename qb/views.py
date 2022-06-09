@@ -11,26 +11,27 @@ from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.utils import timezone
 
 from dotenv import load_dotenv
+from dateutil.relativedelta import relativedelta
 
 from intuitlib.client import AuthClient
 from intuitlib.enums import Scopes
 from intuitlib.exceptions import AuthClientError
+
 from quickbooks import QuickBooks
 from quickbooks.exceptions import QuickbooksException
 from quickbooks.objects.customer import Customer as qbCustomer
 from quickbooks.objects.invoice import Invoice as qbInvoice
 from quickbooks.objects.item import Item as qbItem
 
-from dateutil.relativedelta import relativedelta
-
 from customer.models import Customer
 from jobsite.models import JobSite, JobSiteEquipment
 from equipment.models import Equipment
 
 from qb.services import qbo_api_call
-from .models import Invoice, InvoiceLine
+from .models import Invoice, InvoiceLine, QBSystem
 
 load_dotenv()
 
@@ -65,6 +66,15 @@ def qb_client(request):
         refresh_token=get_refresh_token(),
         company_id=os.environ.get('QB_COMPANY_ID'),
     )
+
+
+def save_last_update(request):
+    current_info = QBSystem(
+        last_update=timezone.now(),
+        user=request.user,
+    )
+
+    return current_info.save()
 
 
 # Create your views here.
@@ -465,6 +475,8 @@ def get_service_data(request):
                                             existing_invoice_line.equipment = line_equipment
 
                                         existing_invoice_line.save()
+                    finally:
+                        save_last_update(request)
 
     return HttpResponse('Successfully updated all service records, invoices, and associated information.')
 
@@ -482,6 +494,8 @@ def calculate_service_date(request):
         if last_invoice:
             jobsite.next_service_date = last_invoice.invoice_date + relativedelta(months=jobsite.service_interval)
             jobsite.save()
+
+    save_last_update(request)
 
     return HttpResponse('Successfully calculated service dates.')
 
@@ -537,6 +551,8 @@ def get_equipment_qb(request):
                     existing_item.save()
 
         return HttpResponse(f"Total Item Count: {item_count}.<br>>>> Updated successfully.")
+    finally:
+        save_last_update(request)
 
 
 @transaction.atomic
@@ -571,6 +587,10 @@ def update_service_interval(request):
 
 
 @transaction.atomic
-@login_required
-def get_latest_changes(request):
-    pass
+def update_db_from_changes(request):
+    # Get all records that do not equal 12 for service interval
+    all_non_standard_invoices = Invoice.objects.filter(~Q(service_interval=12)).select_related('job_site')
+
+    print("I don't get it, this should work.")
+
+    return HttpResponse("Did nothing!")

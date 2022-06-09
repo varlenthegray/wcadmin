@@ -19,7 +19,9 @@
             <excludedPath local="true" path="$PROJECT_DIR$/wcadmin/wsgi.py" />
             <excludedPath local="true" path="$PROJECT_DIR$/manage.py" />
             <excludedPath local="true" path="$PROJECT_DIR$/wcadmin/asgi.py" />
-            <excludedPath local="true" path="$PROJECT_DIR$/wcadmin/.env" />
+            <excludedPath local="true" path="$PROJECT_DIR$/.env" />
+            <excludedPath local="true" path="$PROJECT_DIR$/venv" />
+            <excludedPath local="true" path="$PROJECT_DIR$/qb_refresh_token.txt" />
           </excludedPaths>
         </serverdata>
       </paths>

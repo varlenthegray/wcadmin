@@ -52,17 +52,26 @@
 
             <div class="row mb-3">
                 <div class="col-sm-12">
-                    <button class="btn btn-success btn-icon-text" onclick="updateUsers()">
+                    <button class="btn btn-success btn-icon-text" onclick="getLatestChanges()">
+                        <i class="fa fa-check btn-icon-prepend"></i>
+                        Get Latest Changes
+                    </button>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <button class="btn btn-inverse-success btn-icon-text" onclick="updateUsers()">
                         <i class="fa fa-1 btn-icon-prepend"></i>
                         Update Customers/Equipment from QB
                     </button>
 
-                    <button class="btn btn-success btn-icon-text" onclick="getServiceData()">
+                    <button class="btn btn-inverse-success btn-icon-text" onclick="getServiceData()">
                         <i class="fa fa-2 btn-icon-prepend"></i>
                         Get Service Data/Invoices from QB
                     </button>
 
-                    <button class="btn btn-success btn-icon-text" onclick="calculateServiceDates()">
+                    <button class="btn btn-inverse-success btn-icon-text" onclick="calculateServiceDates()">
                         <i class="fa fa-3 btn-icon-prepend"></i>
                         Calculate Service Dates
                     </button>
@@ -101,7 +110,7 @@
       function apiCall() {
         $("#result").html('Loading...')
         $.get("/qb/qbo_request", function (data) {
-          $("#result").html(data)
+          $("#result").html(JSON.stringify(data, null, 2))
         })
       }
 
@@ -125,7 +134,7 @@
         $("#result").html('Loading...');
 
         $.get("{% url 'get_qb_service_data' %}", function (data) {
-          $("#result").html(data)
+          $("#result").html(JSON.stringify(data, null, 2))
         })
       }
 
@@ -133,7 +142,7 @@
         $("#result").html('Loading...');
 
         $.get("{% url 'calculate_service_date' %}", function (data) {
-          $("#result").html(data)
+          $("#result").html(JSON.stringify(data, null, 2))
         })
       }
 
@@ -141,7 +150,15 @@
         $("#result").html('Loading...');
 
         $.get("{% url 'attach_qb_equipment_to_jobsite' %}", function (data) {
-          $("#result").html(data)
+          $("#result").html(JSON.stringify(data, null, 2))
+        })
+      }
+
+      function getLatestChanges() {
+        $("#result").html('Loading...');
+
+        $.get("{% url 'get_changes_from_qb' %}", function (data) {
+          $("#result").html(JSON.stringify(data, null, 2))
         })
       }
     </script>
