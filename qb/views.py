@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import math
 import os
+import logging
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -12,9 +13,11 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.utils import timezone
+from datetime import datetime
 
 from dotenv import load_dotenv
 from dateutil.relativedelta import relativedelta
+from dateutil.parser import parse
 
 from intuitlib.client import AuthClient
 from intuitlib.enums import Scopes
@@ -36,6 +39,7 @@ from .models import Invoice, InvoiceLine, QBSystem
 load_dotenv()
 
 max_per_run = 500  # The maximum amount of data to pull per run with a hard limit of 1000
+logger = logging.getLogger(__name__)
 
 
 # View specific function
@@ -69,12 +73,98 @@ def qb_client(request):
 
 
 def save_last_update(request):
-    current_info = QBSystem(
-        last_update=timezone.now(),
-        user=request.user,
-    )
+    last_update = QBSystem.objects.last()
 
-    return current_info.save()
+    if last_update:
+        last_update.last_update = timezone.now()
+
+        return last_update.save()
+    else:
+        current_info = QBSystem(
+            last_update=timezone.now(),
+            user=request.user,
+        )
+
+        return current_info.save()
+
+
+def create_new_invoice_lines(request, invoice, attach_to_invoice, job_site):
+    if invoice.Line:
+        for invoice_line in invoice.Line:
+            if invoice_line.DetailType == 'SalesItemLineDetail' and invoice_line.Id and invoice_line.Description:
+                line = InvoiceLine(
+                    line_id=invoice_line.Id,
+                    description=invoice_line.Description,
+                    price=invoice_line.Amount,
+                    invoice=attach_to_invoice,
+                )
+
+                try:
+                    line.quantity = invoice_line.Qty
+                except AttributeError:
+                    pass
+
+                line_equipment_id = int(invoice_line.SalesItemLineDetail.ItemRef.value)
+
+                try:
+                    line_equipment = Equipment.objects.get(quickbooks_id=line_equipment_id)
+                except ObjectDoesNotExist:
+                    pass
+                else:
+                    line.equipment = line_equipment
+
+                    add_equipment_to_job = JobSiteEquipment(
+                        installed_on=invoice.TxnDate,
+                        added_by=request.user,
+                        equipment=line_equipment,
+                        job_site=job_site
+                    )
+
+                    add_equipment_to_job.save()
+
+                line.save()
+
+
+def update_create_existing_invoice_lines(request, invoice, attach_to_invoice, job_site):
+    if invoice.Line:
+        for invoice_line in invoice.Line:
+            if invoice_line.DetailType == 'SalesItemLineDetail' and invoice_line.Id and invoice_line.Description:
+                try:
+                    existing_invoice_line = InvoiceLine.objects.get(invoice=attach_to_invoice, line_id=invoice_line.Id)
+                except ObjectDoesNotExist:
+                    create_new_invoice_lines(request, invoice, attach_to_invoice, job_site)
+                except InvoiceLine.MultipleObjectsReturned:
+                    pass
+                else:
+                    existing_invoice_line.description = invoice_line.Description
+                    existing_invoice_line.price = invoice_line.Amount
+
+                    try:
+                        existing_invoice_line.quantity = invoice_line.Qty
+                    except AttributeError:
+                        pass
+
+                    line_equipment_id = int(invoice_line.SalesItemLineDetail.ItemRef.value)
+
+                    try:
+                        line_equipment = Equipment.objects.get(quickbooks_id=line_equipment_id)
+                    except ObjectDoesNotExist:
+                        pass
+                    else:
+                        existing_invoice_line.equipment = line_equipment
+
+                    existing_invoice_line.save()
+
+
+def get_last_run():
+    system_info = QBSystem.objects.last()
+
+    if system_info:
+        logger.warning("Found a time.")
+        return system_info.last_update.isoformat()
+    else:
+        logger.warning("Unable to locate time, giving it now.")
+        return timezone.now().isoformat()
 
 
 # Create your views here.
@@ -114,7 +204,8 @@ def callback(request):
         return redirect('index')
 
     if state_tok is None:
-        return HttpResponseBadRequest('400 - State Token (Usually a bad QuickBooks login attempt, please log in again.)')
+        return HttpResponseBadRequest(
+            '400 - State Token (Usually a bad QuickBooks login attempt, please log in again.)')
     elif state_tok != auth_client.state_token:
         return HttpResponse('unauthorized', status=401)
 
@@ -135,11 +226,11 @@ def callback(request):
             myfile.write(auth_client.refresh_token)
     except AuthClientError as e:
         # just printing status_code here but it can be used for retry workflows, etc
-        print(e.status_code)
-        print(e.content)
-        print(e.intuit_tid)
+        logger.critical(e.status_code)
+        logger.critical(e.content)
+        logger.critical(e.intuit_tid)
     except Exception as e:
-        print(e)
+        logger.critical(e)
     return redirect('connected')
 
 
@@ -177,13 +268,13 @@ def user_info(request):
     except ValueError:
         return HttpResponse('id_token or access_token not found.')
     except AuthClientError as e:
-        print(e.status_code)
-        print(e.intuit_tid)
+        logger.critical(e.status_code)
+        logger.critical(e.intuit_tid)
     return HttpResponse(response.content)
 
 
 @login_required
-def refresh(request):
+def refresh(request, changes_only=False):
     auth_client = auth_client_def(request)
 
     try:
@@ -193,20 +284,30 @@ def refresh(request):
             myfile = File(f)
             myfile.write(auth_client.refresh_token)
     except AuthClientError as e:
-        print(e.status_code)
-        print(e.intuit_tid)
+        logger.critical(e.status_code)
+        logger.critical(e.intuit_tid)
 
-    return HttpResponse('New refresh_token: {0}'.format(auth_client.refresh_token))
+    if changes_only:
+        return True
+    else:
+        return HttpResponse('New refresh_token: {0}'.format(auth_client.refresh_token))
 
 
 @transaction.atomic
 @login_required
-def insert_qb_customers(request):
+def insert_qb_customers(request, changes_only=False):
     client = qb_client(request)
+    last_run = get_last_run()
 
     try:
-        qb_customer_count = qbCustomer.count("Active in (True, False)", qb=client)
-        print(f"Customer Count: {qb_customer_count}")
+        if changes_only:
+            qb_customer_count = qbCustomer.count(
+                f"Active in (True, False) AND Metadata.LastUpdatedTime > '{last_run}'", qb=client
+            )
+        else:
+            qb_customer_count = qbCustomer.count("Active in (True, False)", qb=client)
+
+        logger.warning(f"Customer Update Count: {qb_customer_count}")
     except QuickbooksException as e:
         return HttpResponse(str(e.error_code) + ' - ' + e.message)
     else:
@@ -214,8 +315,19 @@ def insert_qb_customers(request):
 
         for current_run in range(1, runs):
             start_count = (current_run * max_per_run) - max_per_run
-            customers = qbCustomer.query(f"SELECT * FROM Customer WHERE Active in (True, False) STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
-                                         qb=client)
+
+            if changes_only:
+                logger.warning("Checking for changes to customers.")
+                customers = qbCustomer.query(
+                    f"SELECT * FROM Customer WHERE Active in (True, False) AND Metadata.LastUpdatedTime > '{last_run}' STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
+                    qb=client
+                )
+            else:
+                logger.warning("Getting all customer data from Quickbooks.")
+                customers = qbCustomer.query(
+                    f"SELECT * FROM Customer WHERE Active in (True, False) STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
+                    qb=client
+                )
 
             for customer in customers:
                 cust = Customer(
@@ -306,9 +418,10 @@ def insert_qb_customers(request):
 
                         existing_job_site.save()
 
-    get_equipment_qb(request)
+    get_equipment_qb(request, changes_only)
 
-    return HttpResponse('Successfully fetched all customers, job sites, and equipment.')
+    if not changes_only:
+        return HttpResponse('Successfully fetched all customers, job sites, and equipment.')
 
 
 @login_required
@@ -318,8 +431,8 @@ def revoke(request):
     try:
         auth_client.revoke()
     except AuthClientError as e:
-        print(e.status_code)
-        print(e.intuit_tid)
+        logger.critical(e.status_code)
+        logger.critical(e.intuit_tid)
     return HttpResponse('Revoke successful')
 
 
@@ -336,11 +449,17 @@ def get_qb_customers(request):
 
 @transaction.atomic
 @login_required
-def get_service_data(request):
+def get_service_data(request, changes_only=False):
     client = qb_client(request)
+    last_run = get_last_run()
 
     try:
-        invoice_count = qbInvoice.count(qb=client)
+        if changes_only:
+            invoice_count = qbInvoice.count(f"Metadata.LastUpdatedTime > '{last_run}'", qb=client)
+        else:
+            invoice_count = qbInvoice.count(qb=client)
+
+        logger.warning(f"Invoices to Update: {invoice_count}")
     except QuickbooksException as e:
         return HttpResponse(str(e.error_code) + ' - ' + e.message)
     else:
@@ -348,20 +467,28 @@ def get_service_data(request):
 
         for current_run in range(1, runs):
             start_count = (current_run * max_per_run) - max_per_run
-            invoices = qbInvoice.query(
-                f"SELECT * FROM Invoice STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
-                qb=client)
+
+            if changes_only:
+                logger.warning("Checking for service changes.")
+                invoices = qbInvoice.query(
+                    f"SELECT * FROM Invoice WHERE Metadata.LastUpdatedTime > '{last_run}' STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
+                    qb=client)
+            else:
+                logger.warning("Updating all service records.")
+                invoices = qbInvoice.query(
+                    f"SELECT * FROM Invoice STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
+                    qb=client)
 
             for invoice in invoices:
                 try:
                     job_site = JobSite.objects.get(quickbooks_id=invoice.CustomerRef.value)
                 except ObjectDoesNotExist:
-                    print(f"Unable to locate job site for QB CustomerRef {invoice.CustomerRef.value}")
+                    logger.warning(f"Unable to locate job site for QB CustomerRef {invoice.CustomerRef.value}")
                 else:
                     try:
                         existing_invoice = Invoice.objects.get(invoice_num=invoice.DocNumber)
                     except ValueError:
-                        print(f"Error with QB DocNumber {invoice.DocNumber}, ObjectDoesNotExist.")
+                        logger.warning(f"Error with QB DocNumber {invoice.DocNumber}, ValueError.")
                     except ObjectDoesNotExist:
                         if invoice.DocNumber:
                             create_invoice = Invoice(
@@ -380,34 +507,22 @@ def get_service_data(request):
                                             and cf.StringValue.isnumeric():
                                         create_invoice.service_interval = int(cf.StringValue)
 
+                                        job_site.service_interval = create_invoice.service_interval
+
+                            next_service = parse(create_invoice.invoice_date).date() + \
+                                           relativedelta(months=job_site.service_interval)
+
+                            if job_site.next_service_date:
+                                if next_service > job_site.next_service_date:
+                                    job_site.next_service_date = next_service
+                            else:
+                                job_site.next_service_date = next_service
+
+                            job_site.save()
+
                             create_invoice.save()
 
-                            if invoice.Line:
-                                for invoice_line in invoice.Line:
-                                    if invoice_line.DetailType == 'SalesItemLineDetail' \
-                                            and invoice_line.Id and invoice_line.Description:
-                                        line = InvoiceLine(
-                                            line_id=invoice_line.Id,
-                                            description=invoice_line.Description,
-                                            price=invoice_line.Amount,
-                                            invoice=create_invoice,
-                                        )
-
-                                        try:
-                                            line.quantity = invoice_line.Qty
-                                        except AttributeError:
-                                            pass
-
-                                        line_equipment_id = int(invoice_line.SalesItemLineDetail.ItemRef.value)
-
-                                        try:
-                                            line_equipment = Equipment.objects.get(quickbooks_id=line_equipment_id)
-                                        except ObjectDoesNotExist:
-                                            pass
-                                        else:
-                                            line.equipment = line_equipment
-
-                                        line.save()
+                            create_new_invoice_lines(request, invoice, create_invoice, job_site)
                     else:
                         # On error of page, for instance not enough records, comment the block out below.
                         # FIXME: Move this to a new view def to "update existing records"
@@ -423,62 +538,26 @@ def get_service_data(request):
                                 if cf.Name == 'Set Service Int' and cf.StringValue != '' and cf.StringValue.isnumeric():
                                     existing_invoice.service_interval = int(cf.StringValue)
 
+                                    job_site.service_interval = existing_invoice.service_interval
+
+                        next_service = parse(existing_invoice.invoice_date).date() + \
+                                       relativedelta(months=job_site.service_interval)
+
+                        if job_site.next_service_date:
+                            if next_service > job_site.next_service_date:
+                                job_site.next_service_date = next_service
+                        else:
+                            job_site.next_service_date = next_service
+
+                        job_site.save()
                         existing_invoice.save()
 
-                        if invoice.Line:
-                            for invoice_line in invoice.Line:
-                                if invoice_line.DetailType == 'SalesItemLineDetail' \
-                                        and invoice_line.Id and invoice_line.Description:
-                                    try:
-                                        existing_invoice_line = InvoiceLine.objects.get(
-                                            invoice=existing_invoice, line_id=invoice_line.Id
-                                        )
-                                    except ObjectDoesNotExist:
-                                        line = InvoiceLine(
-                                            line_id=invoice_line.Id,
-                                            description=invoice_line.Description,
-                                            price=invoice_line.Amount,
-                                            invoice=existing_invoice,
-                                        )
+                        update_create_existing_invoice_lines(request, invoice, existing_invoice, job_site)
+    finally:
+        save_last_update(request)
 
-                                        try:
-                                            line.quantity = invoice_line.Qty
-                                        except AttributeError:
-                                            pass
-
-                                        line_equipment_id = int(invoice_line.SalesItemLineDetail.ItemRef.value)
-
-                                        try:
-                                            line_equipment = Equipment.objects.get(quickbooks_id=line_equipment_id)
-                                        except ObjectDoesNotExist:
-                                            pass
-                                        else:
-                                            line.equipment = line_equipment
-
-                                        line.save()
-                                    else:
-                                        existing_invoice_line.description = invoice_line.Description
-                                        existing_invoice_line.price = invoice_line.Amount
-
-                                        try:
-                                            existing_invoice_line.quantity = invoice_line.Qty
-                                        except AttributeError:
-                                            pass
-
-                                        line_equipment_id = int(invoice_line.SalesItemLineDetail.ItemRef.value)
-
-                                        try:
-                                            line_equipment = Equipment.objects.get(quickbooks_id=line_equipment_id)
-                                        except ObjectDoesNotExist:
-                                            pass
-                                        else:
-                                            existing_invoice_line.equipment = line_equipment
-
-                                        existing_invoice_line.save()
-                    finally:
-                        save_last_update(request)
-
-    return HttpResponse('Successfully updated all service records, invoices, and associated information.')
+    if not changes_only:
+        return HttpResponse('Successfully updated all service records, invoices, and associated information.')
 
 
 @transaction.atomic
@@ -501,11 +580,19 @@ def calculate_service_date(request):
 
 
 @login_required
-def get_equipment_qb(request):
+def get_equipment_qb(request, changes_only=False):
     client = qb_client(request)
+    last_run = get_last_run()
 
     try:
-        item_count = qbItem.count("ParentRef in ('316', '318')", qb=client)
+        if changes_only:
+            item_count = qbItem.count(
+                f"ParentRef in ('316', '318') AND Metadata.LastUpdatedTime > '{last_run}'", qb=client
+            )
+        else:
+            item_count = qbItem.count("ParentRef in ('316', '318')", qb=client)
+
+        logger.warning(f"Equipment to update: {item_count}")
     except QuickbooksException as e:
         return HttpResponse(str(e.error_code) + ' - ' + e.message)
     else:
@@ -513,9 +600,17 @@ def get_equipment_qb(request):
 
         for current_run in range(1, runs):
             start_count = (current_run * max_per_run) - max_per_run
-            items = qbItem.query(
-                f"SELECT * FROM Item WHERE ParentRef in ('316', '318') STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
-                qb=client)
+
+            if changes_only:
+                logger.warning("Checking equipment for latest changes.")
+                items = qbItem.query(
+                    f"SELECT * FROM Item WHERE ParentRef IN ('316', '318') AND Metadata.LastUpdatedTime > '{last_run}' STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
+                    qb=client)
+            else:
+                logger.warning("Updating all equipment.")
+                items = qbItem.query(
+                    f"SELECT * FROM Item WHERE ParentRef IN ('316', '318') STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
+                    qb=client)
 
             for item in items:
                 add_item = Equipment(
@@ -550,7 +645,8 @@ def get_equipment_qb(request):
 
                     existing_item.save()
 
-        return HttpResponse(f"Total Item Count: {item_count}.<br>>>> Updated successfully.")
+        if not changes_only:
+            return HttpResponse(f"Total Item Count: {item_count}.<br>>>> Updated successfully.")
     finally:
         save_last_update(request)
 
@@ -587,9 +683,9 @@ def update_service_interval(request):
 
 
 def update_db_from_changes(request):
-    # Get all records that do not equal 12 for service interval
-    all_non_standard_invoices = Invoice.objects.filter(~Q(service_interval=12)).select_related('job_site')
+    refresh(request)
 
-    print("I don't get it, this should work.")
+    insert_qb_customers(request, True)
+    get_service_data(request, True)
 
-    return HttpResponse("Did nothing!")
+    return HttpResponse("Successfully got all changes from QuickBooks.")
