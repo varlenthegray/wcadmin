@@ -53,10 +53,10 @@ def get_refresh_token():
 
 def auth_client_def(request):
     return AuthClient(
-        os.environ.get('QB_CLIENT_ID'),
-        os.environ.get('QB_SECRET'),
-        os.environ.get('QB_REDIRECT_URI'),
-        os.environ.get('QB_ENVIRONMENT'),
+        client_id=os.environ.get('QB_CLIENT_ID'),
+        client_secret=os.environ.get('QB_SECRET'),
+        redirect_uri=os.environ.get('QB_REDIRECT_URI'),
+        environment=os.environ.get('QB_ENVIRONMENT'),
         access_token=request.session.get('access_token', None),
         refresh_token=get_refresh_token(),
         id_token=request.session.get('id_token', None),
@@ -176,10 +176,10 @@ def index(request):
 @login_required
 def oauth(request):
     auth_client = AuthClient(
-        os.environ.get('QB_CLIENT_ID'),
-        os.environ.get('QB_SECRET'),
-        os.environ.get('QB_REDIRECT_URI'),
-        os.environ.get('QB_ENVIRONMENT'),
+        client_id=os.environ.get('QB_CLIENT_ID'),
+        client_secret=os.environ.get('QB_SECRET'),
+        redirect_uri=os.environ.get('QB_REDIRECT_URI'),
+        environment=os.environ.get('QB_ENVIRONMENT'),
     )
 
     url = auth_client.get_authorization_url([Scopes.ACCOUNTING])
@@ -190,10 +190,10 @@ def oauth(request):
 @login_required
 def callback(request):
     auth_client = AuthClient(
-        os.environ.get('QB_CLIENT_ID'),
-        os.environ.get('QB_SECRET'),
-        os.environ.get('QB_REDIRECT_URI'),
-        os.environ.get('QB_ENVIRONMENT'),
+        client_id=os.environ.get('QB_CLIENT_ID'),
+        client_secret=os.environ.get('QB_SECRET'),
+        redirect_uri=os.environ.get('QB_REDIRECT_URI'),
+        environment=os.environ.get('QB_ENVIRONMENT'),
         state_token=request.session.get('state', None),
     )
 

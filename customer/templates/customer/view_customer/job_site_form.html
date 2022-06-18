@@ -49,7 +49,7 @@
 <div class="row mb-3">
     <div class="col-sm-12">
         {{ jobsite.address.errors }}
-        <label class="form-label" for="{{ jobsite.address.id_for_label }}">Installation Address</label>
+        <label class="form-label" for="{{ jobsite.address.id_for_label }}">Installation Address &nbsp; | &nbsp; <a href="https://www.google.com/maps/place/{{ jobsite.address.value|urlencode }},{{ jobsite.city.value|urlencode }},{{ jobsite.state.value|urlencode }} {{ jobsite.zip.value|urlencode }}" target="_blank">Map</a></label>
         {{ jobsite.address|add_class:"form-control"|attr:"placeholder:1234 Hard Street"|attr:"autocomplete:off" }}
     </div>
 </div>

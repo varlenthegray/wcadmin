@@ -4,9 +4,9 @@ import os
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['wcadmin.innovated.tech', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['admin.wcwater.com', 'localhost', '127.0.0.1']
 
-CSRF_TRUSTED_ORIGINS = ['https://wcadmin.innovated.tech']
+CSRF_TRUSTED_ORIGINS = ['https://admin.wcwater.com']
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 

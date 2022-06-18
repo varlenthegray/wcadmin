@@ -71,7 +71,10 @@ License: For each use you must have a valid license purchased only from above li
                 </div>
 
                 <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
+                    <li class="nav-item text-nowrap">
+                        <div id="qb-refresh-status">🟢 &nbsp;QB Updated</div>
+                    </li>
+                    <li class="nav-item mx-2 dropdown">
                         <button class="nav-link dropdown-toggle btn btn-link btn-icon-text" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="icon-lg btn-icon-prepend fa fa-user-o"></i>
                             <span>{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %}</span>
@@ -84,10 +87,16 @@ License: For each use you must have a valid license purchased only from above li
                                 </div>
                             </div>
                             <div class="d-grid gap-2 p-1">
-                                <button onclick="location.href='admin/auth/user/{{ user.pk }}/change/'" type="button" class="text-start btn btn-link ms-0">
+                                <button onclick="location.href='/admin/auth/user/{{ user.pk }}/change/'" type="button" class="text-start btn btn-link ms-0">
                                     <i class="me-2 icon-md fa fa-user-edit"></i>
                                     <span>Edit Profile</span>
                                 </button>
+                                {% if request.user.is_superuser %}
+                                    <button onclick="location.href='/admin/'" type="button" class="text-start btn btn-link ms-0">
+                                        <i class="me-2 icon-md fa fa-cogs"></i>
+                                        <span>Admin Panel</span>
+                                    </button>
+                                {% endif %}
                                 <button onclick="location.href='{% url 'logout' %}'" type="button" class="text-start btn btn-link ms-0">
                                     <i class="me-2 icon-md fa fa-right-from-bracket"></i>
                                     <span>Log Out</span>
@@ -108,7 +117,7 @@ License: For each use you must have a valid license purchased only from above li
                         <div class="card">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-baseline mb-2">
-                                    <h6 class="card-title mb-0">{% block card_title %}All Job Sites{% endblock %}</h6>
+                                    <h6 class="card-title mb-0">{% block card_title %}All Customers{% endblock %}</h6>
                                     <div class="dropdown mb-2">
                                         <button class="btn p-0" type="button" id="dropdownMenuButton7" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="icon-lg text-muted pb-3px fa fa-ellipsis"></i>
@@ -166,6 +175,20 @@ License: For each use you must have a valid license purchased only from above li
       });
     </script>
 {% endblock %}
+
+<script>
+  $(function() {
+    $.get("{% url 'get_changes_from_qb' %}", function () {
+      $("#qb-refresh-status").html("🟢 &nbsp;QB Updated")
+    }).error(function() {
+      $("#qb-refresh-status").html("🔴 &nbsp;QB Failed")
+    });
+
+    $('.dataTables_filter input[type="search"]').css(
+        {'width':'350px','display':'inline-block'}
+    );
+  });
+</script>
 <!-- End plugin js for this page -->
 
 <!-- inject:js -->

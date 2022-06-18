@@ -9,7 +9,11 @@ $(function() {
         { extend: 'pdf', className: 'btn btn-outline-primary' },
         { extend: 'print', className: 'btn btn-outline-primary' },
       ]
-    }
+    },
+    lengthMenu: [
+      [10, 25, 50, -1],
+      [10, 25, 50, 'All'],
+    ],
   });
 
   $("#dt_button_copy").on("click", function() {

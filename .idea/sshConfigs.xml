@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" host="admin.wcwater.com" id="12287923-9b8f-40a2-a666-52bc3b3e42dc" port="22" nameFormat="DESCRIPTIVE" username="wcadmin" useOpenSSHConfig="true" />
+    </configs>
+  </component>
+</project>

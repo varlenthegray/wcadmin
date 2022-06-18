@@ -8,7 +8,7 @@
             {% for invoice_line in invoice %}
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="invoice_heading_{{ invoice_line.invoice_num }}">
-                        <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#invoice_{{ invoice_line.invoice_num }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="invoice_{{ invoice_line.invoice_num }}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#invoice_{{ invoice_line.invoice_num }}" aria-expanded="false" aria-controls="invoice_{{ invoice_line.invoice_num }}">
                             {# <em>{{ invoice_line.invoice_num }}</em> &nbsp;&nbsp; | &nbsp;&nbsp; {{ invoice_line.invoice_date|date:"m-d-Y" }} &nbsp;&nbsp; | &nbsp;&nbsp; <strong>$ {{ invoice_line.total|floatformat:2|intcomma }}</strong> &nbsp;&nbsp; | &nbsp;&nbsp; {{ invoice_line.service_interval }} month interval#}
                             {# HAHA I absolutely CANNOT believe that HTML let me put a table inside of a button. #}
                             <table width="90%">
@@ -20,7 +20,7 @@
                             </table>
                         </button>
                     </h2>
-                    <div id="invoice_{{ invoice_line.invoice_num }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="invoice_heading_{{ invoice_line.invoice_num }}" data-bs-parent="#invoiceAccordian">
+                    <div id="invoice_{{ invoice_line.invoice_num }}" class="accordion-collapse collapse" aria-labelledby="invoice_heading_{{ invoice_line.invoice_num }}" data-bs-parent="#invoiceAccordian">
                         <div class="accordion-body">
                             {% if invoice_line.invoiceline_set %}
                                 <table class="table table-responsive">
@@ -33,7 +33,7 @@
                                     <tbody>
                                     {% for invoice_line_item in invoice_line.invoiceline_set.all %}
                                         <tr>
-                                            <td>{% if invoice_line_item.description|length > 65 %}<abbr title="{{ invoice_line_item.description }}">{% endif %}{{ invoice_line_item.description|truncatechars:65 }}</abbr></td>
+                                            <td>{% if invoice_line_item.description|length > 70 %}<abbr title="{{ invoice_line_item.description }}">{% endif %}{{ invoice_line_item.description|truncatechars:70 }}</abbr></td>
                                             <td>$ {{ invoice_line_item.price|floatformat:2|intcomma }}</td>
                                         </tr>
                                     {% endfor %}

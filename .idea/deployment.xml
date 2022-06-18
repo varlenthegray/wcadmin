@@ -6,6 +6,7 @@
         <serverdata>
           <mappings>
             <mapping deploy="/wcadmin" local="$PROJECT_DIR$" web="/" />
+            <mapping local="$USER_HOME$/Documents/Innovated/2_Clients/Dennis Warwick/01_Active/Admin/01_Stock/NobleUI - HTML - v2.0/template/demo2" />
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/db.sqlite3" />

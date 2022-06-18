@@ -81,6 +81,10 @@
                     </ul>
                     <div class="tab-content border border-top-0 p-3" id="myTabContent">
                         <div class="tab-pane fade show active" id="notes" role="tabpanel" aria-labelledby="notes-tab">
+                            <h5 class="mb-2">
+                                Internal Notes <button type="button" class="btn btn-link btn-icon float-end" id="addNote"><i class="fa fa-plus-circle"></i></button>
+                            </h5>
+
                             <div class="row">
                                 <div class="col-sm-12">
                                     <table class="table">
@@ -109,6 +113,11 @@
                                     {{ customer.billing_address_1.errors }}
                                     <label class="form-label" for="{{ customer.billing_address_1.id_for_label }}">Billing Address 1</label>
                                     {{ customer.billing_address_1|add_class:"form-control"|attr:"placeholder:1234 Easy Street"|attr:"autocomplete:off" }}
+                                </div>
+                                <div class="col-sm-12">
+                                    {{ customer.billing_address_2.errors }}
+                                    <label class="form-label" for="{{ customer.billing_address_2.id_for_label }}">Billing Address 2</label>
+                                    {{ customer.billing_address_2|add_class:"form-control"|attr:"autocomplete:off" }}
                                 </div>
                             </div>
 
