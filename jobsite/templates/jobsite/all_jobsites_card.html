@@ -16,14 +16,14 @@
                 <td>
                     <a href="{% url 'viewSpecificJobSite' pk=jobsite.pk %}" class="btn btn-inverse-info btn-xs btn-icon" title="View Service Record"><i class="fa fa-wrench"></i></a>
                 </td>
-                <td>{% if jobsite.name|length > 50 %}<abbr title="{{ jobsite.name }}">{% endif %}{{ jobsite.name|truncatechars:50 }}</abbr> {% if jobsite.customer.company %}<br><em>{{ jobsite.customer.company }}</em>{% endif %}</td>
+                <td>{% if jobsite.name|length > 40 %}<abbr title="{{ jobsite.name }}">{% endif %}{{ jobsite.name|truncatechars:40 }}</abbr> {% if jobsite.customer.company %}<br><em>{% if jobsite.customer.company|length > 40 %}<abbr title="{{ jobsite.customer.company }}">{% endif %}{{ jobsite.customer.company|truncatechars:40 }}</abbr></em>{% endif %}</td>
                 <td>
                     <a href="https://www.google.com/maps/place/{{ jobsite.address|urlencode }},{{ jobsite.city|urlencode }},{{ jobsite.state|urlencode }} {{ jobsite.zip|urlencode }}" target="_blank">
-                        <i class="fa fa-map-pin"></i> &nbsp; {{ jobsite.address }}<br>{{ jobsite.city }}, {{ jobsite.state }} {{ jobsite.zip }}
+                        <i class="fa fa-map-pin"></i> &nbsp; {% if jobsite.address|length > 40 %}<abbr title="{{ jobsite.address }}">{% endif %}{{ jobsite.address|truncatechars:40 }}</abbr><br>{{ jobsite.city }}, {{ jobsite.state }} {{ jobsite.zip }}
                     </a>
                 </td>
-                <td><a href="tel:1{{ jobsite.phone_number }}"><i class="fa fa-phone"></i> &nbsp; {{ jobsite.phone_number }}</a></td>
-                <td><a href="mailto:{{ jobsite.email }}">{% if jobsite.email|length > 50 %}<abbr title="{{ jobsite.email }}">{% endif %}<i class="fa fa-envelope"></i> &nbsp; {{ jobsite.email|truncatechars:50 }}</abbr></a></td>
+                <td><a href="tel:1{{ jobsite.phone_number }}"><i class="fa fa-phone"></i> &nbsp; {% if jobsite.phone_number|length > 15 %}<abbr title="{{ jobsite.phone_number }}">{% endif %}{{ jobsite.phone_number|truncatechars:15 }}</abbr></a></td>
+                <td><a href="mailto:{{ jobsite.email }}">{% if jobsite.email|length > 30 %}<abbr title="{{ jobsite.email }}">{% endif %}<i class="fa fa-envelope"></i> &nbsp; {{ jobsite.email|truncatechars:30 }}</abbr></a></td>
                 <td>{{ jobsite.next_service_date }}</td>
             </tr>
         {% endfor %}

@@ -1,6 +1,6 @@
 $(function() {
   let table = $("#customerDatatable").DataTable({
-    dom: 'frtip',
+    dom: 'Blfrtip',
     buttons: {
       buttons: [
         { extend: 'copy', className: 'btn btn-outline-primary' },

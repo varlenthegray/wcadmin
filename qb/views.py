@@ -355,6 +355,13 @@ def insert_qb_customers(request, changes_only=False):
                     cust.billing_state = customer.BillAddr.CountrySubDivisionCode
                     cust.billing_zip = customer.BillAddr.PostalCode
 
+                if customer.ShipAddr:
+                    cust.ship_addr_1 = customer.ShipAddr.Line1
+                    cust.ship_addr_2 = customer.ShipAddr.Line2
+                    cust.ship_city = customer.ShipAddr.City
+                    cust.ship_state = customer.ShipAddr.CountrySubDivisionCode
+                    cust.ship_zip = customer.ShipAddr.PostalCode
+
                 try:
                     existing_cust = Customer.objects.get(quickbooks_id=customer.Id)
                 except ObjectDoesNotExist:
@@ -393,28 +400,44 @@ def insert_qb_customers(request, changes_only=False):
                         new_job_site = JobSite(
                             quickbooks_id=cust.quickbooks_id,
                             name=customer.DisplayName,
-                            address=cust.billing_address_1,
-                            address_2=cust.billing_address_2,
-                            city=cust.billing_city,
-                            state=cust.billing_state,
-                            zip=cust.billing_zip,
                             phone_number=cust.main_phone,
                             email=cust.email,
                             active=cust.is_active,
                             customer=job_customer,
                         )
 
+                        if customer.ShipAddr:
+                            new_job_site.address = cust.ship_addr_1
+                            new_job_site.address_2 = cust.ship_addr_2
+                            new_job_site.city = cust.ship_city
+                            new_job_site.state = cust.ship_state
+                            new_job_site.zip = cust.ship_zip
+                        else:
+                            new_job_site.address = cust.billing_address_1
+                            new_job_site.address_2 = cust.billing_address_2
+                            new_job_site.city = cust.billing_city
+                            new_job_site.state = cust.billing_state
+                            new_job_site.zip = cust.billing_zip
+
                         new_job_site.save()
                     else:
                         existing_job_site.quickbooks_id = cust.quickbooks_id
-                        existing_job_site.address = cust.billing_address_1
-                        existing_job_site.address_2 = cust.billing_address_2
-                        existing_job_site.city = cust.billing_city
-                        existing_job_site.state = cust.billing_state
-                        existing_job_site.zip = cust.billing_zip
                         existing_job_site.phone_number = cust.main_phone
                         existing_job_site.email = cust.email
                         existing_job_site.active = cust.is_active
+
+                        if customer.ShipAddr:
+                            existing_job_site.address = cust.ship_addr_1
+                            existing_job_site.address_2 = cust.ship_addr_2
+                            existing_job_site.city = cust.ship_city
+                            existing_job_site.state = cust.ship_state
+                            existing_job_site.zip = cust.ship_zip
+                        else:
+                            existing_job_site.address = cust.billing_address_1
+                            existing_job_site.address_2 = cust.billing_address_2
+                            existing_job_site.city = cust.billing_city
+                            existing_job_site.state = cust.billing_state
+                            existing_job_site.zip = cust.billing_zip
 
                         existing_job_site.save()
 
@@ -682,6 +705,7 @@ def update_service_interval(request):
     return HttpResponse("Successfully updated service interval.")
 
 
+@login_required
 def update_db_from_changes(request):
     refresh(request)
 

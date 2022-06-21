@@ -4,17 +4,17 @@
     <div class="col-sm-4">
         {{ jobsite.name.errors }}
         <label class="form-label" for="{{ jobsite.name.id_for_label }}">Contact Name</label>
-        {{ jobsite.name|add_class:"form-control"|attr:"placeholder:Contact Name"|attr:"autocomplete:off" }}
+        {{ jobsite.name|add_class:"form-control"|attr:"autocomplete:off" }}
     </div><!-- Col -->
     <div class="col-sm-4">
         {{ jobsite.phone_number.errors }}
         <label class="form-label" for="{{ jobsite.phone_number.id_for_label }}">Contact Phone</label>
-        {{ jobsite.phone_number|add_class:"form-control phone-number"|attr:"placeholder:(___) ___-____"|attr:"autocomplete:off" }}
+        {{ jobsite.phone_number|add_class:"form-control phone-number"|attr:"autocomplete:off" }}
     </div>
     <div class="col-sm-4">
         {{ jobsite.email.errors }}
         <label class="form-label" for="{{ jobsite.email.id_for_label }}">Contact Email</label>
-        {{ jobsite.email|add_class:"form-control"|attr:"placeholder:abc@abc.com"|attr:"type:email"|attr:"autocomplete:off" }}
+        {{ jobsite.email|add_class:"form-control"|attr:"type:email"|attr:"autocomplete:off" }}
     </div>
 </div>
 
@@ -23,14 +23,14 @@
         {{ jobsite.next_service_date.errors }}
         <label class="form-label" for="{{ jobsite.next_service_date.id_for_label }}">Next Service Date</label>
         <div class="input-group date datepicker" id="datePickerServiceDate">
-            {{ jobsite.next_service_date|add_class:"form-control next-service-date"|attr:"placeholder:Next Service Date"|attr:"autocomplete:off" }}
+            {{ jobsite.next_service_date|add_class:"form-control next-service-date"|attr:"autocomplete:off" }}
             <span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
         </div>
     </div>
     <div class="col-sm-3">
         {{ jobsite.service_interval.errors }}
         <label class="form-label" for="{{ jobsite.service_interval.id_for_label }}">Service Interval</label>
-        {{ jobsite.service_interval|add_class:"form-control service-int"|attr:"placeholder:12"|attr:"autocomplete:off"|attr:"type:number"|attr:"min:2"|attr:"max:120" }}
+        {{ jobsite.service_interval|add_class:"form-control service-int"|attr:"autocomplete:off"|attr:"type:number"|attr:"min:2"|attr:"max:120" }}
     </div>
     <div class="col-sm-5 text-end">
         <div class="form-check">
@@ -50,7 +50,7 @@
     <div class="col-sm-12">
         {{ jobsite.address.errors }}
         <label class="form-label" for="{{ jobsite.address.id_for_label }}">Installation Address &nbsp; | &nbsp; <a href="https://www.google.com/maps/place/{{ jobsite.address.value|urlencode }},{{ jobsite.city.value|urlencode }},{{ jobsite.state.value|urlencode }} {{ jobsite.zip.value|urlencode }}" target="_blank">Map</a></label>
-        {{ jobsite.address|add_class:"form-control"|attr:"placeholder:1234 Hard Street"|attr:"autocomplete:off" }}
+        {{ jobsite.address|add_class:"form-control"|attr:"autocomplete:off" }}
     </div>
 </div>
 
@@ -58,17 +58,17 @@
     <div class="col-sm-4">
         {{ jobsite.city.errors }}
         <label class="form-label" for="{{ jobsite.city.id_for_label }}">Installation City</label>
-        {{ jobsite.city|add_class:"form-control"|attr:"placeholder:Weaverville"|attr:"autocomplete:off" }}
+        {{ jobsite.city|add_class:"form-control"|attr:"autocomplete:off" }}
     </div><!-- Col -->
     <div class="col-sm-4">
         {{ jobsite.state.errors }}
         <label class="form-label" for="{{ jobsite.state.id_for_label }}">Installation State</label>
-        {{ jobsite.state|add_class:"form-control state"|attr:"placeholder:NC"|attr:"value:NC"|attr:"autocomplete:off" }}
+        {{ jobsite.state|add_class:"form-control state"|attr:"value:NC"|attr:"autocomplete:off" }}
     </div><!-- Col -->
     <div class="col-sm-4">
         {{ jobsite.zip.errors }}
         <label class="form-label" for="{{ jobsite.zip.id_for_label }}">Installation Zip</label>
-        {{ jobsite.zip|add_class:"form-control zip-code"|attr:"placeholder:28806"|attr:"autocomplete:off" }}
+        {{ jobsite.zip|add_class:"form-control zip-code"|attr:"autocomplete:off" }}
     </div><!-- Col -->
 </div><!-- Row -->
 

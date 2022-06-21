@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        <strong class="ms-2 card-title">Viewing: <abbr title="ID: {{ job_site_id }}">{{ jobsite.name.value }}</abbr></strong>
+        <strong class="ms-2 card-title text-uppercase fw-bold">{% if jobsite.name.value|length > 55 %}<abbr title="{{ jobsite.name.value }}">{% endif %}{{ jobsite.name.value|truncatechars:55 }}</abbr></strong>
         <button type="button" class="btn btn-link btn-icon float-end" data-bs-toggle="modal" data-bs-target="#addJobSiteModal">
             <i class="fa fa-plus-circle"></i>
         </button>

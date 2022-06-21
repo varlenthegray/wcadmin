@@ -51,6 +51,11 @@ License: For each use you must have a valid license purchased only from above li
 
     <!-- Layout styles -->
     <link rel="stylesheet" href="{% static 'assets/css/demo2/style.css' %}">
+    <style>
+        .dataTables_length {
+            margin-bottom: -30px;
+        }
+    </style>
     <!-- End layout styles -->
 
     <link rel="shortcut icon" href="{% static 'assets/images/waterdrop.png' %}" />
@@ -178,9 +183,9 @@ License: For each use you must have a valid license purchased only from above li
 
 <script>
   $(function() {
-    $.get("{% url 'get_changes_from_qb' %}", function () {
+    $.ajax("{% url 'get_changes_from_qb' %}", function () {
       $("#qb-refresh-status").html("🟢 &nbsp;QB Updated")
-    }).error(function() {
+    }).fail(function() {
       $("#qb-refresh-status").html("🔴 &nbsp;QB Failed")
     });
 

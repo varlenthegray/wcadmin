@@ -21,22 +21,22 @@
                 <div class="col-sm-2">
                     {{ customer.title.errors }}
                     <label class="form-label" for="{{ customer.title.id_for_label }}">Title</label>
-                    {{ customer.title|add_class:"form-control"|attr:"placeholder:Title"|attr:"autocomplete:off" }}
+                    {{ customer.title|add_class:"form-control"|attr:"autocomplete:off" }}
                 </div>
                 <div class="col-sm-4">
                     {{ customer.first_name.errors }}
                     <label class="form-label" for="{{ customer.first_name.id_for_label }}"><abbr title="Primary Contact">First Name</abbr></label>
-                    {{ customer.first_name|add_class:"form-control"|attr:"placeholder:First Name"|attr:"autocomplete:off" }}
+                    {{ customer.first_name|add_class:"form-control"|attr:"autocomplete:off" }}
                 </div><!-- Col -->
                 <div class="col-sm-2">
                     {{ customer.middle_name.errors }}
                     <label class="form-label" for="{{ customer.middle_name.id_for_label }}"><abbr title="Middle Initials">MI</abbr></label>
-                    {{ customer.middle_name|add_class:"form-control"|attr:"placeholder:MI"|attr:"autocomplete:off" }}
+                    {{ customer.middle_name|add_class:"form-control"|attr:"autocomplete:off" }}
                 </div>
                 <div class="col-sm-4">
                     {{ customer.last_name.errors }}
                     <label class="form-label" for="{{ customer.last_name.id_for_label }}">Last Name</label>
-                    {{ customer.last_name|add_class:"form-control"|attr:"placeholder:Last Name"|attr:"autocomplete:off" }}
+                    {{ customer.last_name|add_class:"form-control"|attr:"autocomplete:off" }}
                 </div><!-- Col -->
             </div>
 
@@ -44,17 +44,17 @@
                 <div class="col-sm-4">
                     {{ customer.company.errors }}
                     <label class="form-label" for="{{ customer.company.id_for_label }}">Company Name</label>
-                    {{ customer.company|add_class:"form-control"|attr:"placeholder:Company Name"|attr:"autocomplete:off" }}
+                    {{ customer.company|add_class:"form-control"|attr:"autocomplete:off" }}
                 </div>
                 <div class="col-sm-4">
                     {{ customer.main_phone.errors }}
                     <label class="form-label" for="{{ customer.main_phone.id_for_label }}">Primary Phone</label>
-                    {{ customer.main_phone|add_class:"form-control"|attr:"placeholder:(___) ___-____"|attr:"autocomplete:off" }}
+                    {{ customer.main_phone|add_class:"form-control"|attr:"autocomplete:off" }}
                 </div>
                 <div class="col-sm-4">
                     {{ customer.email.errors }}
                     <label class="form-label" for="{{ customer.email.id_for_label }}">Primary Email</label>
-                    {{ customer.email|add_class:"form-control"|attr:"placeholder:abc@abc.com"|attr:"type:email"|attr:"autocomplete:off" }}
+                    {{ customer.email|add_class:"form-control"|attr:"type:email"|attr:"autocomplete:off" }}
                 </div>
             </div>
 
@@ -62,7 +62,7 @@
                 <div class="col-sm-12">
                     {{ customer.notes.errors }}
                     <label class="form-label" for="{{ customer.notes.id_for_label }}">Notes</label>
-                    {{ customer.notes|add_class:"form-control"|attr:"placeholder:Enter notes here"|attr:"autocomplete:off"|attr:"rows:3" }}
+                    {{ customer.notes|add_class:"form-control"|attr:"autocomplete:off"|attr:"rows:3" }}
                 </div>
             </div>
 
@@ -112,7 +112,7 @@
                                 <div class="col-sm-12">
                                     {{ customer.billing_address_1.errors }}
                                     <label class="form-label" for="{{ customer.billing_address_1.id_for_label }}">Billing Address 1</label>
-                                    {{ customer.billing_address_1|add_class:"form-control"|attr:"placeholder:1234 Easy Street"|attr:"autocomplete:off" }}
+                                    {{ customer.billing_address_1|add_class:"form-control"|attr:"autocomplete:off" }}
                                 </div>
                                 <div class="col-sm-12">
                                     {{ customer.billing_address_2.errors }}
@@ -125,17 +125,17 @@
                                 <div class="col-sm-4">
                                     {{ customer.billing_city.errors }}
                                     <label class="form-label" for="{{ customer.billing_city.id_for_label }}">Billing City</label>
-                                    {{ customer.billing_city|add_class:"form-control"|attr:"placeholder:Aronld"|attr:"autocomplete:off" }}
+                                    {{ customer.billing_city|add_class:"form-control"|attr:"autocomplete:off" }}
                                 </div><!-- Col -->
                                 <div class="col-sm-4">
                                     {{ customer.billing_state.errors }}
                                     <label class="form-label" for="{{ customer.billing_state.id_for_label }}">Billing State</label>
-                                    {{ customer.billing_state|add_class:"form-control"|attr:"placeholder:NC"|attr:"value:NC"|attr:"autocomplete:off" }}
+                                    {{ customer.billing_state|add_class:"form-control"|attr:"value:NC"|attr:"autocomplete:off" }}
                                 </div><!-- Col -->
                                 <div class="col-sm-4">
                                     {{ customer.billing_zip.errors }}
                                     <label class="form-label" for="{{ customer.billing_zip.id_for_label }}">Billing Zip</label>
-                                    {{ customer.billing_zip|add_class:"form-control"|attr:"placeholder:28801"|attr:"autocomplete:off" }}
+                                    {{ customer.billing_zip|add_class:"form-control"|attr:"autocomplete:off" }}
                                 </div><!-- Col -->
                             </div><!-- Row -->
                         </div>
@@ -145,12 +145,12 @@
                                 <div class="col-sm-6">
                                     {{ customer.secondary_contact_name.errors }}
                                     <label class="form-label" for="{{ customer.secondary_contact_name.id_for_label }}">Secondary Contact Name</label>
-                                    {{ customer.secondary_contact_name|add_class:"form-control"|attr:"placeholder:Secondary Contact Name" }}
+                                    {{ customer.secondary_contact_name|add_class:"form-control" }}
                                 </div>
                                 <div class="col-sm-6">
                                     {{ customer.alternate_phone.errors }}
                                     <label class="form-label" for="{{ customer.alternate_phone.id_for_label }}">Secondary Contact Phone</label>
-                                    {{ customer.alternate_phone|add_class:"form-control"|attr:"placeholder:(___) ___-____" }}
+                                    {{ customer.alternate_phone|add_class:"form-control" }}
                                 </div>
                             </div>
 
@@ -158,12 +158,12 @@
                                 <div class="col-sm-4">
                                     {{ customer.website.errors }}
                                     <label class="form-label" for="{{ customer.website.id_for_label }}">Website</label>
-                                    {{ customer.website|add_class:"form-control"|attr:"placeholder:https://www.widgets.inc/" }}
+                                    {{ customer.website|add_class:"form-control" }}
                                 </div>
                                 <div class="col-sm-4">
                                     {{ customer.fax_number.errors }}
                                     <label class="form-label" for="{{ customer.fax_number.id_for_label }}">Fax Number</label>
-                                    {{ customer.fax_number|add_class:"form-control"|attr:"placeholder:(___) ___-____" }}
+                                    {{ customer.fax_number|add_class:"form-control" }}
                                 </div>
                                 <div class="col-sm-4 form-check">
                                     {{ customer.is_active.errors }}
