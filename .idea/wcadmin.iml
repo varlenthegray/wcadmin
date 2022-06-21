@@ -39,6 +39,7 @@
         <option value="$MODULE_DIR$/jobsite/templates" />
         <option value="$MODULE_DIR$/users/templates" />
         <option value="$MODULE_DIR$/qb/templates" />
+        <option value="$MODULE_DIR$/communication/templates" />
       </list>
     </option>
   </component>

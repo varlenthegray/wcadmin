@@ -1,6 +1,5 @@
 from dateutil.relativedelta import relativedelta
 from django.views import generic
-from customer.models import Customer
 from jobsite.models import JobSite
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,8 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 class DashboardView(LoginRequiredMixin, generic.ListView):
     model = JobSite
-    queryset = JobSite.objects.filter(next_service_date__month=timezone.now().month)\
-        .filter(next_service_date__year=timezone.now().year).filter(active=True)
+    queryset = JobSite.objects.filter(active=True)
     template_name = "base.html"
 
     def get_context_data(self, **kwargs):

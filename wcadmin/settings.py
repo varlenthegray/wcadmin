@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'supplier',
     'users',
     'qb',
+    'communication',
 
     'django.contrib.admin',
     'django.contrib.auth',

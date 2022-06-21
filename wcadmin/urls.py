@@ -25,4 +25,5 @@ urlpatterns = [
     path('job_sites/', include('jobsite.urls'), name='jobsite'),
     path('equipment/', include('equipment.urls'), name='equipment'),
     path('qb/', include('qb.urls'), name='qb'),
+    path('email/', include('communication.urls'), name='email'),
 ]
