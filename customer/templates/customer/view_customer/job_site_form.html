@@ -111,7 +111,7 @@
 
       nsd_field.datepicker('setDate', date);
 
-      {% comment %}let currentServiceInt = {{ jobsite.service_interval.value }},
+      let currentServiceInt = {{ jobsite.service_interval.value }},
           serviceIntField = $("#{{ jobsite.service_interval.id_for_label }}"),
           serviceIntModal = new bootstrap.Modal($("#modalCalculateService"));
 
@@ -128,7 +128,7 @@
         $("#{{ jobsite.next_service_date.id_for_label }}").val(newServiceDate.toFormat('LL-dd-yyyy'));
 
         serviceIntModal.toggle();
-      });{% endcomment %}
+      });
     }
   });
 </script>
