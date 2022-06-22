@@ -83,6 +83,9 @@
             <div class="collapse" id="uiEmail">
                 <ul class="nav sub-menu">
                     <li class="nav-item"><a href="{% url 'emailCompose' %}" class="nav-link">Compose</a></li>
+                    <li class="nav-item"><a href="{% url 'emailSentMail' %}" class="nav-link">Sent Mail</a></li>
+                    <li class="nav-item"><a href="{% url 'emailDrafts' %}" class="nav-link">Drafts</a></li>
+                    <li class="nav-item"><a href="{% url 'emailTrash' %}" class="nav-link">Trash</a></li>
                     <li class="nav-item"><a href="{% url 'emailAllTemplates' %}" class="nav-link">Templates</a></li>
                 </ul>
             </div>

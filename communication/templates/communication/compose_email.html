@@ -26,7 +26,7 @@
                                     </div>
                                 </div>
                                 <div class="d-grid my-3">
-                                    <a class="btn btn-primary" href="{% url 'emailCompose' %}"><i class="fa fa-fw fa-pencil me-2"></i> Compose Email</a>
+                                    <a class="btn btn-primary" href="{% url 'emailCompose' %}"><i class="fa fa-fw fa-pencil-square-o me-2"></i> Compose Email</a>
                                 </div>
                                 <div class="email-aside-nav collapse">
                                     <ul class="nav flex-column">
@@ -35,18 +35,18 @@
                                                 <i class="fa fa-pencil-square-o fa-fw me-2"></i> Compose
                                             </a>
                                         </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link d-flex align-items-center" href="#">
-                                                <i class="fa fa-envelope-o fa-fw me-2"></i> Sent Mail
+                                        <li class="nav-item {% if request.resolver_match.url_name == 'emailSentMail' %}active{% endif %}">
+                                            <a class="nav-link d-flex align-items-center" href="{% url 'emailSentMail' %}">
+                                                <i class="fa fa-envelope-open-text fa-fw me-2"></i> Sent Mail
                                             </a>
                                         </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link d-flex align-items-center" href="#">
-                                                <i class="fa fa-file-o fa-fw me-2"></i> Drafts
+                                        <li class="nav-item {% if request.resolver_match.url_name == 'emailDrafts' %}active{% endif %}">
+                                            <a class="nav-link d-flex align-items-center" href="{% url 'emailDrafts' %}">
+                                                <i class="fa fa-file-text-o fa-fw me-2"></i> Drafts
                                             </a>
                                         </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link d-flex align-items-center" href="#">
+                                        <li class="nav-item {% if request.resolver_match.url_name == 'emailTrash' %}active{% endif %}">
+                                            <a class="nav-link d-flex align-items-center" href="{% url 'emailTrash' %}">
                                                 <i class="fa fa-fw fa-trash-o me-2"></i> Trash
                                             </a>
                                         </li>
@@ -63,7 +63,7 @@
                             {% block email_action %}
                                 <div>
                                     <div class="d-flex align-items-center p-3 border-bottom tx-16">
-                                        <i class="fa fa-fw fa-pencil me-2"></i> New Message
+                                        <i class="fa fa-fw fa-pencil-square-o me-2"></i> New Message
                                     </div>
                                 </div>
                                 <div class="p-3 pb-0">
@@ -139,7 +139,6 @@
 {% block page_script %}
     <script>
       $(function() {
-        /*simplemde editor*/
         if ($("#simpleMdeEditor").length) {
           var simplemde = new SimpleMDE({
             element: $("#simpleMdeEditor")[0]

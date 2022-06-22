@@ -18,5 +18,6 @@ class EmailHistory(models.Model):
     message = models.TextField()
     template_used = models.ForeignKey(EmailTemplates, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, editable=False)
+    status = models.CharField(max_length=50)
     timestamp = models.DateTimeField(auto_now_add=True, editable=False)
 

@@ -29,7 +29,7 @@
                     <tr>
                         <td></td>
                         <td>{{ template.template_name }}</td>
-                        <td>{{ template.last_updated_by.name }}</td>
+                        <td>{% if template.user.name %}{{ template.user.name }}{% else %}{{ template.user.username }}{% endif %}</td>
                         <td>{{ template.last_updated_on|date:'m-d-Y h:i A' }}</td>
                     </tr>
                 {% endfor %}
