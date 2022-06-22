@@ -1,5 +1,5 @@
 $(function() {
-  let table = $("#customerDatatable").DataTable({
+  let job_site_table = $("#customerDatatable").DataTable({
     dom: 'lfrtip',
     buttons: {
       buttons: [
@@ -17,23 +17,23 @@ $(function() {
   });
 
   $("#dt_button_copy").on("click", function() {
-    table.buttons('.buttons-copy').trigger();
+    job_site_table.buttons('.buttons-copy').trigger();
     window.alert("Copied.");
   });
 
   $("#dt_button_csv").on("click", function() {
-    table.buttons('.buttons-csv').trigger();
+    job_site_table.buttons('.buttons-csv').trigger();
   });
 
   $("#dt_button_excel").on("click", function() {
-    table.buttons('.buttons-excel').trigger();
+    job_site_table.buttons('.buttons-excel').trigger();
   });
 
   $("#dt_button_pdf").on("click", function() {
-    table.buttons('.buttons-pdf').trigger();
+    job_site_table.buttons('.buttons-pdf').trigger();
   });
 
   $("#dt_button_print").on("click", function() {
-    table.buttons('.buttons-print').trigger();
+    job_site_table.buttons('.buttons-print').trigger();
   });
 });

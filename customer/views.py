@@ -10,6 +10,9 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class AllCustomers(LoginRequiredMixin, generic.ListView):
     model = Customer
@@ -136,6 +139,7 @@ class ViewSpecificJobSite(LoginRequiredMixin, generic.UpdateView):
 
         context['job_site_id'] = self.object.pk
         context['jobsite'] = ViewJobSiteForm(instance=JobSite.objects.get(pk=context['job_site_id']), prefix='job')
+        context['job_obj'] = JobSite.objects.get(pk=context['job_site_id'])
         context['all_job_sites'] = JobSite.objects.filter(customer=self.object.customer)
 
         context['existing_equipment'] = JobSiteEquipment.objects.filter(job_site=context['job_site_id'])
@@ -214,6 +218,7 @@ class UpdateJobSite(LoginRequiredMixin, generic.UpdateView):
             job_site_form.save()
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
+            logger.warning('Unable to update job site ' + self.kwargs['pk'])
             return HttpResponseBadRequest(job_site_form.errors)
 
 

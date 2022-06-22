@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="table-responsive">
     <table class="table" id="customerDatatable">
         <thead>
@@ -15,6 +17,7 @@
             <tr>
                 <td>
                     <a href="{% url 'viewSpecificJobSite' pk=jobsite.pk %}" class="btn btn-inverse-info btn-xs btn-icon" title="View Service Record"><i class="fa fa-wrench"></i></a>
+                    {% if request.user.is_superuser %}<a href="https://app.qbo.intuit.com/app/customerdetail?nameId={{ jobsite.quickbooks_id }}" class="btn btn-inverse-success btn-xs btn-icon" title="View Quickbooks Record" target="_blank"><img src="{% static 'assets/images/quickbooks-icon.jpeg' %}" alt="Open in Quickbooks" style="max-width:20px;max-height:20px;"></a>{% endif %}
                 </td>
                 <td>{% if jobsite.name|length > 40 %}<abbr title="{{ jobsite.name }}">{% endif %}{{ jobsite.name|truncatechars:40 }}</abbr> {% if jobsite.customer.company %}<br><em>{% if jobsite.customer.company|length > 40 %}<abbr title="{{ jobsite.customer.company }}">{% endif %}{{ jobsite.customer.company|truncatechars:40 }}</abbr></em>{% endif %}</td>
                 <td>

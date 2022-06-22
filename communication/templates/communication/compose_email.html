@@ -139,14 +139,16 @@
 {% block page_script %}
     <script>
       $(function() {
-        if ($("#simpleMdeEditor").length) {
-          var simplemde = new SimpleMDE({
-            element: $("#simpleMdeEditor")[0]
+        let editor = $("#simpleMdeEditor"), multi_select = $(".compose-multiple-select");
+
+        if (editor.length) {
+          let simplemde = new SimpleMDE({
+            element: editor[0]
           });
         }
 
-        if ($(".compose-multiple-select").length) {
-          $(".compose-multiple-select").select2();
+        if (multi_select.length) {
+          multi_select.select2();
         }
       })
     </script>

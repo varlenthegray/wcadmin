@@ -13,7 +13,6 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.utils import timezone
-from datetime import datetime
 
 from dotenv import load_dotenv
 from dateutil.relativedelta import relativedelta
@@ -160,10 +159,8 @@ def get_last_run():
     system_info = QBSystem.objects.last()
 
     if system_info:
-        logger.warning("Found a time.")
         return system_info.last_update.isoformat()
     else:
-        logger.warning("Unable to locate time, giving it now.")
         return timezone.now().isoformat()
 
 
@@ -307,7 +304,7 @@ def insert_qb_customers(request, changes_only=False):
         else:
             qb_customer_count = qbCustomer.count("Active in (True, False)", qb=client)
 
-        logger.warning(f"Customer Update Count: {qb_customer_count}")
+        logger.warning(f"{timezone.now()} Customer Update Count: {qb_customer_count}")
     except QuickbooksException as e:
         return HttpResponse(str(e.error_code) + ' - ' + e.message)
     else:
@@ -482,7 +479,7 @@ def get_service_data(request, changes_only=False):
         else:
             invoice_count = qbInvoice.count(qb=client)
 
-        logger.warning(f"Invoices to Update: {invoice_count}")
+        logger.warning(f"{timezone.now()} Invoices to Update: {invoice_count}")
     except QuickbooksException as e:
         return HttpResponse(str(e.error_code) + ' - ' + e.message)
     else:
@@ -615,7 +612,7 @@ def get_equipment_qb(request, changes_only=False):
         else:
             item_count = qbItem.count("ParentRef in ('316', '318')", qb=client)
 
-        logger.warning(f"Equipment to update: {item_count}")
+        logger.warning(f"{timezone.now()} Equipment to update: {item_count}")
     except QuickbooksException as e:
         return HttpResponse(str(e.error_code) + ' - ' + e.message)
     else:

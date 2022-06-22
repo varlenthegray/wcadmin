@@ -1,4 +1,5 @@
 {% load widget_tweaks %}
+{% load static %}
 
 {% if not jobsite.active.value or jobsite.requires_supporting_technician.value %}
     <div class="row">
@@ -32,7 +33,13 @@
             </div>
         </div>
 
-        <strong class="ms-2 card-title text-uppercase fw-bold">{% if jobsite.name.value|length > 55 %}<abbr title="{{ jobsite.name.value }}">{% endif %}{{ jobsite.name.value|truncatechars:55 }}</abbr></strong>
+        {% if request.user.is_superuser %}
+            <a href="https://app.qbo.intuit.com/app/customerdetail?nameId={{ job_obj.quickbooks_id }}" class="ms-2" title="View Quickbooks Record" target="_blank">
+                <img src="{% static 'assets/images/quickbooks-icon.jpeg' %}" alt="Open in Quickbooks" style="max-width:20px;max-height:20px;">
+            </a>
+        {% endif %}
+
+        <strong class="ms-2 card-title text-uppercase fw-bold">{% if jobsite.name.value|length > 50 %}<abbr title="{{ jobsite.name.value }}">{% endif %}{{ jobsite.name.value|truncatechars:50 }}</abbr></strong>
         <button type="button" class="btn btn-link btn-icon float-end" data-bs-toggle="modal" data-bs-target="#addJobSiteModal">
             <i class="fa fa-plus-circle"></i>
         </button>

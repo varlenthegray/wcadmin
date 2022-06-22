@@ -14,7 +14,7 @@
     <div class="col-sm-4">
         {{ jobsite.email.errors }}
         <label class="form-label" for="{{ jobsite.email.id_for_label }}">Contact Email</label>
-        {{ jobsite.email|add_class:"form-control"|attr:"type:email"|attr:"autocomplete:off" }}
+        {{ jobsite.email|add_class:"form-control"|attr:"type:email"|attr:"autocomplete:off"|attr:"multiple" }}
     </div>
 </div>
 
@@ -42,6 +42,11 @@
             {{ jobsite.requires_supporting_technician.errors }}
             <label class="form-check-label me-4" for="{{ jobsite.requires_supporting_technician.id_for_label }}">Requires Two Technicians</label>
             {{ jobsite.requires_supporting_technician|add_class:"form-check-input float-end" }}
+        </div>
+        <div class="form-check">
+            {{ jobsite.service_scheduled.errors }}
+            <label class="form-check-label me-4" for="{{ jobsite.service_scheduled.id_for_label }}">Service Scheduled</label>
+            {{ jobsite.service_scheduled|add_class:"form-check-input float-end" }}
         </div>
     </div>
 </div>

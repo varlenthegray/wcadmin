@@ -57,7 +57,7 @@
                     <div class="row mb-3">
                         <label class="col-md-2 col-form-label"><abbr title="Visible to recipients.">CC:</abbr></label>
                         <div class="col-md-10">
-                            <select class="compose-multiple-select form-select" multiple="multiple">
+                            <select class="modal-multiple-select form-select" multiple="multiple">
                                 <option value="WCWT Info <info@wcwater.com>" selected="selected">WCWT Info (info@wcwater.com)</option>
                                 <option value="Dennis Warwick <dennis@wcwater.com>">Dennis Warwick (dennis@wcwater.com)</option>
                                 <option value="{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %} <{{ user.email }}>">{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %} ({{ user.email }})</option>
@@ -87,6 +87,18 @@
                     </div>
                 </div>
             </div>
+
+            <script>
+              $(function() {
+                let multi_select = $(".modal-multiple-select");
+
+                if (multi_select.length) {
+                  multi_select.select2({
+                    dropdownParent: $("#createNewTemplateModal"),
+                  });
+                }
+              })
+            </script>
         </div>
     </div>
 {% endblock %}
