@@ -15,21 +15,23 @@
         {% if existing_equipment %}
             {% for equipment_line in existing_equipment %}
                 <tr>
-                    <td>
+                    <td style="border-bottom: 0;">
                         <button type="button" class="btn btn-link btn-icon editEquipmentRow" data-equip-id="{{ equipment_line.pk }}"><i class="fa fa-pencil"></i></button>
                     </td>
-                    <td>
+                    <td style="border-bottom: 0;">
                         {% if equipment_line.equipment.name|length > 50 %}<abbr title="{{ equipment_line.equipment.name }}">{% endif %}{{ equipment_line.equipment.name|truncatechars:50 }}</abbr>
 
                         {% if equipment_line.tags %}
                             {% for tag in equipment_line.tags_as_list %}
-                                <span class="badge bg-primary {% if forloop.first %}ms-2{% elif forloop.last and equipment_line.tags_as_list|length < 5 %}me-2{% endif %}">{% if tag|length > 6 %}<abbr title="{{ tag }}">{% endif %}{{ tag|truncatechars:"6" }}</abbr></span>
+                                {% if forloop.counter < 3 %}
+                                    <span class="badge bg-primary {% if forloop.first %}ms-2{% elif forloop.last and equipment_line.tags_as_list|length < 3 %}me-2{% endif %}">{% if tag|length > 20 %}<abbr title="{{ tag }}">{% endif %}{{ tag|truncatechars:20 }}</abbr></span>
+                                {% endif %}
                             {% endfor %}
 
-                            {% if equipment_line.tags_as_list|length > 5 %}<span class="badge bg-primary me-2"><abbr title="More Tags Assigned">...</abbr></span>{% endif %}
+                            {% if equipment_line.tags_as_list|length >= 3 %}<span class="badge bg-primary me-2"><abbr title="Edit to View All Tags">...</abbr></span>{% endif %}
                         {% endif %}
                     </td>
-                    <td>{{ equipment_line.installed_on }}</td>
+                    <td style="border-bottom: 0;">{{ equipment_line.installed_on }}</td>
                 </tr>
             {% endfor %}
         {% else %}
