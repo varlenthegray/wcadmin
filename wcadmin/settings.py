@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'intuitlib',
     'quickbooks',
+    # 'ajax_datatable',
 ]
 
 MIDDLEWARE = [

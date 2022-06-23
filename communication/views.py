@@ -1,7 +1,10 @@
+from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .models import EmailHistory, EmailTemplates
-from .forms import CreateEmail
+from .forms import CreateEmail, CreateTemplate
+
 from jobsite.models import JobSite
 
 
@@ -16,14 +19,24 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
         return context
 
 
-class AllTemplates(LoginRequiredMixin, generic.ListView):
+class AllTemplates(LoginRequiredMixin, generic.CreateView):
     model = EmailTemplates
     template_name = 'communication/all_templates.html'
+    form_class = CreateTemplate(prefix='createTemplate')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['customers'] = JobSite.objects.filter(active=True).exclude(email=None)
         return context
+
+    def post(self, request, *args, **kwargs):
+        create_template = CreateTemplate(request.POST, prefix='createTemplate')
+
+        if create_template.is_valid():
+            create_template.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            return HttpResponseBadRequest(create_template.errors)
 
 
 class AllSentMail(LoginRequiredMixin, generic.ListView):

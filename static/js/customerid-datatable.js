@@ -1,6 +1,8 @@
 $(function() {
   let job_site_table = $("#customerDatatable").DataTable({
     dom: 'lfrtip',
+    scrollY: 480,
+    // ajax: '/job_sites/all_job_sites_json',
     buttons: {
       buttons: [
         { extend: 'copy', className: 'btn btn-outline-primary' },
@@ -14,6 +16,9 @@ $(function() {
       [10, 25, 50, -1],
       [10, 25, 50, 'All'],
     ],
+    fixedHeader: {
+      header: true
+    },
   });
 
   $("#dt_button_copy").on("click", function() {

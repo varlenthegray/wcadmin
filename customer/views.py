@@ -192,7 +192,6 @@ class SaveJobSiteToCustomer(LoginRequiredMixin, generic.CreateView):
     form_class = AddJobSiteForm
 
     def post(self, request, *args, **kwargs):
-        print(request.POST)
         customer = Customer.objects.get(pk=request.POST['customer_id'])
         add_job_site_customer = AddJobSiteForm(request.POST, prefix='job')
 

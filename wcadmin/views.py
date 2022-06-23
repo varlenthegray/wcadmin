@@ -1,7 +1,6 @@
 from dateutil.relativedelta import relativedelta
 from django.views import generic
 from jobsite.models import JobSite
-from qb.models import QBSystem
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -29,7 +28,7 @@ class DashboardView(LoginRequiredMixin, generic.ListView):
         context["service_coming_up"] = context["service_coming_up_total"].filter(next_service_date__lt=timezone.now())\
             .filter(active=True)
 
-        context["service_refresh_total"] = JobSite.objects.filter(next_service_date__year=(timezone.now().year - 1))\
+        context["service_refresh_total"] = JobSite.objects.filter(next_service_date__year=(timezone.now().year - 3))\
             .filter(next_service_date__month=timezone.now().month).filter(active=True)
         context["service_refresh"] = context["service_refresh_total"].filter(next_service_date__gt=timezone.now())\
             .filter(active=True)
@@ -37,6 +36,6 @@ class DashboardView(LoginRequiredMixin, generic.ListView):
         context["service_past_due_date"] = timezone.now() - relativedelta(months=1)
         context["service_due_date"] = timezone.now()
         context["service_coming_up_date"] = timezone.now() + relativedelta(months=1)
-        context["service_refresh_date"] = timezone.now() - relativedelta(years=1)
+        context["service_refresh_date"] = timezone.now() - relativedelta(years=3)
 
         return context

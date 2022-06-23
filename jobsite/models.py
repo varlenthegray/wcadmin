@@ -1,5 +1,12 @@
+import datetime
+
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
+
+from dateutil.relativedelta import relativedelta
+from dateutil.parser import parse
+
 from customer.models import Customer, Equipment
 
 
@@ -25,6 +32,30 @@ class JobSite(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+    @property
+    def is_past_due(self):
+        ignore_after = timezone.localdate() - relativedelta(years=5)
+
+        # noinspection StrFormat
+        if self.next_service_date:
+            if ignore_after >= self.next_service_date:
+                return False
+            else:
+                return timezone.localdate() > self.next_service_date
+        else:
+            return False
+
+    @property
+    def is_due_soon(self):
+        ignore_after = timezone.localdate() - relativedelta(years=3)
+
+        if self.next_service_date and self.next_service_date >= ignore_after:
+            three_months_future = timezone.localdate() + relativedelta(months=2)
+            return three_months_future > self.next_service_date
+        else:
+            return False
+
 
 
 class JobSiteEquipment(models.Model):

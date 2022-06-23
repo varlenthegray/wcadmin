@@ -105,35 +105,40 @@
     $(".state").inputmask("AA");
     $(".zip-code").inputmask("99999-9999");
 
-    if(nsd_field.length) {
-      let date = new Date({{ jobsite.next_service_date.value|date:'Y' }}, ({{ jobsite.next_service_date.value|date:'m' }} - 1), {{ jobsite.next_service_date.value|date:'d' }});
 
-      nsd_field.datepicker({
-        format: "mm-dd-yyyy",
-        todayHighlight: true,
-        autoclose: true
-      });
+    nsd_field.datepicker({
+      format: "mm-dd-yyyy",
+      todayHighlight: true,
+      autoclose: true,
+      todayBtn: true,
+      startView: 2,
+      zIndexOffset: 979,
+    });
 
+    $('.datepicker-days .table-condensed tfoot').append('<tr><th colspan="7" class="today_">Today</th></tr><tr><th colspan="7" class="yesterday">Yesterday</th></tr><tr><th colspan="7" class=" week">Week</th></tr>');
+
+    if(!nsd_field.val()) {
+      let date = new Date({{ jobsite.next_service_date.value|date:'Y'|default:'1970' }}, ({{ jobsite.next_service_date.value|date:'m'|default:'01' }} - 1), {{ jobsite.next_service_date.value|date:'d'|default:'01' }});
       nsd_field.datepicker('setDate', date);
-
-      let currentServiceInt = {{ jobsite.service_interval.value }},
-          serviceIntField = $("#{{ jobsite.service_interval.id_for_label }}"),
-          serviceIntModal = new bootstrap.Modal($("#modalCalculateService"));
-
-      serviceIntField.on("blur", function() {
-        if(Number(this.value) !== currentServiceInt) {
-          serviceIntModal.toggle();
-        }
-      });
-
-      $("#modalCalculateServiceYes").on("click", function() {
-        let currentServiceDate = luxon.DateTime.fromISO('{{ jobsite.next_service_date.value|date:'Y-m-d' }}');
-        let newServiceDate = currentServiceDate.plus({ months: Number(serviceIntField.val()) });
-
-        $("#{{ jobsite.next_service_date.id_for_label }}").val(newServiceDate.toFormat('LL-dd-yyyy'));
-
-        serviceIntModal.toggle();
-      });
     }
+
+    let currentServiceInt = {{ jobsite.service_interval.value }},
+        serviceIntField = $("#{{ jobsite.service_interval.id_for_label }}"),
+        serviceIntModal = new bootstrap.Modal($("#modalCalculateService"));
+
+    serviceIntField.on("blur", function() {
+      if(Number(this.value) !== currentServiceInt) {
+        serviceIntModal.toggle();
+      }
+    });
+
+    $("#modalCalculateServiceYes").on("click", function() {
+      let currentServiceDate = luxon.DateTime.fromISO('{{ jobsite.next_service_date.value|date:'Y-m-d' }}');
+      let newServiceDate = currentServiceDate.plus({ months: Number(serviceIntField.val()) });
+
+      $("#{{ jobsite.next_service_date.id_for_label }}").val(newServiceDate.toFormat('LL-dd-yyyy'));
+
+      serviceIntModal.toggle();
+    });
   });
 </script>

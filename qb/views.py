@@ -535,6 +535,7 @@ def get_service_data(request, changes_only=False):
                             if job_site.next_service_date:
                                 if next_service > job_site.next_service_date:
                                     job_site.next_service_date = next_service
+                                    job_site.service_scheduled = False
                             else:
                                 job_site.next_service_date = next_service
 
@@ -544,8 +545,6 @@ def get_service_data(request, changes_only=False):
 
                             create_new_invoice_lines(request, invoice, create_invoice, job_site)
                     else:
-                        # On error of page, for instance not enough records, comment the block out below.
-                        # FIXME: Move this to a new view def to "update existing records"
                         existing_invoice.invoice_date = invoice.TxnDate
                         existing_invoice.total = invoice.TotalAmt
                         existing_invoice.job_site = job_site
@@ -566,6 +565,7 @@ def get_service_data(request, changes_only=False):
                         if job_site.next_service_date:
                             if next_service > job_site.next_service_date:
                                 job_site.next_service_date = next_service
+                                job_site.service_scheduled = False
                         else:
                             job_site.next_service_date = next_service
 
@@ -582,6 +582,7 @@ def get_service_data(request, changes_only=False):
 
 @transaction.atomic
 @login_required
+# ##### DEPRECATED ######
 def calculate_service_date(request):
     update_service_interval(request)
 
