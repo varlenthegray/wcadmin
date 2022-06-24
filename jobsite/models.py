@@ -57,7 +57,6 @@ class JobSite(models.Model):
             return False
 
 
-
 class JobSiteEquipment(models.Model):
     equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
     job_site = models.ForeignKey(JobSite, on_delete=models.CASCADE)
