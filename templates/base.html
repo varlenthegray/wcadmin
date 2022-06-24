@@ -45,7 +45,7 @@
     <link rel="stylesheet" href="{% static 'assets/css/custom.css' %}">
     <!-- End layout styles -->
 
-    <link rel="shortcut icon" href="{% static 'assets/images/waterdrop.png' %}" />
+    <link rel="shortcut icon" href="{% if IS_LIVE %}{% static 'assets/images/waterdrop.png' %}{% else %}{% static 'assets/images/waterdrop_dev.png' %}{% endif %}" />
 
     {% block page_css %}{% endblock %}
 </head>

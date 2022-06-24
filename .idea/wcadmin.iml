@@ -34,13 +34,12 @@
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
     <option name="TEMPLATE_FOLDERS">
       <list>
-        <option value="$MODULE_DIR$/templates" />
-        <option value="$MODULE_DIR$/customer/templates" />
-        <option value="$MODULE_DIR$/equipment/templates" />
         <option value="$MODULE_DIR$/jobsite/templates" />
-        <option value="$MODULE_DIR$/users/templates" />
-        <option value="$MODULE_DIR$/qb/templates" />
+        <option value="$MODULE_DIR$/equipment/templates" />
+        <option value="$MODULE_DIR$/customer/templates" />
         <option value="$MODULE_DIR$/communication/templates" />
+        <option value="$MODULE_DIR$/qb/templates" />
+        <option value="$MODULE_DIR$/users/templates" />
       </list>
     </option>
   </component>
