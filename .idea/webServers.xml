@@ -3,14 +3,14 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="ad050257-c61d-477d-b724-200d7d946616" name="wcadmin" url="https://admin.wcwater.com/">
-        <fileTransfer rootFolder="/home/wcadmin/public_html" accessType="SFTP" host="admin.wcwater.com" port="22" sshConfigId="12287923-9b8f-40a2-a666-52bc3b3e42dc" sshConfig="wcadmin@admin.wcwater.com:22 password">
+        <fileTransfer rootFolder="/home/wcadmin/public_html" accessType="SFTP" host="admin.wcwater.com" port="22" sshConfigId="12287923-9b8f-40a2-a666-52bc3b3e42dc" sshConfig="wcadmin">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
         </fileTransfer>
       </webServer>
       <webServer id="2e38bfed-03d1-47eb-bc26-04c49a419c8e" name="wcadev" url="https://wcadev.innovated.tech/">
-        <fileTransfer rootFolder="/home/innovated/domains/wcadev.innovated.tech/public_html" accessType="SFTP" host="host.innovated.tech" port="22" sshConfigId="f66253b2-e3bd-441b-8a83-b86c2b40a745" sshConfig="innovated@host.innovated.tech:22 password">
+        <fileTransfer rootFolder="/home/innovated/domains/wcadev.innovated.tech/public_html" accessType="SFTP" host="host.innovated.tech" port="22" sshConfigId="f66253b2-e3bd-441b-8a83-b86c2b40a745" sshConfig="innovated@inno">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" isUseRsync="true" />
           </advancedOptions>

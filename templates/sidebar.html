@@ -1,7 +1,7 @@
 {% load static %}
 
 <div class="sidebar-header">
-    <a href="{% url 'dashboard' %}" class="sidebar-brand">WCWT<span class="text-danger">{% if not IN_PRODUCTION %}Admin{% else %}Dev{% endif %}</span></a>
+    <a href="{% url 'dashboard' %}" class="sidebar-brand">WCWT<span class="{% if not settings.IN_PRODUCTION %}text-danger{% endif %}">{% if settings.IN_PRODUCTION %}Admin{% else %}Dev{% endif %}</span></a>
 
     <div class="sidebar-toggler not-active">
         <span></span>

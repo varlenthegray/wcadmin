@@ -78,7 +78,6 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 'wcadmin.context_processors.load_qb_system',
-                'wcadmin.context_processors.determine_production_status',
             ],
         },
     },
@@ -126,10 +125,6 @@ LOGIN_URL = '/users/login'
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

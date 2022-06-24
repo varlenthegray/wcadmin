@@ -6,6 +6,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['wcadev.innovated.tech', 'localhost', '127.0.0.1']
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 CSRF_TRUSTED_ORIGINS = ['https://wcadev.innovated.tech']
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True

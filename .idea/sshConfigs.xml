@@ -2,7 +2,9 @@
 <project version="4">
   <component name="SshConfigs">
     <configs>
-      <sshConfig authType="PASSWORD" host="admin.wcwater.com" id="12287923-9b8f-40a2-a666-52bc3b3e42dc" port="22" nameFormat="DESCRIPTIVE" username="wcadmin" useOpenSSHConfig="true" />
+      <sshConfig authType="PASSWORD" host="admin.wcwater.com" id="12287923-9b8f-40a2-a666-52bc3b3e42dc" port="22" customName="wcadmin" nameFormat="CUSTOM" username="wcadmin" useOpenSSHConfig="true">
+        <option name="customName" value="wcadmin" />
+      </sshConfig>
     </configs>
   </component>
 </project>

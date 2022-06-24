@@ -6,6 +6,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 

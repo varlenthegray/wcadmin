@@ -3,8 +3,16 @@ import os
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+IN_PRODUCTION = True
 
 ALLOWED_HOSTS = ['admin.wcwater.com', 'localhost', '127.0.0.1']
+
+# noinspection PyUnresolvedReferences
+# STATIC_ROOT = '/home/wcadmin/public_html/wcadmin/static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 CSRF_TRUSTED_ORIGINS = ['https://admin.wcwater.com']
 CSRF_COOKIE_SECURE = True
