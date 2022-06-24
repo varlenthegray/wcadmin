@@ -9,6 +9,13 @@
           </advancedOptions>
         </fileTransfer>
       </webServer>
+      <webServer id="2e38bfed-03d1-47eb-bc26-04c49a419c8e" name="wcadev" url="https://wcadev.innovated.tech/">
+        <fileTransfer rootFolder="/home/innovated/domains/wcadev.innovated.tech/public_html" accessType="SFTP" host="host.innovated.tech" port="22" sshConfigId="f66253b2-e3bd-441b-8a83-b86c2b40a745" sshConfig="innovated@host.innovated.tech:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" isUseRsync="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>

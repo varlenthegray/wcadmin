@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="&lt; Local DB" uuid="3f6750b0-1194-4491-a3a9-9cc89f9f2749">
+    <data-source source="LOCAL" name="Local Dev" uuid="3f6750b0-1194-4491-a3a9-9cc89f9f2749">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
@@ -16,7 +16,14 @@
         </library>
       </libraries>
     </data-source>
-    <data-source source="LOCAL" name="&gt; Innovated DB" uuid="90941698-1e70-4659-8ed8-72fb330a3ebf">
+    <data-source source="LOCAL" name="# PRODUCTION" uuid="90941698-1e70-4659-8ed8-72fb330a3ebf">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="# REMOTE DEV" uuid="e7595680-4ca4-4eaf-a7ea-20c84ff543b9">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>

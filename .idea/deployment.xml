@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="wcadmin" remoteFilesAllowedToDisappearOnAutoupload="false" compareModeInSync="TIMESTAMP">
+  <component name="PublishConfigData" autoUpload="Always" serverName="wcadev" remoteFilesAllowedToDisappearOnAutoupload="false" compareModeInSync="TIMESTAMP" showAutoUploadSettingsWarning="false">
     <serverData>
+      <paths name="wcadev">
+        <serverdata>
+          <mappings>
+            <mapping deploy="wcadmin" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="" local="$USER_HOME$/Documents/Innovated/2_Clients/Dennis Warwick/01_Active/Admin/01_Stock/NobleUI - HTML - v2.0/template/demo2" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/db.sqlite3" />
+            <excludedPath local="true" path="$PROJECT_DIR$/wcadmin/wsgi.py" />
+            <excludedPath local="true" path="$PROJECT_DIR$/manage.py" />
+            <excludedPath local="true" path="$PROJECT_DIR$/wcadmin/asgi.py" />
+            <excludedPath local="true" path="$PROJECT_DIR$/.env" />
+            <excludedPath local="true" path="$PROJECT_DIR$/venv" />
+            <excludedPath local="true" path="$PROJECT_DIR$/qb_refresh_token.txt" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
       <paths name="wcadmin">
         <serverdata>
           <mappings>

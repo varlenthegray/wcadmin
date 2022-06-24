@@ -78,6 +78,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 'wcadmin.context_processors.load_qb_system',
+                'wcadmin.context_processors.determine_production_status',
             ],
         },
     },
