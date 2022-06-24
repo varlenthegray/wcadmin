@@ -3,7 +3,6 @@ import os
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-IN_PRODUCTION = True
 
 ALLOWED_HOSTS = ['admin.wcwater.com', 'localhost', '127.0.0.1']
 
