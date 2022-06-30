@@ -27,6 +27,7 @@ from quickbooks.exceptions import QuickbooksException
 from quickbooks.objects.customer import Customer as qbCustomer
 from quickbooks.objects.invoice import Invoice as qbInvoice
 from quickbooks.objects.item import Item as qbItem
+from quickbooks.objects.company_info import CompanyInfo as qbCompanyInfo
 
 from customer.models import Customer
 from jobsite.models import JobSite, JobSiteEquipment
@@ -164,7 +165,7 @@ def get_last_run():
         return timezone.now().isoformat()
 
 
-# Create your views here.
+# Views
 @login_required
 def index(request):
     return render(request, 'qb/index.html')
@@ -238,22 +239,33 @@ def connected(request):
     return render(request, 'qb/connected.html', context={'openid': False})
 
 
+# @login_required
+# def qbo_request(request):
+#     auth_client = auth_client_def(request)
+#
+#     if auth_client.access_token is not None:
+#         access_token = auth_client.access_token
+#
+#     if auth_client.realm_id is None:
+#         raise ValueError('Realm id not specified.')
+#
+#     response = qbo_api_call(auth_client.access_token, auth_client.realm_id)
+#
+#     if not response.ok:
+#         return HttpResponse(str(response.status_code) + ': ' + str(response.content))
+#     else:
+#         return HttpResponse(response.content)
+
+
 @login_required
 def qbo_request(request):
-    auth_client = auth_client_def(request)
+    client = qb_client(request)
 
-    if auth_client.access_token is not None:
-        access_token = auth_client.access_token
-
-    if auth_client.realm_id is None:
-        raise ValueError('Realm id not specified.')
-
-    response = qbo_api_call(auth_client.access_token, auth_client.realm_id)
-
-    if not response.ok:
-        return HttpResponse(' '.join([response.content, str(response.status_code)]))
-    else:
-        return HttpResponse(response.content)
+    try:
+        company_info = qbCompanyInfo.all(qb=client)
+        return HttpResponse(company_info)
+    except QuickbooksException as e:
+        return HttpResponse(str(e.error_code) + ' - ' + e.message)
 
 
 @login_required
@@ -442,6 +454,8 @@ def insert_qb_customers(request, changes_only=False):
 
     if not changes_only:
         return HttpResponse('Successfully fetched all customers, job sites, and equipment.')
+    else:
+        pass
 
 
 @login_required
@@ -705,9 +719,12 @@ def update_service_interval(request):
 
 @login_required
 def update_db_from_changes(request):
-    refresh(request)
 
-    insert_qb_customers(request, True)
-    get_service_data(request, True)
 
-    return HttpResponse("Successfully got all changes from QuickBooks.")
+    if refresh(request):
+        insert_qb_customers(request, True)
+        get_service_data(request, True)
+
+        return HttpResponse(status=200, content='Successfully received changes from QuickBooks.')
+    else:
+        return HttpResponse(status=400, content='Unable to get changes.')

@@ -22,13 +22,18 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" type="text/javascript"></script>
     <!-- end jQuery -->
 
+    <!-- end custom scripting -->
+    <script src="{% static 'js/string-manipulations.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/wca-system.js' %}" type="text/javascript"></script>
+    <!-- custom scripting -->
+
     <!-- core:css -->
     <link rel="stylesheet" href="{% static 'assets/vendors/core/core.css' %}">
     <!-- endinject -->
 
     <!-- Plugin css for this page -->
     {% block css_plugins %}
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/date-1.1.2/fh-3.2.4/r-2.3.0/rg-1.2.0/sc-2.0.7/sb-1.3.4/sp-2.0.2/sl-1.4.0/sr-1.1.1/datatables.min.css"/>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.12.1/af-2.4.0/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/cr-1.5.6/date-1.1.2/fc-4.1.0/fh-3.2.4/kt-2.7.0/r-2.3.0/rg-1.2.0/rr-1.2.8/sc-2.0.7/sb-1.3.4/sp-2.0.2/sl-1.4.0/sr-1.1.1/datatables.min.css"/>
     {% endblock %}
 
     {% block add_css_plugins %}{% endblock %}
@@ -115,10 +120,13 @@
                                             <i class="icon-lg text-muted pb-3px fa fa-ellipsis"></i>
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton7">
+                                            <button id="email_report" class="dropdown-item d-flex align-items-center"><i class="icon-sm me-2 fa fa-envelope-o fa-fw"></i> <span class="">Email List</span></button>
+                                            <div class="dropdown-divider"></div>
                                             <button id="dt_button_copy" class="dropdown-item d-flex align-items-center"><i class="icon-sm me-2 fa fa-copy fa-fw"></i> <span class="">Copy</span></button>
                                             <button id="dt_button_csv" class="dropdown-item d-flex align-items-center"><i class="icon-sm me-2 fa fa-file-text fa-fw"></i> <span class="">Download CSV</span></button>
                                             <button id="dt_button_excel" class="dropdown-item d-flex align-items-center"><i class="icon-sm me-2 fa fa-file-excel fa-fw"></i> <span class="">Download Excel</span></button>
-                                            <button id="dt_button_pdf" class="dropdown-item d-flex align-items-center"><i class="icon-sm me-2 fa fa-file-pdf fa-fw"></i> <span class="">Download PDF</span></button>
+{#                                            <button id="dt_button_pdf" class="dropdown-item d-flex align-items-center"><i class="icon-sm me-2 fa fa-file-pdf fa-fw"></i> <span class="">Download PDF</span></button>#}
+                                            <div class="dropdown-divider"></div>
                                             <button id="dt_button_print" class="dropdown-item d-flex align-items-center"><i class="icon-sm me-2 fa fa-print fa-fw"></i> <span class="">Print Table</span></button>
                                         </div>
                                     </div>
@@ -148,12 +156,12 @@
 <!-- Plugin js for this page -->
 {% block page_plugins %}
     <script src="{% static 'assets/vendors/peity/jquery.peity.min.js' %}"></script>
-    <script src="{% static 'js/customerid-datatable.js' %}"></script>
+    {#    <script src="{% static 'js/customerid-datatable.js' %}"></script>#}
 
     <!-- Datatables -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+{#    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>#}
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/date-1.1.2/fh-3.2.4/r-2.3.0/rg-1.2.0/sc-2.0.7/sb-1.3.4/sp-2.0.2/sl-1.4.0/sr-1.1.1/datatables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.12.1/af-2.4.0/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/cr-1.5.6/date-1.1.2/fc-4.1.0/fh-3.2.4/kt-2.7.0/r-2.3.0/rg-1.2.0/rr-1.2.8/sc-2.0.7/sb-1.3.4/sp-2.0.2/sl-1.4.0/sr-1.1.1/datatables.min.js"></script>
     <!-- End Datatables -->
 {% endblock %}
 
@@ -184,6 +192,7 @@
 <script src="{% static 'assets/vendors/feather-icons/feather.min.js' %}"></script>
 <script src="{% static 'assets/js/template.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js" integrity="sha512-lOrm9FgT1LKOJRUXF3tp6QaMorJftUjowOWiDcG5GFZ/q7ukof19V0HKx/GWzXCdt9zYju3/KhBNdCLzK8b90Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/luxon@2.4.0/build/global/luxon.min.js"></script>
 <!-- endinject -->
 
 {% block page_script %}{% endblock %}

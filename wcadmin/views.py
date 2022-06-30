@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 class DashboardView(LoginRequiredMixin, generic.ListView):
     model = JobSite
-    queryset = JobSite.objects.filter(active=True)
+    queryset = JobSite.objects.filter(active=True)[:10]
     template_name = "base.html"
 
     def get_context_data(self, **kwargs):

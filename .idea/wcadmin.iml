@@ -29,6 +29,7 @@
     <orderEntry type="module" module-name="demo2" />
     <orderEntry type="library" name="noty" level="application" />
     <orderEntry type="library" name="datatables" level="application" />
+    <orderEntry type="library" name="ellipsis" level="application" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
@@ -40,6 +41,7 @@
         <option value="$MODULE_DIR$/communication/templates" />
         <option value="$MODULE_DIR$/qb/templates" />
         <option value="$MODULE_DIR$/users/templates" />
+        <option value="$MODULE_DIR$/templates" />
       </list>
     </option>
   </component>

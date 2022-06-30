@@ -1,17 +1,5 @@
 {% load static %}
 
-<style>
-    .blinking-alert {
-        animation: blinker 2s linear infinite;
-    }
-
-    @keyframes blinker {
-        50% {
-            opacity: 0;
-        }
-    }
-</style>
-
 <div class="table-responsive">
     <table class="table" id="customerDatatable">
         <thead>
@@ -25,33 +13,249 @@
             <th>Scheduled</th>
         </tr>
         </thead>
-        <tbody>
-        {% for jobsite in object_list %}
-            <tr>
-                <td>
-                    <a href="{% url 'viewSpecificJobSite' pk=jobsite.pk %}" class="btn btn-inverse-info btn-xs btn-icon" title="View Service Record"><i class="fa fa-wrench"></i></a>
-                    {% if request.user.is_superuser %}<a href="https://app.qbo.intuit.com/app/customerdetail?nameId={{ jobsite.quickbooks_id }}" class="btn btn-inverse-success btn-xs btn-icon" title="View Quickbooks Record" target="_blank"><img src="{% static 'assets/images/quickbooks-icon.jpeg' %}" alt="Open in Quickbooks" style="max-width:20px;max-height:20px;"></a>{% endif %}
-                </td>
-                <td>
-                    {% if jobsite.name|length > 30 %}<abbr title="{{ jobsite.name }}">{% endif %}{{ jobsite.name|truncatechars:30 }}</abbr>
-
-                    {% if jobsite.customer.company and jobsite.name != jobsite.customer.company %}<br>
-                        {% if jobsite.customer.company|length > 30 %}<abbr title="{{ jobsite.customer.company }}">{% endif %}
-                    <em>{{ jobsite.customer.company|truncatechars:30 }}</em>
-                    </abbr>
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="https://www.google.com/maps/place/{{ jobsite.address|urlencode }},{{ jobsite.city|urlencode }},{{ jobsite.state|urlencode }} {{ jobsite.zip|urlencode }}" target="_blank">
-                        <i class="fa fa-map-pin"></i> &nbsp; {% if jobsite.address|length > 40 %}<abbr title="{{ jobsite.address }}">{% endif %}{{ jobsite.address|truncatechars:40 }}</abbr><br>{{ jobsite.city }}, {{ jobsite.state }} {{ jobsite.zip }}
-                    </a>
-                </td>
-                <td><a href="tel:1{{ jobsite.phone_number }}"><i class="fa fa-phone"></i> &nbsp; {% if jobsite.phone_number|length > 15 %}<abbr title="{{ jobsite.phone_number }}">{% endif %}{{ jobsite.phone_number|truncatechars:15 }}</abbr></a></td>
-                <td><a href="mailto:{{ jobsite.email }}"><i class="fa fa-envelope"></i> &nbsp; {% if jobsite.email|length > 20 %}<abbr title="{{ jobsite.email }}">{% endif %}{{ jobsite.email|truncatechars:20 }}</abbr></a></td>
-                <td>{{ jobsite.next_service_date }}</td>
-                <td><span class="{% if jobsite.service_scheduled %}text-success{% elif jobsite.is_past_due %}text-danger blinking-alert{% elif jobsite.is_due_soon %}text-warning{% endif %}">{{ jobsite.service_scheduled|yesno:"Yes,No" }}</span></td>
-            </tr>
-        {% endfor %}
-        </tbody>
+        <tbody><!-- Rendered via DataTables below --></tbody>
     </table>
 </div>
+
+<div class="modal fade" id="setServiceScheduledModal" tabindex="-1" aria-labelledby="setServiceScheduledModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Schedule Service?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
+            </div>
+            <div class="modal-body">
+                Do you want to set <span id="serviceScheduleName"></span> as service scheduled?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="modalConfirmedSchedule" class="btn btn-primary">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  $(function() {
+    let customer_datatable = $("#customerDatatable");
+
+    let job_site_table = customer_datatable.DataTable({
+      sDom: 'lfrtip',
+      scrollY: 480,
+      scrollX: false,
+      //ajax: '{% url 'allJobSitesJSON' %}',
+      ajax: '/job_sites/api/allJobSitesRest/?format=datatables',
+      serverSide: true,
+      stateSave: true,
+      searching: true,
+      columns: [
+        {
+          targets: 0,
+          searchable: false,
+          data: null,
+          render: function (data, type, row, meta) {
+            return '<a href="/customers/view/job_site/' + data.id + '" class="btn btn-inverse-info btn-xs btn-icon" title="View Service Record"><i class="fa fa-wrench"></i></a>' +
+                ' <a href="https://app.qbo.intuit.com/app/customerdetail?nameId=' + data.quickbooks_id + '" class="btn btn-inverse-success btn-xs btn-icon" title="View Quickbooks Record" target="_blank"><img src="{% static 'assets/images/quickbooks-icon.jpeg' %}" alt="Open in Quickbooks" style="max-width:20px;max-height:20px;"></a>';
+          }
+        },
+        {
+          targets: 1,
+          searchable: true,
+          data: null,
+          render: function(data, type, row, meta) {
+            let trim = 30;
+
+            if(data.name === '' || data.name === data.customer__company) {
+              return '<em>' + stringManipulations.truncate(data.customer__company, trim) + '</em>'
+            } else if(data.customer__company !== '') {
+              return stringManipulations.truncate(data.name, trim) + '<br /><em>' + stringManipulations.truncate(data.customer__company, trim) + '</em>'
+            }  else {
+              return stringManipulations.truncate(data.name, trim);
+            }
+          }
+        },
+        {
+          targets: 2,
+          searchable: true,
+          data: null,
+          render: function (data, type, row, meta) {
+            let trim = 25;
+
+            if(data.address !== '' && data.address !== null) {
+              return '<a href="https://www.google.com/maps/place/' + data.address + ',' + data.city + ',' + data.state + ' ' + data.zip + '" target="_blank">' +
+                  '<i class="fa fa-map-pin"></i> &nbsp; ' + stringManipulations.truncate(data.address, trim) + '<br>' + stringManipulations.truncate(data.city, trim) + ', ' + data.state + ' ' + data.zip +
+                  '</a>';
+            } else {
+              return 'N/A';
+            }
+          }
+        },
+        {
+          targets: 3,
+          data: null,
+          render: function (data, type, row, meta) {
+            let trim = 18;
+
+            if(data.phone_number !== '' && data.phone_number !== null) {
+              return '<a href="tel:1' + data.phone_number + '"><i class="fa fa-phone"></i> &nbsp; ' + stringManipulations.truncate(data.phone_number, trim);
+            } else {
+              return 'N/A';
+            }
+          }
+        },
+        {
+          targets: 4,
+          data: null,
+          render: function (data, type, row, meta) {
+            let trim = 20;
+
+            if(data.email !== '' && data.email !== null) {
+              return '<a href="mailto:' + data.email + '"><i class="fa fa-envelope"></i> &nbsp; ' + stringManipulations.truncate(data.email, trim) + '</a>';
+            } else {
+              return 'N/A';
+            }
+          }
+        },
+        {
+          targets: 5,
+          data: null,
+          render: function (data, type, row, meta) {
+            // generate the Google calendar link to schedule this customer
+            // http://www.google.com/calendar/event?action=TEMPLATE&dates=20220714T010000Z%2F20220714T010000Z&text=Test&location=&details=This%20is%20a%20test
+            let google_url_prefix = "http://www.google.com/calendar/event?action=TEMPLATE&dates=";
+            let date = luxon.DateTime.fromISO(data.next_service_date).toFormat('yyyyLLdd');
+            let subject = "&text=" + data.name + ' - Scheduled Service';
+            let location = "&location=" + data.address + ',' + data.city + ',' + data.state + ' ' + data.zip;
+            let details = "&details=" + data.phone_number + '%0A'; // need to add Appointment notes
+
+            let from_time = 'T120000';
+            let to_time = 'T130000';
+            let date_string = date + from_time + '/' + date + to_time;
+
+            let google_url = google_url_prefix + date_string + subject + location + details;
+
+            let nsd_formatted = luxon.DateTime.fromISO(data.next_service_date).toFormat('LLL dd, yyyy');
+
+            if (data.next_service_date !== null) {
+              let nsd_date = luxon.DateTime.fromISO(data.next_service_date);
+
+              if(!data.service_scheduled && (nsd_date.hasSame(luxon.DateTime.now(), 'month') || nsd_date >= luxon.DateTime.now().minus({ years: 3 }))) {
+                return '<button class="dt_show_modal btn btn-link p-0 m-0" data-bs-toggle="modal" data-bs-target="#setServiceScheduledModal" data-google-url="' + google_url + '" data-job-name="' + data.name + '" data-job-id="' + data.id + '"><i class="fa fa-calendar-day"></i> ' + nsd_formatted + '</button>';
+              } else {
+                return nsd_formatted;
+              }
+            } else {
+              return 'N/A';
+            }
+          }
+        },
+        {
+          targets: 6,
+          data: null,
+          render: function (data, type, row, meta) {
+            if(data.service_scheduled) {
+              return '<span class="text-success">Scheduled</span>';
+            } else {
+              let ignore_older_than = luxon.DateTime.now().minus({ years: 3 });
+              let alarm_date = luxon.DateTime.now().minus({ years: 1 });
+              let ignore_future_date = luxon.DateTime.now().plus({ months: 2 });
+              let service_date = luxon.DateTime.fromISO(data.next_service_date);
+
+              if(data.next_service_date !== '' && data.next_service_date !== null) {
+                // this takes the place of jobsite/models/JobSite.is_past_due & JobSite.is_due_soon
+                if(service_date <= ignore_older_than) {
+                  return 'Not Due';
+                } else {
+                  if(service_date >= ignore_future_date) {
+                    return 'Not Due';
+                  } else if(service_date.startOf('month').plus({ months: 2 }) >= ignore_future_date) {
+                    return '<span class="text-warning">Due Soon</span>';
+                  } else if(service_date >= alarm_date) {
+                    return '<span class="text-danger blinking-alert">Not Scheduled</span>';
+                  } else {
+                    return '<span class="text-warning">Missed Service</span>';
+                  }
+                }
+              } else {
+                return 'N/A';
+              }
+            }
+          }
+        },
+      ],
+      buttons: {
+        buttons: [
+          { extend: 'copy', className: 'btn btn-outline-primary' },
+          { extend: 'csv', className: 'btn btn-outline-primary' },
+          { extend: 'excel', className: 'btn btn-outline-primary' },
+          { extend: 'pdf', className: 'btn btn-outline-primary' },
+          { extend: 'print', className: 'btn btn-outline-primary' },
+        ]
+      },
+      lengthMenu: [
+        [10, 25, 50, -1],
+        [10, 25, 50, 'All'],
+      ],
+      fixedHeader: {
+        header: true
+      },
+      preDrawCallback: function () {
+        pageScrollPos = $('div.dataTables_scrollBody').scrollTop();
+      },
+      drawCallback: function () {
+        $('div.dataTables_scrollBody').scrollTop(pageScrollPos);
+      }
+    });
+
+    $("#dt_button_copy").on("click", function() {
+      job_site_table.buttons('.buttons-copy').trigger();
+      window.alert("Copied.");
+    });
+
+    $("#dt_button_csv").on("click", function() {
+      job_site_table.buttons('.buttons-csv').trigger();
+    });
+
+    $("#dt_button_excel").on("click", function() {
+      job_site_table.buttons('.buttons-excel').trigger();
+    });
+
+    $("#dt_button_pdf").on("click", function() {
+      job_site_table.buttons('.buttons-pdf').trigger();
+    });
+
+    $("#dt_button_print").on("click", function() {
+      job_site_table.buttons('.buttons-print').trigger();
+    });
+
+    $("#modalConfirmedSchedule").on("click", function() {
+      let job_id = $(this).attr('data-job-id');
+
+      let request = $.ajax('{% url 'setJobSiteScheduled' pk=999999999 %}'.replace(/999999999/, job_id));
+
+      request.fail(function() {
+        wcaSystem.show_notification('Unable to schedule job site. Please report this error.', 'error', 10000);
+      });
+
+      request.done(function() {
+        let job_name = $("#serviceScheduleName").text();
+
+        wcaSystem.show_notification('Successfully scheduled ' + job_name + '.', 'success', 10000);
+
+        // hide the modal & refresh content
+        //job_site_table.ajax.reload(null, false);
+        job_site_table.draw();
+        $("#setServiceScheduledModal").modal('hide');
+      });
+    });
+
+    $(document)
+        .on("click", ".dt_show_modal", function() {
+          let open_url = $(this).data('google-url');
+          $("#serviceScheduleName").text($(this).data('job-name'));
+          $("#modalConfirmedSchedule").attr('data-job-id', $(this).data('job-id'));
+
+          window.open(open_url, '_blank');
+        });
+  });
+</script>

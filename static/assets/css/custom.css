@@ -24,6 +24,20 @@
   margin-bottom: -30px;
 }
 
+div.dataTables_scrollBody {
+  border-left: none!important;
+}
+
 .CodeMirror, .CodeMirror-scroll {
   min-height: 260px;
+}
+
+.blinking-alert {
+  animation: blinker 2s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
 }

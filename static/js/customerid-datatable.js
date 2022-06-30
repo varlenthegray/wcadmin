@@ -2,7 +2,22 @@ $(function() {
   let job_site_table = $("#customerDatatable").DataTable({
     dom: 'lfrtip',
     scrollY: 480,
-    // ajax: '/job_sites/all_job_sites_json',
+    ajax: '/job_sites/all_job_sites_json',
+    columns: [
+      {
+        targets: 0,
+        data: null,
+        render: function (data, type, row, meta) {
+          return '<a href="' + data.quickbooks_id + '">Download</a>';
+        },
+      },
+      { data: 'name' },
+      { data: 'address' },
+      { data: 'phone_number' },
+      { data: 'email' },
+      { data: 'next_service_date' },
+      { data: 'service_scheduled' },
+    ],
     buttons: {
       buttons: [
         { extend: 'copy', className: 'btn btn-outline-primary' },

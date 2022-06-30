@@ -80,11 +80,7 @@
 
         $("#editProductTag").modal('hide');
 
-        new Noty({
-          text: "Successfully deleted equipment and saved Job Site.",
-          theme: 'bootstrap-v4',
-          type: 'warning'
-        }).show();
+        wcaSystem.show_notification('Successfully deleted equipment and saved Job Site.', 'warning');
       });
     });
   });

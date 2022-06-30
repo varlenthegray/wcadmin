@@ -5,6 +5,9 @@
       <sshConfig authType="PASSWORD" host="admin.wcwater.com" id="12287923-9b8f-40a2-a666-52bc3b3e42dc" port="22" customName="wcadmin" nameFormat="CUSTOM" username="wcadmin" useOpenSSHConfig="true">
         <option name="customName" value="wcadmin" />
       </sshConfig>
+      <sshConfig authType="PASSWORD" host="host.innovated.tech" id="08185959-15bd-4c7b-894f-ce9e95cdc3d5" port="22" customName="wcadev@inno" nameFormat="CUSTOM" username="wcadev" useOpenSSHConfig="true">
+        <option name="customName" value="wcadev@inno" />
+      </sshConfig>
     </configs>
   </component>
 </project>
