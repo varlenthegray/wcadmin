@@ -6,8 +6,7 @@ from qb.models import Invoice
 from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponse
 from .forms import AddCustomerForm, ViewCustomerForm, ViewJobSiteForm, EditJobSiteEquipment, AddJobSiteEquipment, \
     AddJobSiteForm
-from django.utils import timezone
-from datetime import datetime, timedelta
+from datetime import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 import logging
@@ -22,64 +21,37 @@ class AllCustomers(LoginRequiredMixin, generic.ListView):
 
 class CustomersDueThisMonth(LoginRequiredMixin, generic.ListView):
     model = JobSite
-    queryset = JobSite.objects.filter(next_service_date__month=timezone.now().month) \
-        .filter(next_service_date__year=timezone.now().year).filter(active=True)
     template_name = 'customer/reports/due_this_month.html'
 
 
 class CustomersDueNextMonth(LoginRequiredMixin, generic.ListView):
     model = JobSite
-    queryset = JobSite.objects.filter(next_service_date__month=(timezone.now().month + 1)) \
-        .filter(next_service_date__year=timezone.now().year).filter(active=True)
     template_name = 'customer/reports/due_next_month.html'
 
 
 class CustomersDueTwoMonthsFuture(LoginRequiredMixin, generic.ListView):
     model = JobSite
-    queryset = JobSite.objects.filter(next_service_date__month=(timezone.now().month + 2)) \
-        .filter(next_service_date__year=timezone.now().year).filter(active=True)
     template_name = 'customer/reports/due_two_months_future.html'
 
 
 class CustomersDueLastMonth(LoginRequiredMixin, generic.ListView):
     model = JobSite
-    queryset = JobSite.objects.filter(next_service_date__month=(timezone.now().month - 1)) \
-        .filter(next_service_date__year=timezone.now().year).filter(active=True)
     template_name = 'customer/reports/due_last_month.html'
 
 
 class CustomersDueLastThreeMonths(LoginRequiredMixin, generic.ListView):
     model = JobSite
-    queryset = JobSite.objects.filter(next_service_date__gt=(datetime.now() - timedelta(weeks=12))) \
-        .filter(next_service_date__lt=timezone.now()).filter(next_service_date__year=timezone.now().year).filter(active=True)
     template_name = 'customer/reports/due_last_three_months.html'
 
 
 class CustomersDueLastYearThisMonth(LoginRequiredMixin, generic.ListView):
     model = JobSite
-    queryset = JobSite.objects.filter(next_service_date__month=timezone.now().month) \
-        .filter(next_service_date__year=(timezone.now().year - 1)).filter(active=True)
     template_name = 'customer/reports/due_last_year_this_month.html'
 
 
 class CustomersCustomReport(LoginRequiredMixin, generic.ListView):
     model = JobSite
     template_name = 'customer/reports/custom_report.html'
-
-    def get_queryset(self):
-        from_date = self.request.GET.get('fromDate')
-        to_date = self.request.GET.get('toDate')
-        self.queryset = JobSite.objects.filter(active=True)
-
-        if from_date:
-            from_date = datetime.strptime(from_date, '%m-%d-%Y').strftime('%Y-%m-%d')
-            self.queryset = self.queryset.filter(next_service_date__gte=from_date)
-
-        if to_date:
-            to_date = datetime.strptime(to_date, '%m-%d-%Y').strftime('%Y-%m-%d')
-            self.queryset = self.queryset.filter(next_service_date__lte=to_date)
-
-        return self.queryset
 
 
 class AddCustomer(LoginRequiredMixin, generic.CreateView):

@@ -35,3 +35,11 @@
         </div>
     </div>
 {% endblock %}
+
+{% block page_script %}
+    <script>
+      $(function() {
+        job_site_table.ajax.url('/job_sites/api/allJobSitesRest/?format=datatables&all_items=True').draw();
+      });
+    </script>
+{% endblock %}

@@ -36,10 +36,12 @@
 </div>
 
 <script>
+  let job_site_table;
+
   $(function() {
     let customer_datatable = $("#customerDatatable");
 
-    let job_site_table = customer_datatable.DataTable({
+    job_site_table = customer_datatable.DataTable({
       sDom: 'lfrtip',
       scrollY: 480,
       scrollX: false,
@@ -52,6 +54,7 @@
         {
           targets: 0,
           searchable: false,
+          orderable: false,
           data: null,
           render: function (data, type, row, meta) {
             return '<a href="/customers/view/job_site/' + data.id + '" class="btn btn-inverse-info btn-xs btn-icon" title="View Service Record"><i class="fa fa-wrench"></i></a>' +
@@ -78,6 +81,7 @@
           targets: 2,
           searchable: true,
           data: null,
+          orderable: false,
           render: function (data, type, row, meta) {
             let trim = 25;
 
@@ -93,6 +97,7 @@
         {
           targets: 3,
           data: null,
+          orderable: false,
           render: function (data, type, row, meta) {
             let trim = 18;
 
