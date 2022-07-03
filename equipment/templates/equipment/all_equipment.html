@@ -66,6 +66,10 @@
             $('div.dataTables_scrollBody').scrollTop(pageScrollPos);
           }
         });
+
+        if(wcaSystem.get_url_query().submitted) {
+          wcaSystem.show_notification('Successfully added equipment.', 'success')
+        }
       });
     </script>
 {% endblock %}

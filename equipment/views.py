@@ -1,6 +1,7 @@
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.urls import reverse
 
 from .models import Equipment
 from .forms import AddEquipmentForm
@@ -19,6 +20,18 @@ class AddEquipment(LoginRequiredMixin, generic.CreateView):
     model = Equipment
     form_class = AddEquipmentForm
 
+    def post(self, request, *args, **kwargs):
+        create_equipment = AddEquipmentForm(request.POST)
+
+        if create_equipment.is_valid():
+            data = create_equipment.save(commit=False)
+            data.last_updated_by = request.user
+            data.save()
+
+            return HttpResponseRedirect(reverse('allEquipment') + "?submitted=True")
+        else:
+            return HttpResponseBadRequest('invalid')
+
 
 class ViewEquipment(LoginRequiredMixin, generic.UpdateView):
     template_name = 'equipment/view_equipment.html'
@@ -35,7 +48,7 @@ class ViewEquipment(LoginRequiredMixin, generic.UpdateView):
             data.last_updated_by = request.user
             data.save()
 
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER') + "?submitted=True")
         else:
             return HttpResponseBadRequest('invalid')
 

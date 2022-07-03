@@ -37,5 +37,12 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/wcadev</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="# PROD PSQL" uuid="0d8e4c30-21c6-4934-9145-63504d2f0bd0">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/wcadmin</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

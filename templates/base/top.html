@@ -15,9 +15,9 @@
                             </a>
                         </div>
                     </div>
-{#                    <div class="col-4">#}
-{#                        <span class="donut" data-peity='{ "fill": ["rgb(255,51,102)", "rgba(255,51,102,.2)"], "innerRadius": 15, "radius": 25 }'>{{ service_past_due.count }}/{{ service_past_due_total.count }}</span>#}
-{#                    </div>#}
+                    {#                    <div class="col-4">#}
+                    {#                        <span class="donut" data-peity='{ "fill": ["rgb(255,51,102)", "rgba(255,51,102,.2)"], "innerRadius": 15, "radius": 25 }'>{{ service_past_due.count }}/{{ service_past_due_total.count }}</span>#}
+                    {#                    </div>#}
                 </div>
             </div>
         </div>
@@ -38,9 +38,9 @@
                             </a>
                         </div>
                     </div>
-{#                    <div class="col-4">#}
-{#                        <span class="donut" data-peity='{ "fill": ["rgb(101, 113, 255)", "rgba(101, 113, 255,.2)"], "innerRadius": 15, "radius": 25 }'>{{ service_due.count }}/{{ service_due_total.count }}</span>#}
-{#                    </div>#}
+                    {#                    <div class="col-4">#}
+                    {#                        <span class="donut" data-peity='{ "fill": ["rgb(101, 113, 255)", "rgba(101, 113, 255,.2)"], "innerRadius": 15, "radius": 25 }'>{{ service_due.count }}/{{ service_due_total.count }}</span>#}
+                    {#                    </div>#}
                 </div>
             </div>
         </div>
@@ -61,9 +61,9 @@
                             </a>
                         </div>
                     </div>
-{#                    <div class="col-4">#}
-{#                        <span class="donut" data-peity='{ "fill": ["rgb(121, 135, 161)", "rgba(121, 135, 161,.2)"], "innerRadius": 15, "radius": 25 }'>{{ service_coming_up.count }}/{{ service_coming_up_total.count }}</span>#}
-{#                    </div>#}
+                    {#                    <div class="col-4">#}
+                    {#                        <span class="donut" data-peity='{ "fill": ["rgb(121, 135, 161)", "rgba(121, 135, 161,.2)"], "innerRadius": 15, "radius": 25 }'>{{ service_coming_up.count }}/{{ service_coming_up_total.count }}</span>#}
+                    {#                    </div>#}
                 </div>
             </div>
         </div>
@@ -84,11 +84,17 @@
                             </a>
                         </div>
                     </div>
-{#                    <div class="col-4">#}
-{#                        <span class="donut" data-peity='{ "fill": ["rgb(102, 209, 209)", "rgba(102, 209, 209,.2)"], "innerRadius": 15, "radius": 25 }'>{{ service_refresh.count }}/{{ service_refresh_total.count }}</span>#}
-{#                    </div>#}
+                    {#                    <div class="col-4">#}
+                    {#                        <span class="donut" data-peity='{ "fill": ["rgb(102, 209, 209)", "rgba(102, 209, 209,.2)"], "innerRadius": 15, "radius": 25 }'>{{ service_refresh.count }}/{{ service_refresh_total.count }}</span>#}
+                    {#                    </div>#}
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+  $(function() {
+    $('.donut').peity('donut');
+  });
+</script>

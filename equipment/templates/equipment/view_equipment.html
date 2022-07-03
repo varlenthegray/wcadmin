@@ -85,18 +85,18 @@
 
                 <div class="card-body">
                     <div class="row">
-                    {% if attached_job_sites %}
-                        {% for job_site in attached_job_sites %}
-                            <div class="col-sm-6">
-                                <p><a href="{% url 'viewSpecificJobSite' pk=job_site.job_site.pk %}">
-                                    {% if job_site.job_site.name|length > 25 %}<abbr title="{{ job_site.job_site.name }}">{% endif %}
-                                    {{ job_site.job_site.name|truncatechars:25 }}</abbr>
-                                </a></p>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <p><em>There are no job sites with this equipment.</em></p>
-                    {% endif %}
+                        {% if attached_job_sites %}
+                            {% for job_site in attached_job_sites %}
+                                <div class="col-sm-6">
+                                    <p><a href="{% url 'viewSpecificJobSite' pk=job_site.job_site.pk %}">
+                                        {% if job_site.job_site.name|length > 25 %}<abbr title="{{ job_site.job_site.name }}">{% endif %}
+                                        {{ job_site.job_site.name|truncatechars:25 }}</abbr>
+                                    </a></p>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p><em>There are no job sites with this equipment.</em></p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -112,16 +112,9 @@
 {% block page_script %}
     <script>
       $(function() {
-        $('#{{ form.tags.id_for_label }}').tagsInput({
-          'width': '100%',
-          'height': '60%',
-          'interactive': true,
-          'defaultText': 'Add More',
-          'removeWithBackspace': true,
-          'minChars': 0,
-          'maxChars': 50,
-          'placeholderColor': '#666666'
-        });
+        if(wcaSystem.get_url_query().submitted) {
+          wcaSystem.show_notification('Successfully updated equipment', 'success', 3000);
+        }
       });
     </script>
 {% endblock %}
