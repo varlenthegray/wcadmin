@@ -40,11 +40,20 @@
 
   $(function() {
     let customer_datatable = $("#customerDatatable");
+    let current_path = window.location.pathname;
+    let scroll_height;
+
+    if(current_path === '/') {
+      scroll_height = 348;
+    } else {
+      scroll_height = 498;
+    }
 
     job_site_table = customer_datatable.DataTable({
       sDom: 'lfrtip',
-      scrollY: 480,
+      scrollY: scroll_height,
       scrollX: false,
+      scrollResize: true,
       //ajax: '{% url 'allJobSitesJSON' %}',
       ajax: '/job_sites/api/allJobSitesRest/?format=datatables',
       serverSide: true,
@@ -70,7 +79,7 @@
 
             if(data.name === '' || data.name === data.customer__company) {
               return '<em>' + stringManipulations.truncate(data.customer__company, trim) + '</em>'
-            } else if(data.customer__company !== '') {
+            } else if(data.customer__company !== undefined) {
               return stringManipulations.truncate(data.name, trim) + '<br /><em>' + stringManipulations.truncate(data.customer__company, trim) + '</em>'
             }  else {
               return stringManipulations.truncate(data.name, trim);

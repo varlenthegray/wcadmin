@@ -38,7 +38,6 @@
             <div class="collapse" id="uiCustomers">
                 <ul class="nav sub-menu">
                     <li class="nav-item"><a href="{% url 'addCustomer' %}" class="nav-link">New Customer</a></li>
-{#                    <li class="nav-item"><a href="{% url 'allCustomers' %}" class="nav-link">All Customers</a></li>#}
                     <li class="nav-item"><a href="{% url 'allJobSites' %}" class="nav-link">All Customers</a></li>
                 </ul>
             </div>
@@ -51,8 +50,8 @@
             </a>
             <div class="collapse" id="uiEquipment">
                 <ul class="nav sub-menu">
+                    <li class="nav-item"><a href="{% url 'addEquipment' %}" class="nav-link">New Equipment</a></li>
                     <li class="nav-item"><a href="{% url 'allEquipment' %}" class="nav-link">All Equipment</a></li>
-                    <li class="nav-item"><a href="{% url 'addEquipment' %}" class="nav-link">Add Equipment</a></li>
                 </ul>
             </div>
         </li>

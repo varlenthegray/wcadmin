@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="remoteDeploymentFS://&lt;2e38bfed-03d1-47eb-bc26-04c49a419c8e&gt;/wcadmin/jobsite/migrations/0002_auto_20220629_2353.py" dialect="GenericSQL" />
     <file url="PROJECT" dialect="MySQL" />
   </component>
 </project>

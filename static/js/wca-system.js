@@ -8,5 +8,5 @@ let wcaSystem = {
       type: type,
       timeout: timeout
     }).show();
-  }
+  },
 }
