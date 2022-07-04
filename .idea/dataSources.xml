@@ -16,13 +16,6 @@
         </library>
       </libraries>
     </data-source>
-    <data-source source="LOCAL" name="# PRODUCTION" uuid="90941698-1e70-4659-8ed8-72fb330a3ebf">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
     <data-source source="LOCAL" name="# REMOTE DEV" uuid="e7595680-4ca4-4eaf-a7ea-20c84ff543b9">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
