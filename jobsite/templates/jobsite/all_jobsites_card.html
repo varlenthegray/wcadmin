@@ -183,7 +183,7 @@
                   if(service_date >= ignore_future_date) {
                     return 'Not Due';
                   } else if(service_date.startOf('month').plus({ months: 2 }) >= ignore_future_date) {
-                    return '<span class="text-warning">Due Soon</span>';
+                    return '<span class="text-info">Due Soon</span>';
                   } else if(service_date >= alarm_date) {
                     return '<span class="text-danger blinking-alert">Not Scheduled</span>';
                   } else {
