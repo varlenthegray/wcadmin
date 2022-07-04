@@ -15,17 +15,15 @@ SESSION_COOKIE_SECURE = True
 
 CONN_MAX_AGE = 20
 
-# DATABASES = {
-#     'default': {
-#         'HOST': os.environ.get('DB_HOST'),
-#         'PASSWORD': os.environ.get('DB_PASSWORD'),
-#         'USER': os.environ.get('DB_USERNAME'),
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': os.environ.get('DB_NAME'),
-#     }
-# }
-
 DATABASES = {
+    'mysql_old': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USERNAME'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
+    },
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ.get('PG_DB_NAME'),
@@ -33,5 +31,5 @@ DATABASES = {
         'PASSWORD': os.environ.get('PG_DB_PASSWORD'),
         'HOST': os.environ.get('PG_DB_HOST'),
         'PORT': os.environ.get('PG_DB_PORT'),
-    }
+    },
 }
