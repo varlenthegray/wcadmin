@@ -89,7 +89,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" id="modalCalculateServiceYes">Yes</button>
+                <button type="button" class="btn btn-primary" id="modalCalculateServiceYes">Yes & Save Job</button>
             </div>
         </div>
     </div>
@@ -137,6 +137,8 @@
       let newServiceDate = currentServiceDate.plus({ months: Number(serviceIntField.val()) });
 
       $("#{{ jobsite.next_service_date.id_for_label }}").val(newServiceDate.toFormat('LL-dd-yyyy'));
+
+      $("#jobsiteForm").submit();
 
       serviceIntModal.toggle();
     });

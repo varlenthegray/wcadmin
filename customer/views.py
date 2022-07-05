@@ -115,7 +115,7 @@ class ViewSpecificJobSite(LoginRequiredMixin, generic.UpdateView):
         context['all_job_sites'] = JobSite.objects.filter(customer=self.object.customer)
 
         context['existing_equipment'] = JobSiteEquipment.objects.filter(job_site=context['job_site_id'])
-        context['all_equipment'] = Equipment.objects.all()
+        context['all_equipment'] = Equipment.objects.all().order_by('name')
         context['add_equipment_form'] = AddJobSiteEquipment(prefix='equipment')
 
         context['invoice'] = Invoice.objects.filter(job_site=context['job_site_id']).prefetch_related('invoiceline_set')

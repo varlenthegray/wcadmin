@@ -33,11 +33,14 @@
             </div>
         </div>
 
-        {% if request.user.is_superuser %}
-            <a href="https://app.qbo.intuit.com/app/customerdetail?nameId={{ job_obj.quickbooks_id }}" class="ms-2" title="View Quickbooks Record" target="_blank">
-                <img src="{% static 'assets/images/quickbooks-icon.jpeg' %}" alt="Open in Quickbooks" style="max-width:20px;max-height:20px;">
-            </a>
-        {% endif %}
+        <a href="https://app.qbo.intuit.com/app/customerdetail?nameId={{ job_obj.quickbooks_id }}" class="ms-2" title="View Quickbooks Record" target="_blank">
+            <img src="{% static 'assets/images/quickbooks-icon.jpeg' %}" alt="Open in Quickbooks" style="max-width:20px;max-height:20px;">
+        </a>
+
+        {# http://www.google.com/calendar/event?action=TEMPLATE&dates=20220714T010000Z%2F20220714T010000Z&text=Test&location=&details=This%20is%20a%20test #}
+        <button class="btn btn-icon p-0 m-0" id="schedule_google_cal" title="Schedule on Google Calendar" data-bs-toggle="modal" data-bs-target="#setServiceScheduledModal" data-job-id="{{ job_obj.pk }}" data-job-name="{{ job_obj.name }}" data-google-url="http://www.google.com/calendar/event?action=TEMPLATE&dates={{ job_obj.next_service_date|date:'Ymd' }}T120000%2F{{ job_obj.next_service_date|date:'Ymd' }}T130000&text={{ job_obj.name }} - Scheduled Service&location={{ job_obj.address }}, {{ job_obj.city }}, {{ job_obj.state }} {{ job_obj.zip }}&details={{ job_obj.phone_number }}">
+            <i class="fa fa-calendar-day text-success"></i>
+        </button>
 
         <strong class="ms-2 card-title text-uppercase fw-bold">{% if jobsite.name.value|length > 50 %}<abbr title="{{ jobsite.name.value }}">{% endif %}{{ jobsite.name.value|truncatechars:50 }}</abbr></strong>
         <button type="button" class="btn btn-link btn-icon float-end" data-bs-toggle="modal" data-bs-target="#addJobSiteModal">
@@ -99,6 +102,8 @@
     </div>
 </div>
 
+{% include 'jobsite/modal/schedule_service.html' %}
+
 <div class="modal" tabindex="-1" id="addEquipmentJobSite">
     {% include 'customer/view_customer/add_equipment_jobsite.html' %}
 </div>
@@ -113,6 +118,36 @@
       $("#jobSiteFormActions").show();
     }).on("reset", function() {
       $("#jobSiteFormActions").hide();
+    });
+
+    $("#schedule_google_cal").on("click", function() {
+      let open_url = $(this).data('google-url');
+      $("#serviceScheduleName").text($(this).data('job-name'));
+      $("#modalConfirmedSchedule").attr('data-job-id', $(this).data('job-id'));
+
+      window.open(open_url, '_blank');
+    });
+
+    $("#modalConfirmedSchedule").on("click", function() {
+      let job_id = $(this).attr('data-job-id');
+
+      let request = $.ajax('{% url 'setJobSiteScheduled' pk=999999999 %}'.replace(/999999999/, job_id));
+
+      request.fail(function() {
+        wcaSystem.show_notification('Unable to schedule job site. Please report this error.', 'error', 10000);
+      });
+
+      request.done(function() {
+        let job_name = $("#serviceScheduleName").text();
+
+        wcaSystem.show_notification('Successfully scheduled ' + job_name + '.', 'success', 10000);
+
+        // show that it's scheduled now
+        $("#{{ jobsite.service_scheduled.id_for_label }}").prop("checked", true);
+
+        // hide the modal
+        $("#setServiceScheduledModal").modal('hide');
+      });
     });
 
     let addJobSiteModal = document.getElementById('addJobSiteModal');

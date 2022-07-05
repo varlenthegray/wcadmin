@@ -4,36 +4,20 @@
     <table class="table" id="customerDatatable">
         <thead>
         <tr>
-            <th>Actions</th>
             <th>Contact Name</th>
             <th>Address</th>
             <th>Phone</th>
             <th>Email</th>
             <th>Next Service Date</th>
             <th>Scheduled</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody><!-- Rendered via DataTables below --></tbody>
     </table>
 </div>
 
-<div class="modal fade" id="setServiceScheduledModal" tabindex="-1" aria-labelledby="setServiceScheduledModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Schedule Service?</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
-            </div>
-            <div class="modal-body">
-                Do you want to set <span id="serviceScheduleName"></span> as service scheduled?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" id="modalConfirmedSchedule" class="btn btn-primary">Yes</button>
-            </div>
-        </div>
-    </div>
-</div>
+{% include 'jobsite/modal/schedule_service.html' %}
 
 <script>
   let job_site_table;
@@ -62,32 +46,25 @@
       columns: [
         {
           targets: 0,
-          searchable: false,
-          orderable: false,
-          data: null,
-          render: function (data, type, row, meta) {
-            return '<a href="/customers/view/job_site/' + data.id + '" class="btn btn-inverse-info btn-xs btn-icon" title="View Service Record"><i class="fa fa-wrench"></i></a>' +
-                ' <a href="https://app.qbo.intuit.com/app/customerdetail?nameId=' + data.quickbooks_id + '" class="btn btn-inverse-success btn-xs btn-icon" title="View Quickbooks Record" target="_blank"><img src="{% static 'assets/images/quickbooks-icon.jpeg' %}" alt="Open in Quickbooks" style="max-width:20px;max-height:20px;"></a>';
-          }
-        },
-        {
-          targets: 1,
           searchable: true,
           data: null,
           render: function(data, type, row, meta) {
             let trim = 30;
+            let output_string;
 
             if(data.name === '' || data.name === data.customer__company) {
-              return '<em>' + stringManipulations.truncate(data.customer__company, trim) + '</em>'
+              output_string = '<em>' + stringManipulations.truncate(data.customer__company, trim) + '</em>'
             } else if(data.customer__company !== undefined) {
-              return stringManipulations.truncate(data.name, trim) + '<br /><em>' + stringManipulations.truncate(data.customer__company, trim) + '</em>'
+              output_string = stringManipulations.truncate(data.name, trim) + '<br /><em>' + stringManipulations.truncate(data.customer__company, trim) + '</em>'
             }  else {
-              return stringManipulations.truncate(data.name, trim);
+              output_string = stringManipulations.truncate(data.name, trim);
             }
+
+            return '<a href="/customers/view/job_site/' + data.id + '" title="View Service Record">' + output_string + '</a>';
           }
         },
         {
-          targets: 2,
+          targets: 1,
           searchable: true,
           data: null,
           orderable: false,
@@ -104,7 +81,7 @@
           }
         },
         {
-          targets: 3,
+          targets: 2,
           data: null,
           orderable: false,
           render: function (data, type, row, meta) {
@@ -118,7 +95,7 @@
           }
         },
         {
-          targets: 4,
+          targets: 3,
           data: null,
           render: function (data, type, row, meta) {
             let trim = 20;
@@ -131,7 +108,7 @@
           }
         },
         {
-          targets: 5,
+          targets: 4,
           data: null,
           render: function (data, type, row, meta) {
             // generate the Google calendar link to schedule this customer
@@ -164,7 +141,7 @@
           }
         },
         {
-          targets: 6,
+          targets: 5,
           data: null,
           render: function (data, type, row, meta) {
             if(data.service_scheduled) {
@@ -173,17 +150,21 @@
               let ignore_older_than = luxon.DateTime.now().minus({ years: 3 });
               let alarm_date = luxon.DateTime.now().minus({ years: 1 });
               let ignore_future_date = luxon.DateTime.now().plus({ months: 2 });
+              let plus_30_days = luxon.DateTime.now().plus({ days: 30 });
+              let current_date = luxon.DateTime.now();
               let service_date = luxon.DateTime.fromISO(data.next_service_date);
 
               if(data.next_service_date !== '' && data.next_service_date !== null) {
                 // this takes the place of jobsite/models/JobSite.is_past_due & JobSite.is_due_soon
                 if(service_date <= ignore_older_than) {
-                  return 'Not Due';
+                  return '<span class="text-secondary">Dormant</span>';
                 } else {
                   if(service_date >= ignore_future_date) {
-                    return 'Not Due';
+                    return '<span class="text-secondary">Not Due</span>';
                   } else if(service_date.startOf('month').plus({ months: 2 }) >= ignore_future_date) {
                     return '<span class="text-info">Due Soon</span>';
+                  } else if(service_date <= plus_30_days && service_date >= current_date.startOf('month')) {
+                    return '<span class="text-warning">Due Now</span>';
                   } else if(service_date >= alarm_date) {
                     return '<span class="text-danger blinking-alert">Not Scheduled</span>';
                   } else {
@@ -191,9 +172,18 @@
                   }
                 }
               } else {
-                return 'N/A';
+                return '<span class="text-secondary">N/A</span>';
               }
             }
+          }
+        },
+        {
+          targets: 6,
+          searchable: false,
+          orderable: false,
+          data: null,
+          render: function (data, type, row, meta) {
+            return '<a href="https://app.qbo.intuit.com/app/customerdetail?nameId=' + data.quickbooks_id + '" class="btn btn-inverse-success btn-xs btn-icon" title="View Quickbooks Record" target="_blank"><img src="{% static 'assets/images/quickbooks-icon.jpeg' %}" alt="Open in Quickbooks" style="max-width:20px;max-height:20px;"></a>';
           }
         },
       ],

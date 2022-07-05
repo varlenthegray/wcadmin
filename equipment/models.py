@@ -21,5 +21,8 @@ class Equipment(models.Model):
     last_updated_on = models.DateTimeField(auto_now=True, editable=False)
     last_updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, editable=False)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return f"{self.name}"

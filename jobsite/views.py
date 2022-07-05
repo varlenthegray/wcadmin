@@ -114,9 +114,7 @@ class JobSitesREST(viewsets.ModelViewSet):
         if order:
             base_query = base_query.order_by(order_direction + order_by_column)
 
-        self.queryset = base_query
-
-        return self.queryset
+        return base_query
 
 
 def set_job_site_scheduled(request, *args, **kwargs):
