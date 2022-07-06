@@ -32,6 +32,7 @@
                             <tr>
                                 <th width="5%">Actions</th>
                                 <th>Name</th>
+                                <th>Sales Price</th>
                                 <th>Cost</th>
                             </tr>
                             </thead>
@@ -42,6 +43,7 @@
                                         <a href="{% url 'viewEquipment' pk=equipment.pk %}" class="btn btn-inverse-secondary btn-xs btn-icon" title="View Equipment Record"><i class="fa fa-eye"></i></a>
                                     </td>
                                     <td>{{ equipment.name }}</td>
+                                    <td>$ {{ equipment.sales_price|floatformat:2|intcomma }}</td>
                                     <td>$ {{ equipment.cost|floatformat:2|intcomma }}</td>
                                 </tr>
                             {% endfor %}

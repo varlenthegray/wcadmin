@@ -649,7 +649,8 @@ def get_equipment_qb(request, changes_only=False):
 
             for item in items:
                 add_item = Equipment(
-                    cost=item.UnitPrice,
+                    sales_price=item.UnitPrice,
+                    cost=item.PurchaseCost,
                     is_active=item.Active,
                     quickbooks_id=item.Id,
                     last_updated_by=request.user,
@@ -673,6 +674,7 @@ def get_equipment_qb(request, changes_only=False):
                 else:
                     existing_item.name = add_item.name
                     existing_item.cost = add_item.cost
+                    existing_item.sales_price = add_item.sales_price
                     existing_item.is_active = add_item.is_active
                     existing_item.sku = add_item.sku
                     existing_item.description = add_item.description

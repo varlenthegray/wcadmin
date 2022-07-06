@@ -83,6 +83,15 @@
                 </div>
             </div>
 
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <button class="btn btn-inverse-success btn-icon-text" onclick="getEquipmentQB()">
+                        <i class="fa fa-link btn-icon-prepend"></i>
+                        Get Equipment from QB
+                    </button>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-sm-12">
                     <code id="result"></code>
@@ -158,6 +167,14 @@
         $("#result").html('Loading...');
 
         $.get("{% url 'get_changes_from_qb' %}", function (data) {
+          $("#result").html(JSON.stringify(data, null, 2))
+        })
+      }
+
+      function getEquipmentQB() {
+        $("#result").html('Loading...');
+
+        $.get("{% url 'get_qb_equipment' %}", function (data) {
           $("#result").html(JSON.stringify(data, null, 2))
         })
       }
