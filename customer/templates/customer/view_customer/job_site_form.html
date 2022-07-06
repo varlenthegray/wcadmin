@@ -48,6 +48,11 @@
             <label class="form-check-label me-4" for="{{ jobsite.service_scheduled.id_for_label }}">Service Scheduled</label>
             {{ jobsite.service_scheduled|add_class:"form-check-input float-end" }}
         </div>
+        <div class="form-check">
+            {{ jobsite.disable_service.errors }}
+            <label class="form-check-label me-4" for="{{ jobsite.disable_service.id_for_label }}">Disable Service</label>
+            {{ jobsite.disable_service|add_class:"form-check-input float-end" }}
+        </div>
     </div>
 </div>
 

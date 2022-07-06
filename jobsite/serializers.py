@@ -8,7 +8,8 @@ class JobSitesSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobSite
         fields = ('id', 'quickbooks_id', 'name', 'address', 'address_2', 'city', 'state', 'zip', 'phone_number',
-                  'email', 'next_service_date', 'service_scheduled')
+                  'email', 'next_service_date', 'service_scheduled', 'disable_service')
 
-        datatables_always_serialize = ('id', 'quickbooks_id', 'name', 'address', 'address_2', 'city', 'state', 'zip', 'phone_number',
-                  'email', 'next_service_date', 'service_scheduled')
+        datatables_always_serialize = ('id', 'quickbooks_id', 'name', 'address', 'address_2', 'city', 'state', 'zip',
+                                       'phone_number', 'email', 'next_service_date', 'service_scheduled',
+                                       'disable_service')

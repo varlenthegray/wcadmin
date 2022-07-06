@@ -127,16 +127,24 @@
 
             let nsd_formatted = luxon.DateTime.fromISO(data.next_service_date).toFormat('LLL dd, yyyy');
 
+            let disabled;
+
+            if(data.disable_service) {
+              disabled = '<span class="text-decoration-line-through">';
+            } else {
+              disabled = '<span>';
+            }
+
             if (data.next_service_date !== null) {
               let nsd_date = luxon.DateTime.fromISO(data.next_service_date);
 
               if(!data.service_scheduled && (nsd_date.hasSame(luxon.DateTime.now(), 'month') || nsd_date >= luxon.DateTime.now().minus({ years: 3 }))) {
-                return '<button class="dt_show_modal btn btn-link p-0 m-0" data-bs-toggle="modal" data-bs-target="#setServiceScheduledModal" data-google-url="' + google_url + '" data-job-name="' + data.name + '" data-job-id="' + data.id + '"><i class="fa fa-calendar-day"></i> ' + nsd_formatted + '</button>';
+                return '<button class="dt_show_modal btn btn-link p-0 m-0" data-bs-toggle="modal" data-bs-target="#setServiceScheduledModal" data-google-url="' + google_url + '" data-job-name="' + data.name + '" data-job-id="' + data.id + '"><i class="fa fa-calendar-day"></i> ' + disabled + nsd_formatted + '</span></button>';
               } else {
-                return nsd_formatted;
+                return disabled + nsd_formatted + '</span>';
               }
             } else {
-              return 'N/A';
+              return disabled + 'N/A</span>';
             }
           }
         },
@@ -146,6 +154,8 @@
           render: function (data, type, row, meta) {
             if(data.service_scheduled) {
               return '<span class="text-success">Scheduled</span>';
+            } else if(data.disable_service) {
+              return '<span class="text-light">Disabled</span>';
             } else {
               let ignore_older_than = luxon.DateTime.now().minus({ years: 3 });
               let alarm_date = luxon.DateTime.now().minus({ years: 1 });

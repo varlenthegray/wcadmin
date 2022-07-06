@@ -27,7 +27,7 @@ class ViewJobSiteForm(forms.ModelForm):
         model = JobSite
         fields = ['name', 'address', 'city', 'state', 'zip', 'phone_number', 'email', 'next_service_date',
                   'active', 'access_code', 'bill_parent', 'customer', 'primary_technician', 'service_interval',
-                  'requires_supporting_technician', 'service_scheduled']
+                  'requires_supporting_technician', 'service_scheduled', 'disable_service']
 
 
 class AddJobSiteForm(forms.ModelForm):
@@ -38,7 +38,7 @@ class AddJobSiteForm(forms.ModelForm):
         model = JobSite
         fields = ['name', 'address', 'city', 'state', 'zip', 'phone_number', 'email', 'next_service_date',
                   'active', 'access_code', 'bill_parent', 'service_interval', 'requires_supporting_technician',
-                  'service_scheduled']
+                  'service_scheduled', 'disable_service']
 
 
 class EditJobSiteEquipment(forms.ModelForm):

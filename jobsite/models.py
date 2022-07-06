@@ -1,11 +1,8 @@
-import datetime
-
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
 
 from dateutil.relativedelta import relativedelta
-from dateutil.parser import parse
 
 from customer.models import Customer, Equipment
 
@@ -29,6 +26,7 @@ class JobSite(models.Model):
     bill_parent = models.BooleanField(default=False)
     requires_supporting_technician = models.BooleanField(default=False)
     service_scheduled = models.BooleanField(default=False)
+    disable_service = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.name}'

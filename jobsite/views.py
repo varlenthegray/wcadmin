@@ -75,7 +75,7 @@ class JobSitesREST(viewsets.ModelViewSet):
         if all_items:
             base_query = JobSite.objects.all()
         else:
-            base_query = JobSite.objects.filter(active=True)
+            base_query = JobSite.objects.filter(active=True).filter(disable_service=False)
 
         if search:
             base_query = JobSite.objects.annotate(
