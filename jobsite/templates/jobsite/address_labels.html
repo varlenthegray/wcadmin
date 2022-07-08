@@ -44,14 +44,16 @@
 </head>
 <body>
 <table>
+    <tr>
     {% for job in jobsite %}
-        {% if forloop.counter|divisibleby:3 %}<tr>{% endif %}
-
         <td>{{ job.name }}<br/>{{ job.address }}<br/>{{ job.address_2 }}{% if job.address_2 %}<br/>{% endif %}{{ job.city }}, {{ job.state }} {{ job.zip }}</td>
-        <td class="spacer">&nbsp;</td>
-
-        {% if forloop.counter|divisibleby:3 %}</tr>{% endif %}
+        {% if forloop.counter|divisibleby:3 and not forloop.last %}
+            </tr><tr>
+        {% elif not forloop.last %}
+            <td class="spacer" rowspan="0">&nbsp;</td>
+        {% endif %}
     {% endfor %}
+    </tr>
 </table>
 </body>
 </html>
