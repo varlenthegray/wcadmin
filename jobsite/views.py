@@ -1,6 +1,8 @@
 import logging
+import simplejson
 
 from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render
 from django.utils import timezone
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -130,3 +132,26 @@ def set_job_site_scheduled(request, *args, **kwargs):
     else:
         logger.critical('Got request to update scheduled but no ID was provided.')
         return HttpResponse(status=400, content='No PK provided')
+
+
+def print_address_labels(request, *args, **kwargs):
+    # fancy footwork to get POST data and represent it as an array, then get objects from the array
+    raw_job_site_ids = simplejson.loads(request.POST['data'])['body']
+    job_site_ids = []
+
+    # this has to be done, it's a 3D array initially with 1 array, [0] didn't work
+    for js_id in raw_job_site_ids:
+        job_site_ids.append(js_id[0])
+
+    job_sites = JobSite.objects.filter(pk__in=job_site_ids)
+    context = {'jobsite': job_sites}
+
+    return render(request, 'jobsite/address_labels.html', context)
+
+
+class PrintAddressLabels(LoginRequiredMixin, generic.ListView):
+    model = JobSite
+    template_name = 'jobsite/address_labels.html'
+
+    def post(self, request, *args, **kwargs):
+        return HttpResponse(status=200)

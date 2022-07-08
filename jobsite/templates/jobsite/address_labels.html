@@ -1,0 +1,62 @@
+<html lang="en">
+<head>
+    <style>
+        body {
+            background-color: #ffffff;
+            max-width: 571.4pt;
+            padding: 20pt 22.3pt 25pt 18.4pt;
+        }
+
+        table {
+            margin-left: -4.3pt;
+            border-spacing: 0;
+            border-collapse: collapse;
+            margin-right: auto;
+        }
+
+        table td, table th {
+            padding: 0;
+            margin: 0;
+            color: #000000;
+            font-size: 11pt;
+            border: 1pt solid #b7b7b7;
+            vertical-align: middle;
+            text-align: center;
+            width: 189pt;
+        }
+
+        tr {
+            height: 72pt;
+        }
+
+        .spacer {
+            border: 1pt solid;
+            border-color: #fff #b7b7b7;
+            width: 9pt;
+            padding-top: 0;
+            padding-bottom: 0;
+            line-height: 1.15;
+            orphans: 2;
+            widows: 2;
+        }
+    </style>
+    <title>WCWT Admin - Avery 5260 - Print Address Labels</title>
+</head>
+<body>
+<table>
+    <tr>
+    {% for job in jobsite %}
+        {% if forloop.counter <= 3 %}
+            <td>{{ job.name }}<br/>{{ job.address }}<br/>{{ job.address_2 }}{% if job.address_2 %}<br/>{% endif %}{{ job.city }}, {{ job.state }} {{ job.zip }}</td>
+            <td class="spacer" rowspan="0">&nbsp;</td>
+        {% else %}
+            {% if forloop.counter|divisibleby:3 %}<tr>{% endif %}
+
+            <td>{{ job.name }}<br/>{{ job.address }}<br/>{{ job.address_2 }}{% if job.address_2 %}<br/>{% endif %}{{ job.city }}, {{ job.state }} {{ job.zip }}</td>
+
+            {% if forloop.counter|divisibleby:3 %}</tr>{% endif %}
+        {% endif %}
+    {% endfor %}
+</table>
+</body>
+</html>

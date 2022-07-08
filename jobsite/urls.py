@@ -10,6 +10,8 @@ urlpatterns = [
     path('view/<int:pk>', views.ViewJobSite.as_view(), name='viewJobSite'),
     path('add_job_site', views.AddJobSite.as_view(), name='addJobSite'),
     path('all_job_sites_json', views.all_job_sites_json, name='allJobSitesJSON'),
+    # path('print_address_labels', views.PrintAddressLabels.as_view(), name='printAddrLabels'),
+    path('print_address_labels', views.print_address_labels, name='printAddrLabels'),
     path('set_job_scheduled/<int:pk>', views.set_job_site_scheduled, name='setJobSiteScheduled'),
     re_path('^api/', include(router.urls)),
 ]

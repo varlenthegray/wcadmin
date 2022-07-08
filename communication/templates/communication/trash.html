@@ -14,29 +14,27 @@
 
     <div class="p-3 pb-0">
         <table class="table table-sm">
-            {% if all_trash %}
+            <tr>
+                <th>Actions</th>
+                <th>Subject</th>
+                <th>Sent On</th>
+                <th>Sent By</th>
+            </tr>
+            {% for trash in all_trash %}
                 <tr>
-                    <th>Actions</th>
-                    <th>Subject</th>
-                    <th>Sent On</th>
-                    <th>Sent By</th>
+                    <td></td>
+                    <td>{{ trash.subject }}</td>
+                    <td>{{ trash.last_updated_on|date:'m-d-Y h:i A' }}</td>
+                    <td>{% if trash.user.name %}{{ trash.user.name }}{% else %}{{ trash.user.username }}{% endif %}</td>
                 </tr>
-                {% for trash in all_trash %}
-                    <tr>
-                        <td></td>
-                        <td>{{ trash.subject }}</td>
-                        <td>{{ trash.last_updated_on|date:'m-d-Y h:i A' }}</td>
-                        <td>{% if trash.user.name %}{{ trash.user.name }}{% else %}{{ trash.user.username }}{% endif %}</td>
-                    </tr>
-                {% endfor %}
-            {% else %}
+            {% empty %}
                 <tr>
-                    <td class="text-center">
+                    <td colspan="4" class="text-center">
                         Good news... or bad news. Nothing has been thrown away.<br />
                         Perhaps you want to <a href="{% url 'emailCompose' %}">send an email?</a>
                     </td>
                 </tr>
-            {% endif %}
+            {% endfor %}
         </table>
     </div>
 {% endblock %}

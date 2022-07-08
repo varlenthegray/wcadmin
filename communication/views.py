@@ -22,7 +22,7 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
 class AllTemplates(LoginRequiredMixin, generic.CreateView):
     model = EmailTemplates
     template_name = 'communication/all_templates.html'
-    form_class = CreateTemplate(prefix='createTemplate')
+    form_class = CreateTemplate
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -30,7 +30,7 @@ class AllTemplates(LoginRequiredMixin, generic.CreateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        create_template = CreateTemplate(request.POST, prefix='createTemplate')
+        create_template = CreateTemplate(request.POST)
 
         if create_template.is_valid():
             create_template.save()

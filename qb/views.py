@@ -33,7 +33,6 @@ from customer.models import Customer
 from jobsite.models import JobSite, JobSiteEquipment
 from equipment.models import Equipment
 
-from qb.services import qbo_api_call
 from .models import Invoice, InvoiceLine, QBSystem
 
 load_dotenv()
