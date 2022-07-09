@@ -5,7 +5,7 @@
         {{ jobsite.name.errors }}
         <label class="form-label" for="{{ jobsite.name.id_for_label }}">Contact Name</label>
         {{ jobsite.name|add_class:"form-control"|attr:"autocomplete:off" }}
-    </div><!-- Col -->
+    </div>
     <div class="col-sm-4">
         {{ jobsite.phone_number.errors }}
         <label class="form-label" for="{{ jobsite.phone_number.id_for_label }}">Contact Phone</label>
@@ -108,7 +108,7 @@
     nsd_field.inputmask("99-99-9999");
     $(".service-int").inputmask("999");
     $(".state").inputmask("AA");
-    $(".zip-code").inputmask("99999-9999");
+    $(".zip-code").inputmask("99999[-9999]");
 
 
     nsd_field.datepicker({

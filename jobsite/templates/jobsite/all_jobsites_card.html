@@ -182,9 +182,9 @@
                   } else if(service_date <= plus_30_days && service_date >= current_date.startOf('month')) {
                     return '<span class="text-warning">Due Now</span>';
                   } else if(service_date >= alarm_date) {
-                    return '<span class="text-danger blinking-alert">Not Scheduled</span>';
+                    return '<span class="text-warning blinking-alert">Missed Service</span>';
                   } else {
-                    return '<span class="text-warning">Missed Service</span>';
+                    return '<span class="text-danger blinking-alert">Past Due</span>';
                   }
                 }
               } else {

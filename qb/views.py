@@ -720,8 +720,6 @@ def update_service_interval(request):
 
 @login_required
 def update_db_from_changes(request):
-
-
     if refresh(request):
         insert_qb_customers(request, True)
         get_service_data(request, True)
@@ -729,3 +727,39 @@ def update_db_from_changes(request):
         return HttpResponse(status=200, content='Successfully received changes from QuickBooks.')
     else:
         return HttpResponse(status=400, content='Unable to get changes.')
+
+
+@login_required
+def get_print_on_check_name_from_qb(request):
+    client = qb_client(request)
+    all_job_sites = JobSite.objects.all()
+
+    try:
+        customer_count = qbCustomer.count("Active in (True, False)", qb=client)
+        logger.warning(f"{timezone.now()} Customers getting Print on Check name for: {customer_count}")
+    except QuickbooksException as e:
+        return HttpResponse(str(e.error_code) + ' - ' + e.message)
+    else:
+        runs = math.ceil(customer_count / max_per_run) + 1
+
+        for current_run in range(1, runs):
+            start_count = (current_run * max_per_run) - max_per_run
+
+            customers = qbCustomer.query(
+                f"SELECT * FROM Customer WHERE Active in (True, False) STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
+                qb=client
+            )
+
+            for customer in customers:
+                try:
+                    job_site = all_job_sites.get(quickbooks_id=customer.Id)
+
+                    job_site.print_on_check_name = customer.PrintOnCheckName
+                    job_site.first_name = customer.GivenName
+                    job_site.last_name = customer.FamilyName
+
+                    job_site.save()
+                except ObjectDoesNotExist:
+                    pass
+
+    return HttpResponse('Successfully updated Job Site Print on Checks name, First Name and Last Name.')

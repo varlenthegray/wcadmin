@@ -89,6 +89,11 @@
                         <i class="fa fa-link btn-icon-prepend"></i>
                         Get Equipment from QB
                     </button>
+
+                    <button class="btn btn-danger btn-icon-text" onclick="fixJobSitePrintOnCheck()">
+                        <i class="fa fa-link btn-icon-prepend"></i>
+                        Update Print on Check/First/Last Name
+                    </button>
                 </div>
             </div>
 
@@ -175,6 +180,14 @@
         $("#result").html('Loading...');
 
         $.get("{% url 'get_qb_equipment' %}", function (data) {
+          $("#result").html(JSON.stringify(data, null, 2))
+        })
+      }
+
+      function fixJobSitePrintOnCheck() {
+        $("#result").html('Loading...');
+
+        $.get("{% url 'print_on_check_fix_from_qb' %}", function (data) {
           $("#result").html(JSON.stringify(data, null, 2))
         })
       }

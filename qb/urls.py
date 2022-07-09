@@ -18,4 +18,5 @@ urlpatterns = [
     path('attach_equipment_to_jobsite/', views.attach_equipment_to_job_site, name='attach_qb_equipment_to_jobsite'),
     path('set_service_interval/', views.update_service_interval, name='update_service_interval_based_on_qb'),
     path('update_changes/', views.update_db_from_changes, name='get_changes_from_qb'),
+    path('print_on_check_fix/', views.get_print_on_check_name_from_qb, name='print_on_check_fix_from_qb'),
 ]
