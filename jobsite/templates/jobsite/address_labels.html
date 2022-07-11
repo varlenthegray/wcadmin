@@ -3,8 +3,7 @@
     <style>
         body {
             background-color: #ffffff;
-            margin: 0;
-            padding: 0;
+            margin: 0 0.2in;
         }
 
         .header-footer {
@@ -15,40 +14,25 @@
             display: flex;
             flex: 0 0 2.625in;
             height: 1in;
-            width: 2.625in;
             justify-content: center;
             align-items: center;
             font-size: 11pt;
-            border: 1pt solid #000000;
+            outline: 1pt dotted #fff;
             padding: 0;
-            margin: 0 3.175mm 0 -1.52mm;
+            margin: 0 3.175mm 0 0;
             text-align: center;
-            cursor: pointer;
-        }
-
-        .address-label:hover {
-            background: repeating-linear-gradient(
-                    45deg,
-                    #ff0000 0px,
-                    #ff0000 5px,
-                    #ffffff 5px,
-                    #ffffff 20px
-            );
-            border-radius: 20px;
         }
 
         .label-container {
+            margin: .15in 0 0 -0.06in;
             display: flex;
             flex-wrap: wrap;
             width: 8.5in;
-            margin: 0;
-            padding-left: 18.4pt;
         }
 
         @media print {
             @page {
-                margin: 0;
-                padding: 0;
+                margin: 0 0.2in;
             }
 
             html, body {
@@ -62,8 +46,6 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" type="text/javascript"></script>
 </head>
 <body>
-<div class="header-footer"></div>
-
 <div class="label-container">
     {% for job in jobsite %}
         {% if job.address %}
@@ -76,22 +58,14 @@
 
             {% if forloop.counter|divisibleby:30 %}
                 </div>
-                <div class="header-footer"></div>
-                <div class="header-footer"></div>
                 <div class="label-container">
             {% endif %}
         {% endif %}
     {% endfor %}
-</div>
-
-<div class="header-footer"></div>
+    </div>
 </body>
 
 <script>
-  $(function() {
-    $(".address-label").on("click", function() {
-      $(this).parent().prepend('<div class="address-label">&nbsp;</div>');
-    });
-  });
+
 </script>
 </html>
