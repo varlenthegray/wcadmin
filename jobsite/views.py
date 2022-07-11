@@ -23,6 +23,13 @@ class AllJobSites(LoginRequiredMixin, generic.ListView):
     queryset = JobSite.objects.all().prefetch_related('customer')
     template_name = 'jobsite/all_jobsites.html'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['job_sites'] = self.queryset
+
+        return context
+
 
 class ViewJobSite(LoginRequiredMixin, generic.UpdateView):
     model = JobSite
