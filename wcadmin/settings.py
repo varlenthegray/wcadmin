@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'users',
     'qb',
     'communication',
+    'main',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -80,6 +81,7 @@ TEMPLATES = [
 
                 'wcadmin.context_processors.load_qb_system',
                 'wcadmin.context_processors.determine_production_status',
+                'wcadmin.context_processors.get_version_info',
             ],
         },
     },

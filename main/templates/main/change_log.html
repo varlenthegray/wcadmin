@@ -1,0 +1,21 @@
+<div class="modal fade bd-example-modal-lg" id="showChangeLog" tabindex="-1" aria-labelledby="showChangeLogModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Version History</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
+            </div>
+            <div class="modal-body">
+                {% for log in VERSION_LOG %}
+                    <h4>{{ log.version }} - {{ log.when|date:"M d, Y: g:iA T" }}</h4>
+                    <ul>{{ log.details|safe }}</ul>
+
+                    {% if not forloop.last %}<hr/>{% endif %}
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

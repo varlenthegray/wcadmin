@@ -1,7 +1,7 @@
 import os
-from django.conf import settings
 
 from qb.models import QBSystem
+from main.models import VersionLog
 
 
 def load_qb_system(request):
@@ -11,3 +11,9 @@ def load_qb_system(request):
 
 def determine_production_status(request):
     return {'IS_LIVE': os.environ.get('LIVE')}
+
+
+def get_version_info(request):
+    full_version_log = VersionLog.objects.all().order_by('-pk')
+    latest_version = VersionLog.objects.last()
+    return {'VERSION_LOG': full_version_log, 'LATEST_VERSION': latest_version}
