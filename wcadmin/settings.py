@@ -31,7 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 INSTALLED_APPS = [
     'customer',
     'equipment',
-    'jobsite',
+    # 'jobsite',
     'service',
     'supplier',
     'users',

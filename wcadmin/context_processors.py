@@ -23,9 +23,12 @@ def get_version_info(request):
 
 
 def get_theme(request):
-    try:
-        preferences = Preferences.objects.get(user=request.user)
-    except ObjectDoesNotExist:
-        return {'THEME': 'demo2'}
+    if request.user:
+        try:
+            preferences = Preferences.objects.get(user=request.user)
+        except ObjectDoesNotExist:
+            return {'THEME': 'demo2'}
+        else:
+            return {'THEME': preferences.theme}
     else:
-        return {'THEME': preferences.theme}
+        return {'THEME': 'demo2'}

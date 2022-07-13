@@ -5,7 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import EmailHistory, EmailTemplates
 from .forms import CreateEmail, CreateTemplate
 
-from jobsite.models import JobSite
+from customer.models import JobSite
+# from jobsite.models import JobSite
 
 
 class EmailHomepage(LoginRequiredMixin, generic.CreateView):

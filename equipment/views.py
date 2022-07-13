@@ -6,7 +6,8 @@ from django.urls import reverse
 from .models import Equipment
 from .forms import AddEquipmentForm
 
-from jobsite.models import JobSiteEquipment
+# from jobsite.models import JobSiteEquipment
+from customer.models import JobSiteEquipment
 
 
 class AllEquipment(LoginRequiredMixin, generic.ListView):

@@ -1,5 +1,6 @@
 from django.db import models
-from jobsite.models import JobSite
+from customer.models import JobSite
+# from jobsite.models import JobSite
 from equipment.models import Equipment
 from django.conf import settings
 

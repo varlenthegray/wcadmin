@@ -1,6 +1,7 @@
 from dateutil.relativedelta import relativedelta
 from django.views import generic
-from jobsite.models import JobSite
+# from jobsite.models import JobSite
+from customer.models import JobSite
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 

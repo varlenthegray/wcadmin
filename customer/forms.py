@@ -1,6 +1,6 @@
 from django import forms
-from .models import Customer
-from jobsite.models import JobSite, JobSiteEquipment
+from .models import Customer, JobSite, JobSiteEquipment
+# from jobsite.models import JobSite, JobSiteEquipment
 
 
 class AddCustomerForm(forms.ModelForm):

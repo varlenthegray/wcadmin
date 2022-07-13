@@ -1,0 +1,71 @@
+<html lang="en">
+<head>
+    <style>
+        body {
+            background-color: #ffffff;
+            margin: 0 0.2in;
+        }
+
+        .header-footer {
+            height: 0.5in;
+        }
+
+        .address-label {
+            display: flex;
+            flex: 0 0 2.625in;
+            height: 1in;
+            justify-content: center;
+            align-items: center;
+            font-size: 11pt;
+            outline: 1pt dotted #fff;
+            padding: 0;
+            margin: 0 3.175mm 0 0;
+            text-align: center;
+        }
+
+        .label-container {
+            margin: .15in 0 0 -0.06in;
+            display: flex;
+            flex-wrap: wrap;
+            width: 8.5in;
+        }
+
+        @media print {
+            @page {
+                margin: 0 0.2in;
+            }
+
+            html, body {
+                width: 8.5in;
+                height: 11in;
+            }
+        }
+    </style>
+    <title>WCWT Admin - Avery 5260 - Print Address Labels</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="label-container">
+    {% for job in jobsite %}
+        {% if job.address %}
+            <div class="address-label">
+                {{ job.print_on_check_name }}<br/>
+                {{ job.customer.billing_address_1 }}<br/>
+                {% if job.customer.billing_address_2 %}{{ job.customer.billing_address_2 }}<br/>{% endif %}
+                {{ job.customer.billing_city }}, {{ job.customer.billing_state }} {{ job.customer.billing_zip }}
+            </div>
+
+            {% if forloop.counter|divisibleby:30 %}
+                </div>
+                <div class="label-container">
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    </div>
+</body>
+
+<script>
+
+</script>
+</html>
