@@ -2,7 +2,7 @@ $(function() {
   let job_site_table = $("#customerDatatable").DataTable({
     dom: 'lfrtip',
     scrollY: 480,
-    ajax: '/job_sites/all_job_sites_json',
+    ajax: '/customer/all_job_sites_json',
     columns: [
       {
         targets: 0,

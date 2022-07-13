@@ -21,7 +21,7 @@ class ViewCustomerForm(forms.ModelForm):
 
 class ViewJobSiteForm(forms.ModelForm):
     next_service_date = forms.DateField(widget=forms.DateInput(format='%m-%d-%Y'), input_formats=['%m-%d-%Y'])
-    template_name = 'customer/view_customer/job_site_form.html'
+    template_name = 'customer/view_customer/form.html'
 
     class Meta:
         model = JobSite
@@ -32,7 +32,7 @@ class ViewJobSiteForm(forms.ModelForm):
 
 class AddJobSiteForm(forms.ModelForm):
     next_service_date = forms.DateField(widget=forms.DateInput(format='%m-%d-%Y'), input_formats=['%m-%d-%Y'])
-    template_name = 'customer/view_customer/job_site_form.html'
+    template_name = 'customer/view_customer/form.html'
 
     class Meta:
         model = JobSite

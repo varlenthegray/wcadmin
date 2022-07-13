@@ -1,4 +1,4 @@
-{% extends 'customer/all_jobsites.html' %}
+{% extends 'customer/job_sites/all_jobsites.html' %}
 
 {% block page_header %}Due Last 3 Months{% endblock %}
 {% block card_title %}Service Due From Last 3 Months{% endblock %}
@@ -6,7 +6,7 @@
 {% block page_script %}
     <script>
       $(function() {
-        job_site_table.ajax.url('/job_sites/api/allJobSitesRest/?format=datatables&report=past_three_months').draw();
+        job_site_table.ajax.url('/customers/api/allJobSitesRest/?format=datatables&report=past_three_months').draw();
       });
     </script>
 {% endblock %}

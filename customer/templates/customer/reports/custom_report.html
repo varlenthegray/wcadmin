@@ -1,4 +1,4 @@
-{% extends 'customer/all_jobsites.html' %}
+{% extends 'customer/job_sites/all_jobsites.html' %}
 {% load static %}
 
 {% block page_header %}Custom Report{% endblock %}
@@ -66,13 +66,13 @@
           });
         }
 
-        job_site_table.ajax.url('/job_sites/api/allJobSitesRest/?format=datatables&report=custom_report').draw();
+        job_site_table.ajax.url('/customers/api/allJobSitesRest/?format=datatables&report=custom_report').draw();
 
         $("#custom_show_filter").on('click', function() {
           let from_date = $('#serviceFromDateField').val();
           let to_date = $('#serviceToDateField').val();
 
-          job_site_table.ajax.url('/job_sites/api/allJobSitesRest/?format=datatables&report=custom_report&fromDate=' + from_date + '&toDate=' + to_date).draw();
+          job_site_table.ajax.url('/customers/api/allJobSitesRest/?format=datatables&report=custom_report&fromDate=' + from_date + '&toDate=' + to_date).draw();
         });
       });
     </script>

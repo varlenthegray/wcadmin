@@ -55,7 +55,7 @@
             <input type="hidden" value="{{ job_site_id }}" name="job_id" />
             {# Shake a stick at this later, if it makes you angry. Duplicate HTML ID's are found here. #}
 
-            {% include 'customer/view_customer/job_site_form.html' %}
+            {% include 'customer/job_sites/form.html' %}
 
             <div class="row" id="jobSiteFormActions" style="display:none;">
                 <div class="col-sm-6 offset-sm-6">
@@ -68,11 +68,11 @@
         <hr class="bg-secondary opacity-100" />
 
         <div class="row pt-2 mb-3">
-            {% include 'customer/view_customer/job_site_equipment.html' %}
+            {% include 'customer/job_sites/equipment.html' %}
         </div>
 
         <div class="row pt-2 mb-3">
-            {% include 'customer/view_customer/job_site_invoices.html' %}
+            {% include 'customer/job_sites/invoices.html' %}
         </div>
     </div>
 </div>
@@ -90,7 +90,7 @@
                 </div>
 
                 <div class="modal-body">
-                    {% include 'customer/view_customer/job_site_form.html' %}
+                    {% include 'customer/job_sites/form.html' %}
                 </div>
 
                 <div class="modal-footer">
@@ -105,7 +105,7 @@
 {% include 'customer/modal/schedule_service.html' %}
 
 <div class="modal" tabindex="-1" id="addEquipmentJobSite">
-    {% include 'customer/view_customer/add_equipment_jobsite.html' %}
+    {% include 'customer/job_sites/add_equipment_jobsite.html' %}
 </div>
 
 <script>

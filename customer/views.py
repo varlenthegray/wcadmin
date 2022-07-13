@@ -137,7 +137,7 @@ class ViewSpecificJobSite(LoginRequiredMixin, generic.UpdateView):
 
 class ViewDeleteEquipmentFromJobSite(LoginRequiredMixin, generic.DeleteView):
     model = JobSiteEquipment
-    template_name = 'customer/view_customer/job_site.html'
+    template_name = 'customer/job_sites/job_site.html'
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -147,7 +147,7 @@ class ViewDeleteEquipmentFromJobSite(LoginRequiredMixin, generic.DeleteView):
 
 class ViewEditEquipmentLine(LoginRequiredMixin, generic.UpdateView):
     model = JobSiteEquipment
-    template_name = 'customer/view_customer/edit_equipment_line.html'
+    template_name = 'customer/job_sites/edit_equipment_line.html'
     form_class = EditJobSiteEquipment
 
     def get_context_data(self, **kwargs):
@@ -158,7 +158,7 @@ class ViewEditEquipmentLine(LoginRequiredMixin, generic.UpdateView):
 
 class AddJobSiteToCustomer(LoginRequiredMixin, generic.CreateView):
     model = JobSite
-    template_name = 'customer/view_customer/job_site_form.html'
+    template_name = 'customer/job_sites/form.html'
     form_class = AddJobSiteForm
     form2 = AddJobSiteForm(prefix='jstc')
 
@@ -170,7 +170,7 @@ class AddJobSiteToCustomer(LoginRequiredMixin, generic.CreateView):
 
 class SaveJobSiteToCustomer(LoginRequiredMixin, generic.CreateView):
     model = JobSite
-    template_name = 'customer/view_customer/job_site_form.html'
+    template_name = 'customer/job_sites/form.html'
     form_class = AddJobSiteForm
 
     def post(self, request, *args, **kwargs):
@@ -188,7 +188,7 @@ class SaveJobSiteToCustomer(LoginRequiredMixin, generic.CreateView):
 
 class UpdateJobSite(LoginRequiredMixin, generic.UpdateView):
     model = JobSite
-    template_name = 'customer/view_customer/job_site_form.html'
+    template_name = 'customer/job_sites/form.html'
     form_class = ViewJobSiteForm
 
     def post(self, request, *args, **kwargs):
@@ -221,7 +221,7 @@ class SaveCustomer(LoginRequiredMixin, generic.CreateView):
 
 class SaveEquipmentChanges(LoginRequiredMixin, generic.UpdateView):
     model = JobSiteEquipment
-    template_name = 'customer/view_customer/edit_equipment_line.html'
+    template_name = 'customer/job_sites/edit_equipment_line.html'
     form_class = EditJobSiteEquipment
 
     def post(self, request, *args, **kwargs):
@@ -237,7 +237,7 @@ class SaveEquipmentChanges(LoginRequiredMixin, generic.UpdateView):
 
 class AddEquipmentToJobSite(LoginRequiredMixin, generic.CreateView):
     model = JobSiteEquipment
-    template_name = 'customer/view_customer/add_equipment_jobsite.html'
+    template_name = 'customer/job_sites/add_equipment_jobsite.html'
     form_class = AddJobSiteEquipment
 
     def post(self, request, *args, **kwargs):
@@ -259,7 +259,7 @@ class AddEquipmentToJobSite(LoginRequiredMixin, generic.CreateView):
 class AllJobSites(LoginRequiredMixin, generic.ListView):
     model = JobSite
     queryset = JobSite.objects.all().prefetch_related('customer')
-    template_name = 'customer/all_jobsites.html'
+    template_name = 'customer/job_sites/all_jobsites.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -272,13 +272,13 @@ class AllJobSites(LoginRequiredMixin, generic.ListView):
 class ViewJobSite(LoginRequiredMixin, generic.UpdateView):
     model = JobSite
     form_class = ViewJobSiteForm
-    template_name = 'customer/view_jobsite.html'
+    template_name = 'customer/job_sites/view_jobsite.html'
 
 
 class AddJobSite(LoginRequiredMixin, generic.CreateView):
     model = JobSite
     form_class = ViewJobSiteForm
-    template_name = 'customer/add_jobsite.html'
+    template_name = 'customer/job_sites/add_jobsite.html'
 
 
 def all_job_sites_json(request):
