@@ -13,7 +13,7 @@
 <div class="card">
     <div class="card-header">
         <div class="btn-group" style="height:20px;padding:0;">
-            <button type="button" class="btn btn-primary dropdown-toggle btn-sm px-2 me-2" style="padding:0;" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="btn btn-primary dropdown-toggle btn-sm px-2 me-2" style="padding:0;height:20px;" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Job Sites
             </button>
 
@@ -38,12 +38,12 @@
         </a>
 
         {# http://www.google.com/calendar/event?action=TEMPLATE&dates=20220714T010000Z%2F20220714T010000Z&text=Test&location=&details=This%20is%20a%20test #}
-        <button class="btn btn-icon p-0 m-0" id="schedule_google_cal" title="Schedule on Google Calendar" data-bs-toggle="modal" data-bs-target="#setServiceScheduledModal" data-job-id="{{ job_obj.pk }}" data-job-name="{{ job_obj.name }}" data-google-url="http://www.google.com/calendar/event?action=TEMPLATE&dates={{ job_obj.next_service_date|date:'Ymd' }}T120000%2F{{ job_obj.next_service_date|date:'Ymd' }}T130000&text={{ job_obj.name }} - Scheduled Service&location={{ job_obj.address }}, {{ job_obj.city }}, {{ job_obj.state }} {{ job_obj.zip }}&details={{ job_obj.phone_number }}">
+        <button class="btn btn-icon p-0 m-0 btn-sm" id="schedule_google_cal" style="padding:0;height:20px;"  title="Schedule on Google Calendar" data-bs-toggle="modal" data-bs-target="#setServiceScheduledModal" data-job-id="{{ job_obj.pk }}" data-job-name="{{ job_obj.name }}" data-google-url="http://www.google.com/calendar/event?action=TEMPLATE&dates={{ job_obj.next_service_date|date:'Ymd' }}T120000%2F{{ job_obj.next_service_date|date:'Ymd' }}T130000&text={{ job_obj.name }} - Scheduled Service&location={{ job_obj.address }}, {{ job_obj.city }}, {{ job_obj.state }} {{ job_obj.zip }}&details={{ job_obj.phone_number }}">
             <i class="fa fa-calendar-day text-success"></i>
         </button>
 
         <strong class="ms-2 card-title text-uppercase fw-bold">{% if jobsite.name.value|length > 45 %}<abbr title="{{ jobsite.name.value }}">{% endif %}{{ jobsite.name.value|truncatechars:45 }}</abbr></strong>
-        <button type="button" class="btn btn-link btn-icon float-end" data-bs-toggle="modal" data-bs-target="#addJobSiteModal">
+        <button type="button" class="btn btn-link btn-icon float-end btn-sm" style="padding:0;height:20px;"  data-bs-toggle="modal" data-bs-target="#addJobSiteModal">
             <i class="fa fa-plus-circle"></i>
         </button>
     </div>

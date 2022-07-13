@@ -16,6 +16,13 @@
           </advancedOptions>
         </fileTransfer>
       </webServer>
+      <webServer id="455e2f80-8aa4-4510-a168-7006730cbc86" name="demo" url="https://demo.innovated.tech">
+        <fileTransfer rootFolder="/home/innovateddemo/public_html" accessType="SFTP" host="innovated.tech" port="22" sshConfigId="4a22971e-144f-4c93-b598-c5d2f77e8cd1" sshConfig="demo@inno">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>

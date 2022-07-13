@@ -8,6 +8,9 @@
       <sshConfig authType="PASSWORD" host="host.innovated.tech" id="08185959-15bd-4c7b-894f-ce9e95cdc3d5" port="22" customName="wcadev@inno" nameFormat="CUSTOM" username="wcadev" useOpenSSHConfig="true">
         <option name="customName" value="wcadev@inno" />
       </sshConfig>
+      <sshConfig authType="PASSWORD" host="innovated.tech" id="4a22971e-144f-4c93-b598-c5d2f77e8cd1" port="22" customName="demo@inno" nameFormat="CUSTOM" username="innovateddemo" useOpenSSHConfig="true">
+        <option name="customName" value="demo@inno" />
+      </sshConfig>
     </configs>
   </component>
 </project>

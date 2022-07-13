@@ -82,6 +82,7 @@ TEMPLATES = [
                 'wcadmin.context_processors.load_qb_system',
                 'wcadmin.context_processors.determine_production_status',
                 'wcadmin.context_processors.get_version_info',
+                'wcadmin.context_processors.get_theme',
             ],
         },
     },

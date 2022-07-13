@@ -2,6 +2,13 @@
 <project version="4">
   <component name="PublishConfigData" autoUpload="Always" serverName="wcadev" remoteFilesAllowedToDisappearOnAutoupload="false" compareModeInSync="TIMESTAMP" showAutoUploadSettingsWarning="false">
     <serverData>
+      <paths name="demo">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/dashboard" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="wcadev">
         <serverdata>
           <mappings>

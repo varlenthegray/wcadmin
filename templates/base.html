@@ -46,7 +46,7 @@
     <!-- endinject -->
 
     <!-- Layout styles -->
-    <link rel="stylesheet" href="{% static 'assets/css/demo2/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/'|add:THEME|add:'/style.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/custom.css' %}">
     <!-- End layout styles -->
 
@@ -94,6 +94,15 @@
                                         <span>Admin Panel</span>
                                     </button>
                                 {% endif %}
+                                <button type="button" id="change_theme" class="text-start btn btn-link ms-0">
+                                    {% if THEME == 'demo2' %}
+                                        <i class="me-2 icon-md fa fa-lightbulb"></i>
+                                        <span>Light Theme</span>
+                                    {% else %}
+                                        <i class="me-2 icon-md fa fa-lightbulb-o"></i>
+                                        <span>Dark Theme</span>
+                                    {% endif %}
+                                </button>
                                 <button onclick="location.href='{% url 'logout' %}'" type="button" class="text-start btn btn-link ms-0">
                                     <i class="me-2 icon-md fa fa-right-from-bracket"></i>
                                     <span>Log Out</span>
@@ -199,6 +208,14 @@
     $('.dataTables_filter input[type="search"]').css(
         {'width':'350px','display':'inline-block'}
     );
+
+    $("#change_theme").on("click", function() {
+      $.ajax('{% url 'changeTheme' %}').done(function() {
+        location.reload()
+      }).fail(function() {
+        wcaSystem.show_notification('Unable to change theme. Please try again.', 'error')
+      });
+    });
   });
 </script>
 <!-- End plugin js for this page -->

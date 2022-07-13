@@ -1,8 +1,10 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponse
 from django.shortcuts import get_object_or_404
 from .forms import LoginForm, ProfileForm
+from .models import Preferences
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -53,3 +55,24 @@ class Profile(LoginRequiredMixin, generic.UpdateView):
             return HttpResponseRedirect('/')
         else:
             return HttpResponse(form.errors.values())
+
+
+def change_theme(request):
+    try:
+        current_preferences = Preferences.objects.get(user=request.user)
+    except ObjectDoesNotExist:
+        new_preference = Preferences(
+            user=request.user,
+            theme='demo1'
+        )
+
+        new_preference.save()
+    else:
+        if current_preferences.theme == 'demo2':
+            current_preferences.theme = 'demo1'
+        else:
+            current_preferences.theme = 'demo2'
+
+        current_preferences.save()
+
+    return HttpResponse(status=200)
