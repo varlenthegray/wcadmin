@@ -9,7 +9,7 @@
 {% endif %}
 
 <div class="card">
-    <div class="card-header"><span class="card-title">Customer Information</span></div>
+    <div class="card-header"><span class="card-title">{{ cust_obj.first_name }} {{ cust_obj.last_name }}</span></div>
 
     <div class="card-body">
         <form method="post" id="customerForm" action="{% url 'saveCustomer' %}">

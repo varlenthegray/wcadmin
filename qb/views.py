@@ -763,3 +763,49 @@ def get_print_on_check_name_from_qb(request):
                     pass
 
     return HttpResponse('Successfully updated Job Site Print on Checks name, First Name and Last Name.')
+
+
+@login_required
+def get_qb_created_on(request):
+    client = qb_client(request)
+    all_job_sites = JobSite.objects.all()
+    all_customers = Customer.objects.all()
+
+    try:
+        customer_count = qbCustomer.count("Active in (True, False)", qb=client)
+        logger.warning(f"{timezone.now()} Customers getting created date for: {customer_count}")
+    except QuickbooksException as e:
+        return HttpResponse(str(e.error_code) + ' - ' + e.message)
+    else:
+        runs = math.ceil(customer_count / max_per_run) + 1
+
+        for current_run in range(1, runs):
+            start_count = (current_run * max_per_run) - max_per_run
+
+            customers = qbCustomer.query(
+                f"SELECT * FROM Customer WHERE Active in (True, False) STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
+                qb=client
+            )
+
+            for customer in customers:
+                create_time = customer.MetaData['CreateTime']
+
+                try:
+                    job_site = all_job_sites.get(quickbooks_id=customer.Id)
+
+                    job_site.qb_created_on = create_time
+
+                    job_site.save()
+                except ObjectDoesNotExist:
+                    pass
+                finally:
+                    try:
+                        customer = all_customers.get(quickbooks_id=customer.Id)
+
+                        customer.qb_created_on = create_time
+
+                        customer.save()
+                    except ObjectDoesNotExist:
+                        pass
+
+    return HttpResponse('Successfully updated Job Site and Customers with QB Created Time.')

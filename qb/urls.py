@@ -19,4 +19,5 @@ urlpatterns = [
     path('set_service_interval/', views.update_service_interval, name='update_service_interval_based_on_qb'),
     path('update_changes/', views.update_db_from_changes, name='get_changes_from_qb'),
     path('print_on_check_fix/', views.get_print_on_check_name_from_qb, name='print_on_check_fix_from_qb'),
+    path('get_created_time_qb/', views.get_qb_created_on, name='get_qb_created_on'),
 ]

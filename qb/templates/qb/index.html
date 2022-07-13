@@ -90,6 +90,11 @@
                         Get Equipment from QB
                     </button>
 
+                    <button class="btn btn-inverse-success btn-icon-text" onclick="getQBCreatedOn()">
+                        <i class="fa fa-link btn-icon-prepend"></i>
+                        Update Created On from QB
+                    </button>
+
                     <button class="btn btn-danger btn-icon-text" onclick="fixJobSitePrintOnCheck()">
                         <i class="fa fa-link btn-icon-prepend"></i>
                         Update Print on Check/First/Last Name
@@ -188,6 +193,14 @@
         $("#result").html('Loading...');
 
         $.get("{% url 'print_on_check_fix_from_qb' %}", function (data) {
+          $("#result").html(JSON.stringify(data, null, 2))
+        })
+      }
+
+      function getQBCreatedOn() {
+        $("#result").html('Loading...');
+
+        $.get("{% url 'get_qb_created_on' %}", function (data) {
           $("#result").html(JSON.stringify(data, null, 2))
         })
       }

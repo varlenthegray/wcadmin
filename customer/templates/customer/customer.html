@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}Edit Customer {{ customer.first_name.value }} {{ customer.last_name.value }}{% endblock %}
-{% block page_header %}Editing Customer <u>{{ customer.first_name.value }} {{ customer.last_name.value }}</u>{% endblock %}
+{% block page_header %}Editing Customer <abbr title="Customer From {{ job_obj.qb_created_on|date:"M, Y" }}">{{ customer.first_name.value }} {{ customer.last_name.value }} ({{ job_obj.qb_created_on|date:"Y" }})</abbr>{% endblock %}
 
 {% block css_plugins %}
     <link rel="stylesheet" href="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css' %}">

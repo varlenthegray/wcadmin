@@ -118,6 +118,7 @@ class ViewSpecificJobSite(LoginRequiredMixin, generic.UpdateView):
         context = super().get_context_data(**kwargs)
         context['customer'] = ViewCustomerForm(instance=self.object.customer, prefix='customer')
         context['customer_id'] = self.object.customer.pk
+        context['cust_obj'] = Customer.objects.get(pk=context['customer_id'])
 
         context['job_site_id'] = self.object.pk
         context['jobsite'] = ViewJobSiteForm(instance=JobSite.objects.get(pk=context['job_site_id']), prefix='job')
