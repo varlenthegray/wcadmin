@@ -20,6 +20,14 @@
             {% include 'customer/job_sites/job_site.html' %}
         </div>
     </div>
+
+    {% if note_added %}
+        <script>
+          $(function() {
+            wcaSystem.show_notification('Successfully added note to customer.', 'success')
+          });
+        </script>
+    {% endif %}
 {% endblock %}
 
 {% block page_script %}{% endblock %}

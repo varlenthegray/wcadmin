@@ -1,5 +1,5 @@
 from django import forms
-from .models import Customer, JobSite, JobSiteEquipment
+from .models import Customer, JobSite, JobSiteEquipment, CustomerNotes
 # from jobsite.models import JobSite, JobSiteEquipment
 
 
@@ -17,6 +17,12 @@ class ViewCustomerForm(forms.ModelForm):
         fields = ['company', 'title', 'first_name', 'middle_name', 'last_name', 'secondary_contact_name', 'website',
                   'email', 'main_phone', 'alternate_phone', 'fax_number', 'billing_address_1', 'billing_address_2',
                   'billing_city', 'billing_state', 'billing_zip', 'is_active', 'notes']
+
+
+class AddNotesForm(forms.ModelForm):
+    class Meta:
+        model = CustomerNotes
+        fields = ['subject', 'note']
 
 
 class ViewJobSiteForm(forms.ModelForm):

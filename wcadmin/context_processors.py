@@ -23,7 +23,7 @@ def get_version_info(request):
 
 
 def get_theme(request):
-    if request.user:
+    if request.user.is_authenticated:
         try:
             preferences = Preferences.objects.get(user=request.user)
         except ObjectDoesNotExist:

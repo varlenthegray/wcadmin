@@ -1,0 +1,37 @@
+{% load widget_tweaks %}
+
+<div class="modal fade" id="addNoteToCustomer" tabindex="-1" aria-labelledby="addNoteToCustomerModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" id="addNoteForm" action="{% url 'saveCustomerNotes' %}">
+                {% csrf_token %}
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Notes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
+                </div>
+                <div class="modal-body">
+                    {{ add_notes.non_field_errors }}
+                    <input type="hidden" name="customer_id" value="{{ customer_id }}">
+
+                    <div class="row mb-3">
+                        <div class="col-sm-12">
+                            {{ add_notes.subject.errors }}
+                            <label class="form-label" for="{{ add_notes.subject.id_for_label }}">Subject</label>
+                            {{ add_notes.subject|add_class:"form-control"|attr:"autocomplete:off" }}
+                        </div>
+                        <div class="col-sm-12">
+                            {{ add_notes.note.errors }}
+                            <label class="form-label" for="{{ add_notes.note.id_for_label }}">Note</label>
+                            {{ add_notes.note|add_class:"form-control"|attr:"autocomplete:off"|attr:"rows:5" }}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Note</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

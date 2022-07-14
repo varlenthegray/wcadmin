@@ -4,61 +4,48 @@
     <h5 class="mb-2">Invoices</h5>
 
     <div class="accordion" id="invoiceAccordian">
-        {% if invoice %}
-            {% for invoice_line in invoice %}
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="invoice_heading_{{ invoice_line.invoice_num }}">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#invoice_{{ invoice_line.invoice_num }}" aria-expanded="false" aria-controls="invoice_{{ invoice_line.invoice_num }}">
-                            {# <em>{{ invoice_line.invoice_num }}</em> &nbsp;&nbsp; | &nbsp;&nbsp; {{ invoice_line.invoice_date|date:"m-d-Y" }} &nbsp;&nbsp; | &nbsp;&nbsp; <strong>$ {{ invoice_line.total|floatformat:2|intcomma }}</strong> &nbsp;&nbsp; | &nbsp;&nbsp; {{ invoice_line.service_interval }} month interval#}
-                            {# HAHA I absolutely CANNOT believe that HTML let me put a table inside of a button. #}
-                            <table width="90%">
-                                <tr>
-                                    <td width="10%">{{ invoice_line.invoice_num }}</td>
-                                    <td width="15%">{{ invoice_line.invoice_date|date:"m-d-Y" }}</td>
-                                    <td width="60%"><strong>$ {{ invoice_line.total|floatformat:2|intcomma }}</strong></td>
-                                </tr>
-                            </table>
-                        </button>
-                    </h2>
-                    <div id="invoice_{{ invoice_line.invoice_num }}" class="accordion-collapse collapse" aria-labelledby="invoice_heading_{{ invoice_line.invoice_num }}" data-bs-parent="#invoiceAccordian">
-                        <div class="accordion-body">
-                            {% if invoice_line.invoiceline_set %}
-                                <table class="table table-responsive">
-                                    <thead>
-                                    <tr>
-                                        <th>Description</th>
-                                        <th>Price</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for invoice_line_item in invoice_line.invoiceline_set.all %}
-                                        <tr>
-                                            <td>{% if invoice_line_item.description|length > 70 %}<abbr title="{{ invoice_line_item.description }}">{% endif %}{{ invoice_line_item.description|truncatechars:70 }}</abbr></td>
-                                            <td>$ {{ invoice_line_item.price|floatformat:2|intcomma }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            {% else %}
-                                ¯\_(ツ)_/¯ I looked, but I didn't find any more information. Sorry!
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
+        {% for invoice_line in invoice %}
             <div class="accordion-item">
-                <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        No invoices found
+                <h2 class="accordion-header" id="invoice_heading_{{ invoice_line.invoice_num }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#invoice_{{ invoice_line.invoice_num }}" aria-expanded="false" aria-controls="invoice_{{ invoice_line.invoice_num }}">
+                        {# <em>{{ invoice_line.invoice_num }}</em> &nbsp;&nbsp; | &nbsp;&nbsp; {{ invoice_line.invoice_date|date:"m-d-Y" }} &nbsp;&nbsp; | &nbsp;&nbsp; <strong>$ {{ invoice_line.total|floatformat:2|intcomma }}</strong> &nbsp;&nbsp; | &nbsp;&nbsp; {{ invoice_line.service_interval }} month interval#}
+                        {# HAHA I absolutely CANNOT believe that HTML let me put a table inside of a button. #}
+                        <table width="90%">
+                            <tr>
+                                <td width="10%">{{ invoice_line.invoice_num }}</td>
+                                <td width="15%">{{ invoice_line.invoice_date|date:"m-d-Y" }}</td>
+                                <td width="60%"><strong>$ {{ invoice_line.total|floatformat:2|intcomma }}</strong></td>
+                            </tr>
+                        </table>
                     </button>
                 </h2>
-                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div id="invoice_{{ invoice_line.invoice_num }}" class="accordion-collapse collapse" aria-labelledby="invoice_heading_{{ invoice_line.invoice_num }}" data-bs-parent="#invoiceAccordian">
                     <div class="accordion-body">
-                        ¯\_(ツ)_/¯ We looked everywhere, we promise, but we just couldn't find anything!
+                        <table class="table table-responsive">
+                            <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Price</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for invoice_line_item in invoice_line.invoiceline_set.all %}
+                                <tr>
+                                    <td>{% if invoice_line_item.description|length > 70 %}<abbr title="{{ invoice_line_item.description }}">{% endif %}{{ invoice_line_item.description|truncatechars:70 }}</abbr></td>
+                                    <td>$ {{ invoice_line_item.price|floatformat:2|intcomma }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="2" class="text-center"><i>I looked, I swear! I couldn't find any line items!</i></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-        {% endif %}
+        {% empty %}
+            <div class="mt-3 text-center"><i>¯\_(ツ)_/¯ We looked everywhere, we promise, but we just couldn't find anything!</i></div>
+        {% endfor %}
     </div>
 </div>

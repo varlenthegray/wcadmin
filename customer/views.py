@@ -1,5 +1,6 @@
 import logging
 import simplejson
+from django.contrib.auth.decorators import login_required
 
 from django.contrib.postgres.search import SearchVector
 from django.shortcuts import render
@@ -11,22 +12,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import viewsets
 from datetime import datetime, timedelta
 
-from .models import Customer, JobSite, JobSiteEquipment
+from .models import Customer, JobSite, JobSiteEquipment, CustomerNotes
 # from jobsite.models import JobSite, JobSiteEquipment
 from equipment.models import Equipment
 from qb.models import Invoice
 from .forms import AddCustomerForm, ViewCustomerForm, ViewJobSiteForm, EditJobSiteEquipment, AddJobSiteEquipment, \
-    AddJobSiteForm
+    AddJobSiteForm, AddNotesForm
 from .serializers import JobSitesSerializer
 
 
 logger = logging.getLogger(__name__)
-
-
-class AllCustomers(LoginRequiredMixin, generic.ListView):
-    model = Customer
-    queryset = Customer.objects.all()
-    template_name = 'customer/all_customers.html'
 
 
 class CustomersDueThisMonth(LoginRequiredMixin, generic.ListView):
@@ -80,35 +75,6 @@ class AddCustomer(LoginRequiredMixin, generic.CreateView):
             return HttpResponseBadRequest('/customer/add')
 
 
-class ViewCustomer(LoginRequiredMixin, generic.UpdateView):
-    model = Customer
-    template_name = 'customer/customer.html'
-    form_class = ViewCustomerForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['customer_id'] = self.object.pk
-        context['cust_obj'] = Customer.objects.get(pk=context['customer_id'])
-        context['customer'] = ViewCustomerForm(instance=context['cust_obj'], prefix='customer')
-
-        context['job_obj'] = JobSite.objects.filter(customer=context['customer_id']).first()
-        context['jobsite'] = ViewJobSiteForm(instance=context['job_obj'], prefix='job')
-        context['all_job_sites'] = JobSite.objects.filter(customer=context['customer_id'])
-
-        context['invoice'] = Invoice.objects.filter(job_site=context['job_obj']).prefetch_related('invoiceline_set')
-
-        context['current_date'] = datetime.now()
-
-        if context['job_obj']:
-            context['job_site_id'] = context['job_obj'].pk
-            context['existing_equipment'] = JobSiteEquipment.objects.filter(job_site=context['job_obj'].pk)
-        else:
-            context['job_site_id'] = 0
-
-        context['add_equipment_form'] = AddJobSiteEquipment(prefix='equipment')
-        return context
-
-
 class ViewSpecificJobSite(LoginRequiredMixin, generic.UpdateView):
     model = JobSite
     template_name = 'customer/customer.html'
@@ -119,6 +85,8 @@ class ViewSpecificJobSite(LoginRequiredMixin, generic.UpdateView):
         context['customer'] = ViewCustomerForm(instance=self.object.customer, prefix='customer')
         context['customer_id'] = self.object.customer.pk
         context['cust_obj'] = Customer.objects.get(pk=context['customer_id'])
+        context['add_notes'] = AddNotesForm(prefix='add_notes')
+        context['customer_notes'] = CustomerNotes.objects.filter(customer=context['cust_obj']).order_by('-timestamp')
 
         context['job_site_id'] = self.object.pk
         context['jobsite'] = ViewJobSiteForm(instance=JobSite.objects.get(pk=context['job_site_id']), prefix='job')
@@ -130,8 +98,8 @@ class ViewSpecificJobSite(LoginRequiredMixin, generic.UpdateView):
         context['add_equipment_form'] = AddJobSiteEquipment(prefix='equipment')
 
         context['invoice'] = Invoice.objects.filter(job_site=context['job_site_id']).prefetch_related('invoiceline_set')
-
         context['current_date'] = datetime.now()
+        context['note_added'] = self.request.GET.get('note_added')
 
         return context
 
@@ -401,3 +369,25 @@ class PrintAddressLabels(LoginRequiredMixin, generic.ListView):
 
     def post(self, request, *args, **kwargs):
         return HttpResponse(status=200)
+
+
+class SaveNoteToCustomer(LoginRequiredMixin, generic.CreateView):
+    model = CustomerNotes
+    template_name = 'customer/modal/add_note.html'
+    form_class = AddNotesForm
+
+    def post(self, request, *args, **kwargs):
+        customer = Customer.objects.get(pk=request.POST['customer_id'])
+        add_note = AddNotesForm(request.POST, prefix='add_notes')
+
+        if add_note.is_valid():
+            data = add_note.save(commit=False)
+
+            data.created_by = request.user
+            data.customer = customer
+
+            data.save()
+
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER') + '?note_added=true')
+        else:
+            return HttpResponseBadRequest(add_note.errors)

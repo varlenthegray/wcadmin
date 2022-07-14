@@ -6,10 +6,9 @@ router = routers.DefaultRouter()
 router.register(r'allJobSitesRest', views.JobSitesREST)
 
 urlpatterns = [
-    path('all_customers', views.AllCustomers.as_view(), name='allCustomers'),
     path('add_customer', views.AddCustomer.as_view(), name='addCustomer'),
     path('save_customer', views.SaveCustomer.as_view(), name='saveCustomer'),
-    path('view/<int:pk>', views.ViewCustomer.as_view(), name='viewCustomer'),
+    path('save_notes', views.SaveNoteToCustomer.as_view(), name='saveCustomerNotes'),
 
     path('add/job_site', views.AddJobSiteToCustomer.as_view(), name='addJobSiteToCustomer'),
     path('save/job_site', views.SaveJobSiteToCustomer.as_view(), name='saveJobSiteToCustomer'),

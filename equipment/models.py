@@ -3,7 +3,6 @@ from supplier.models import Supplier
 from django.conf import settings
 
 
-# Create your models here.
 class Equipment(models.Model):
     quickbooks_id = models.IntegerField(blank=True, null=True)
     sku = models.CharField(max_length=100, blank=True, null=True)

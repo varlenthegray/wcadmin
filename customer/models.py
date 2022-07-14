@@ -34,11 +34,11 @@ class Customer(models.Model):
 
 
 class CustomerNotes(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True)
     subject = models.CharField(max_length=100)
-    timestamp = models.DateTimeField(editable=False, auto_now_add=True)
+    timestamp = models.DateTimeField(editable=False, auto_now=True)
     note = models.TextField()
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, editable=False)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
 
 
 class JobSite(models.Model):
