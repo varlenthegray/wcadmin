@@ -358,17 +358,20 @@ def print_address_labels(request, *args, **kwargs):
         job_site_ids.append(js_id[0])
 
     job_sites = JobSite.objects.filter(pk__in=job_site_ids)
+
+    for job in job_sites:
+        note = CustomerNotes(
+            subject='Address Label requested to print',
+            note=f'{request.user.first_name} {request.user.last_name} attempted to print address labels.',
+            created_by=request.user,
+            customer=job.customer
+        )
+
+        note.save()
+
     context = {'jobsite': job_sites}
 
     return render(request, 'customer/address_labels.html', context)
-
-
-class PrintAddressLabels(LoginRequiredMixin, generic.ListView):
-    model = JobSite
-    template_name = 'customer/address_labels.html'
-
-    def post(self, request, *args, **kwargs):
-        return HttpResponse(status=200)
 
 
 class SaveNoteToCustomer(LoginRequiredMixin, generic.CreateView):

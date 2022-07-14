@@ -1,0 +1,39 @@
+<div class="modal fade bd-example-modal-lg" id="printAddressLabels" tabindex="-1" aria-labelledby="printAddressLabelsModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Address Label Printing Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
+            </div>
+            <div class="modal-body">
+                <p><em><b>Due to constraints, the following need to be observed and are important:</b></em></p>
+
+                <ul>
+                    <li class="text-warning">
+                        Address labels are only printed based on the list shown in the previous popup. If an address is missing,
+                        check to make sure that it's included in the DISPLAYED list below. Check your filters, search results, and
+                        the display total amount.
+                    </li>
+                    <li>
+                        If you do <b>NOT</b> print the labels on the next page for any reason, the system will <b>NOT</b>
+                        be able to tell. As such, a note will always be logged stating "Address label scheduled to print."
+                        on all records that are printed.
+                    </li>
+                    <li>You <b class="text-danger">MUST</b> start with a <u>blank and full</u> Avery 5260 address label sheet.</li>
+                    <li>The following labels will <b>NOT</b> be printed due to incomplete address information:</li>
+                    <ul id="job_sites_not_printing">
+                        {% for job in job_sites %}
+                            {% if not job.address %}
+                                <li><a href="{% url 'viewSpecificJobSite' pk=job.pk %}" target="_blank">{{ job.name }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" id="print_address_labels_confirmed" data-bs-dismiss="modal">Let's Go</button>
+            </div>
+        </div>
+    </div>
+</div>
