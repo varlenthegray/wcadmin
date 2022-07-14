@@ -10,6 +10,9 @@ media
 */migrations/*
 !*/migrations/__init__.py
 
+# Loaddata specific JSON files #
+/*.json
+
 # Backup files #
 *.bak
 
