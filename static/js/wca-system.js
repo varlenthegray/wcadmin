@@ -20,5 +20,52 @@ let wcaSystem = {
     }
 
     return result;
+  },
+
+  setup_mde_editor: function(element) {
+    function db_insert_field(element_id, database_field) {
+      $("#" + element_id).on('click', function() {
+        let text = simplemde.value();
+
+        if(text.length > 0) {
+          text += ' ' + database_field + ' ';
+        } else {
+          text += database_field;
+        }
+
+        simplemde.value(text);
+
+        $("#insertDBField").modal('hide');
+      });
+    }
+
+    let simplemde, editor = $("#" + element);
+
+    if (editor.length) {
+      simplemde = new SimpleMDE({
+        element: editor[0],
+        toolbar: [
+          "bold", "italic", "heading", "|", "code", "quote", "|", "unordered-list", "ordered-list", "|", "link",
+          "image", "table", "horizontal-rule", "preview", "|",
+          {
+            name: 'insert_custom',
+            action: function() {
+              $("#insertDBField").modal('show');
+            },
+            className: 'fa fa-magic',
+            title: 'Insert Database Field'
+          }]
+      });
+    }
+
+    db_insert_field('insert_first_name_mde', '[[customer.first_name]]');
+    db_insert_field('insert_last_name_mde', '[[customer.last_name]]');
+    db_insert_field('insert_company_name_mde', '[[customer.company]]');
+    db_insert_field('insert_print_on_check_name_mde', '[[jobsite.print_on_check_name]]');
+    db_insert_field('insert_email_mde', '[[customer.email]]');
+    db_insert_field('insert_jobsite_name_mde', '[[jobsite.name]]');
+    db_insert_field('insert_next_service_date_mde', '[[jobsite.next_service_date]]');
+
+    return simplemde;
   }
 }

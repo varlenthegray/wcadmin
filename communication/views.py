@@ -1,3 +1,5 @@
+import logging
+
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -6,7 +8,8 @@ from .models import EmailHistory, EmailTemplates
 from .forms import CreateEmail, CreateTemplate
 
 from customer.models import JobSite
-# from jobsite.models import JobSite
+
+logger = logging.getLogger(__name__)
 
 
 class EmailHomepage(LoginRequiredMixin, generic.CreateView):
@@ -17,6 +20,7 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['customers'] = JobSite.objects.filter(active=True).exclude(email=None)
+        context['existing_templates'] = EmailTemplates.objects.all()
         return context
 
 
@@ -28,13 +32,17 @@ class AllTemplates(LoginRequiredMixin, generic.CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['customers'] = JobSite.objects.filter(active=True).exclude(email=None)
+        context['existing_templates'] = EmailTemplates.objects.all()
         return context
 
     def post(self, request, *args, **kwargs):
         create_template = CreateTemplate(request.POST)
 
         if create_template.is_valid():
-            create_template.save()
+            data = create_template.save(commit=False)
+            data.last_updated_by = request.user
+            data.save()
+
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             return HttpResponseBadRequest(create_template.errors)

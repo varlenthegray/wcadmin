@@ -18,23 +18,21 @@
 </div>
 
 <div class="p-3 pb-0">
-    <table class="table table-sm">
+    <table class="table table-sm table-dark table-bordered">
         <tr>
-            <th>Actions</th>
-            <th>Template Name</th>
-            <th>Last Updated By</th>
-            <th>Last Updated On</th>
+            <th width="65%">Template Name</th>
+            <th width="20%">Last Updated By</th>
+            <th width="25%">Last Updated On</th>
         </tr>
-        {% for template in emailtemplates_list %}
+        {% for template in existing_templates %}
             <tr>
-                <td></td>
-                <td>{{ template.template_name }}</td>
-                <td>{% if template.user.name %}{{ template.user.name }}{% else %}{{ template.user.username }}{% endif %}</td>
-                <td>{{ template.last_updated_on|date:'m-d-Y h:i A' }}</td>
+                <td><a href="">{{ template.template_name }}</a></td>
+                <td>{% if template.last_updated_by.first_name %}{{ template.last_updated_by.first_name }} {{ template.last_updated_by.last_name }}{% else %}{{ template.last_updated_by.username }}{% endif %}</td>
+                <td>{{ template.last_updated_on|date:'M d, y P' }}</td>
             </tr>
         {% empty %}
             <tr>
-                <td colspan="4" class="text-center">
+                <td colspan="3" class="text-center">
                     I checked the records... I can't find a template anywhere. Sorry.<br />
                     Want to <a href="#" data-bs-toggle="modal" data-bs-target="#createNewTemplateModal">make a new template?</a>
                 </td>
@@ -43,75 +41,13 @@
     </table>
 </div>
 
-<div class="modal fade" tabindex="-1" id="createNewTemplateModal" aria-labelledby="createNewTemplateModal" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <form method="post">
-                {% csrf_token %}
-                {{ form.non_field_errors }}
-
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="fa fa-feather-pointed"></i> Create Template</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="p-3 pb-0">
-                        <div class="row mb-3">
-                            {{ form.template_name.errors }}
-                            <label class="col-md-2 col-form-label" for="{{ form.template_name.id_for_label }}">Template Name</label>
-                            <div class="col-md-10">{{ form.template_name|add_class:"form-control" }}</div>
-                        </div>
-                        <div class="row mb-3">
-                            {{ form.send_cc.errors }}
-                            <label class="col-md-2 col-form-label" for="{{ form.send_cc.id_for_label }}">
-                                <abbr title="Visible to recipients.">CC:</abbr>
-                            </label>
-                            <div class="col-md-10">
-                                <select class="modal-multiple-select form-select" id="{{ form.send_cc.id_for_label }}" multiple="multiple">
-                                    <option value="WCWT Info <info@wcwater.com>" selected="selected">WCWT Info (info@wcwater.com)</option>
-                                    <option value="Dennis Warwick <dennis@wcwater.com>">Dennis Warwick (dennis@wcwater.com)</option>
-                                    <option value="{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %} <{{ user.email }}>">{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %} ({{ user.email }})</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            {{ form.subject.errors }}
-                            <label class="col-md-2 col-form-label" for="{{ form.subject.id_for_label }}">Subject</label>
-                            <div class="col-md-10">{{ form.subject|add_class:"form-control" }}</div>
-                        </div>
-                    </div>
-                    <div class="px-3">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                {{ form.message.errors }}
-                                <label class="form-label visually-hidden" for="{{ form.message.id_for_label }}">Email Body</label>
-                                {{ form.message|add_class:"form-control"|attr:"form:novalidate" }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-danger me-1 mb-1 btn-icon-text me-auto" type="button"><i class="fa fa-trash-o fa-fw btn-icon-prepend"></i> Delete</button>
-                    <button class="btn btn-success me-1 mb-1 btn-icon-text" type="submit"><i class="fa fa-save fa-fw btn-icon-prepend"></i> Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+{% include 'communication/modal/create_new_template.html' %}
 {% endblock %}
 
 {% block page_script %}
     <script>
       $(function() {
-        let editor = $("#{{ form.message.id_for_label }}"), multi_select = $("#{{ form.send_cc.id_for_label }}");
-
-        if (editor.length) {
-          let simplemde = new SimpleMDE({
-            element: editor[0]
-          });
-        }
+        let multi_select = $("#{{ form.send_cc.id_for_label }}");
 
         if (multi_select.length) {
           multi_select.select2({

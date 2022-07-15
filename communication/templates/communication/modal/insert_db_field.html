@@ -1,0 +1,48 @@
+{% load widget_tweaks %}
+
+<div class="modal fade" tabindex="-1" id="insertDBField" aria-labelledby="insertDBFieldModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fa fa-database"></i> &nbsp; Available Database Fields</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
+            </div>
+
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th colspan="2">Customer</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><button type="button" id="insert_first_name_mde" class="btn btn-link btn-sm">First Name</button></td>
+                        <td><button type="button" id="insert_last_name_mde" class="btn btn-link btn-sm">Last Name</button></td>
+                    </tr>
+                    <tr>
+                        <td><button type="button" id="insert_company_name_mde" class="btn btn-link btn-sm">Company Name</button></td>
+                        <td><button type="button" id="insert_print_on_check_name_mde" class="btn btn-link btn-sm">Print on Check Name</button></td>
+                    </tr>
+                    <tr>
+                        <td><button type="button" id="insert_email_mde" class="btn btn-link btn-sm">Customer Email</button></td>
+                        <td><button type="button" id="insert_jobsite_name_mde" class="btn btn-link btn-sm">Job Site Name</button></td>
+                    </tr>
+                    <tr>
+                        <td><button type="button" id="insert_next_service_date_mde" class="btn btn-link btn-sm">Next Service Date</button></td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-danger me-1 mb-1 btn-icon-text me-auto" type="button" data-bs-dismiss="modal"><i class="fa fa-close fa-fw btn-icon-prepend"></i> Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>

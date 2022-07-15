@@ -1,6 +1,5 @@
 import logging
 import simplejson
-from django.contrib.auth.decorators import login_required
 
 from django.contrib.postgres.search import SearchVector
 from django.shortcuts import render
@@ -13,7 +12,6 @@ from rest_framework import viewsets
 from datetime import datetime, timedelta
 
 from .models import Customer, JobSite, JobSiteEquipment, CustomerNotes
-# from jobsite.models import JobSite, JobSiteEquipment
 from equipment.models import Equipment
 from qb.models import Invoice
 from .forms import AddCustomerForm, ViewCustomerForm, ViewJobSiteForm, EditJobSiteEquipment, AddJobSiteEquipment, \
