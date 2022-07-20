@@ -7,53 +7,69 @@
 {% block page_header %}All Templates{% endblock %}
 
 {% block email_action %}
-<div>
-    <div class="d-flex align-items-center p-3 border-bottom tx-16">
-        <i class="fa fa-fw fa-table me-2"></i> All Templates
+    <div>
+        <div class="d-flex align-items-center p-3 border-bottom tx-16">
+            <i class="fa fa-fw fa-table me-2"></i> All Templates
 
-        <button type="button" class="btn btn-link btn-icon float-end" data-bs-toggle="modal" data-bs-target="#createNewTemplateModal">
-            <i class="fa fa-plus-circle"></i>
-        </button>
+            <button type="button" class="btn btn-link btn-icon float-end" id="create_new_template">
+                <i class="fa fa-plus-circle"></i>
+            </button>
+        </div>
     </div>
-</div>
 
-<div class="p-3 pb-0">
-    <table class="table table-sm table-dark table-bordered">
-        <tr>
-            <th width="65%">Template Name</th>
-            <th width="20%">Last Updated By</th>
-            <th width="25%">Last Updated On</th>
-        </tr>
-        {% for template in existing_templates %}
+    <div class="p-3 pb-0">
+        <table class="table table-sm table-dark table-bordered">
             <tr>
-                <td><a href="">{{ template.template_name }}</a></td>
-                <td>{% if template.last_updated_by.first_name %}{{ template.last_updated_by.first_name }} {{ template.last_updated_by.last_name }}{% else %}{{ template.last_updated_by.username }}{% endif %}</td>
-                <td>{{ template.last_updated_on|date:'M d, y P' }}</td>
+                <th width="65%">Template Name</th>
+                <th width="20%">Last Updated By</th>
+                <th width="25%">Last Updated On</th>
             </tr>
-        {% empty %}
-            <tr>
-                <td colspan="3" class="text-center">
-                    I checked the records... I can't find a template anywhere. Sorry.<br />
-                    Want to <a href="#" data-bs-toggle="modal" data-bs-target="#createNewTemplateModal">make a new template?</a>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-</div>
+            {% for template in existing_templates %}
+                <tr>
+                    <td><a href="{% url 'emailEditTemplate' pk=template.pk %}" class="view_template">{{ template.template_name }}</a></td>
+                    <td>{% if template.last_updated_by.first_name %}{{ template.last_updated_by.first_name }} {{ template.last_updated_by.last_name }}{% else %}{{ template.last_updated_by.username }}{% endif %}</td>
+                    <td>{{ template.last_updated_on|date:'M d, y P' }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center">
+                        I checked the records... I can't find a template anywhere. Sorry.<br />
+                        Want to <a href="#" data-bs-toggle="modal" data-bs-target="#createNewTemplate">make a new template?</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 
-{% include 'communication/modal/create_new_template.html' %}
+    <div class="modal fade" tabindex="-1" id="createNewTemplate" aria-labelledby="createNewTemplateModal" aria-hidden="true">
+        {% include 'communication/modal/create_new_template.html' %}
+    </div>
 {% endblock %}
 
 {% block page_script %}
     <script>
       $(function() {
-        let multi_select = $("#{{ form.send_cc.id_for_label }}");
+        let create_template = $("#createNewTemplate").html();
 
-        if (multi_select.length) {
-          multi_select.select2({
-            dropdownParent: $("#createNewTemplateModal"),
+        $(".view_template").on('click', function(e) {
+          e.preventDefault();
+
+          $.ajax($(this).attr('href')).done(function(data) {
+            $("#createNewTemplate").html(data).modal('show');
           });
-        }
+        });
+
+        $("#create_new_template").on('click', function() {
+          $("#createNewTemplate").html(create_template).modal('show');
+          simplemde.value('');
+        });
+
+        let message_mde = wcaSystem.setup_mde_editor('#id_message'),
+            multi_select = $(".send_cc");
+
+        multi_select.select2({
+          dropdownParent: $(".template_container").parent(),
+        });
       });
     </script>
 {% endblock %}

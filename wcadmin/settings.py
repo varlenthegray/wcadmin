@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'quickbooks',
     'rest_framework',
     'rest_framework_datatables',
+    'markdownify',
 ]
 
 MIDDLEWARE = [
@@ -138,6 +139,17 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email configuration
+ADMINS = (
+    ('Ben Beach', 'bbeach@innovated.tech'),
+)
+
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_HOST_USER = os.environ.get('EMAIL_USERNAME')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')
 
 # QBO Base URLs
 QBO_BASE_SANDBOX = 'https://sandbox-quickbooks.api.intuit.com'

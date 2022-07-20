@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block title %}Compose Email{% endblock %}
 {% block page_header %}Compose Email{% endblock %}
@@ -59,19 +60,23 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-lg-9">
                             {% block email_action %}
-                                <div>
-                                    <div class="d-flex align-items-center p-3 border-bottom tx-16">
-                                        <i class="fa fa-fw fa-pencil-square-o me-2"></i> New Message
+                                <form method="post" id="compose_email_form">
+                                    {% csrf_token %}
+
+                                    <div>
+                                        <div class="d-flex align-items-center p-3 border-bottom tx-16">
+                                            <i class="fa fa-fw fa-pencil-square-o me-2"></i> New Message
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="p-3 pb-0">
-                                    <div class="to">
+                                    <div class="p-3 pb-0">
                                         <div class="row mb-3">
-                                            <label class="col-md-2 col-form-label"><abbr title="Not visible to recipients.">BCC</abbr></label>
+                                            {{ form.send_bcc.errors }}
+                                            <label class="col-md-2 col-form-label" for="{{ form.send_bcc.id_for_label }}"><abbr title="Not visible to recipients.">BCC</abbr></label>
                                             <div class="col-md-10">
-                                                <select class="compose-multiple-select form-select" multiple="multiple">
+                                                <select class="compose-multiple-select form-select" name="{{ form.send_bcc.name }}" id="{{ form.send_bcc.id_for_label }}" multiple="multiple">
                                                     {% for customer in customers %}
                                                         {% if customer.email %}
                                                             <option value="{{ customer.name }} <{{ customer.email }}>">{{ customer.name }} ({{ customer.email }})</option>
@@ -80,32 +85,26 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="to cc">
                                         <div class="row mb-3">
-                                            <label class="col-md-2 col-form-label"><abbr title="Visible to recipients.">CC:</abbr></label>
+                                            {{ form.send_cc.errors }}
+                                            <label class="col-md-2 col-form-label" for="{{ form.send_cc.id_for_label }}"><abbr title="Visible to recipients.">CC:</abbr></label>
                                             <div class="col-md-10">
-                                                <select class="compose-multiple-select form-select" multiple="multiple">
-                                                    <option value="WCWT Info <info@wcwater.com>" selected="selected">WCWT Info (info@wcwater.com)</option>
+                                                <select class="compose-multiple-select form-select" name="{{ form.send_cc.name }}" id="{{ form.send_cc.id_for_label }}" multiple="multiple">
                                                     <option value="Dennis Warwick <dennis@wcwater.com>">Dennis Warwick (dennis@wcwater.com)</option>
                                                     <option value="{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %} <{{ user.email }}>">{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %} ({{ user.email }})</option>
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="subject">
                                         <div class="row mb-3">
-                                            <label class="col-md-2 col-form-label">Subject</label>
-                                            <div class="col-md-10">
-                                                <input class="form-control" type="text">
-                                            </div>
+                                            {{ form.subject.errors }}
+                                            <label class="col-md-2 col-form-label" for="{{ form.subject.id_for_label }}">Subject</label>
+                                            <div class="col-md-10">{{ form.subject|add_class:"form-control" }}</div>
                                         </div>
-                                    </div>
-                                    <div class="template">
                                         <div class="row mb-3">
-                                            <label class="col-md-2 col-form-label">Template</label>
+                                            {{ form.template_used.errors }}
+                                            <label class="col-md-2 col-form-label" for="{{ form.template_used.id_for_label }}">Template</label>
                                             <div class="col-md-10">
-                                                <select class="compose-multiple-select form-select">
+                                                <select class="compose-multiple-select form-select" name="{{ form.template_used.name }}" id="{{ form.template_used.id_for_label }}">
                                                     {% for template in existing_templates %}
                                                         <option value="{{ template.pk }}" {% if forloop.first %}selected="selected"{% endif %}>{{ template.template_name }}</option>
                                                     {% empty %}
@@ -115,23 +114,25 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="px-3">
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label class="form-label visually-hidden" for="simpleMdeEditor">Email Body </label>
-                                            <textarea class="form-control" name="tinymce" id="simpleMdeEditor" rows="5"></textarea>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="col-md-12">
-                                            <button class="btn btn-success me-1 mb-1 btn-icon-text" type="submit"><i class="fa fa-send-o fa-fw btn-icon-prepend"></i> Send</button>
-                                            <button class="btn btn-secondary me-1 mb-1 btn-icon-text" type="submit"><i class="fa fa-save fa-fw btn-icon-prepend"></i> Save Draft</button>
 
-                                            <button class="btn btn-danger me-1 mb-1 btn-icon-text float-end" type="button"><i class="fa fa-trash-o fa-fw btn-icon-prepend"></i> Delete</button>
+                                    <div class="px-3">
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                {{ form.message.errors }}
+                                                <label class="form-label visually-hidden" for="simpleMdeEditor">Email Body </label>
+                                                <textarea class="form-control" name="{{ form.message.name }}" id="simpleMdeEditor" rows="5"></textarea>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="col-md-12">
+                                                <button class="btn btn-success me-1 mb-1 btn-icon-text" type="submit"><i class="fa fa-send-o fa-fw btn-icon-prepend"></i> Send</button>
+                                                <button class="btn btn-secondary me-1 mb-1 btn-icon-text" type="submit"><i class="fa fa-save fa-fw btn-icon-prepend"></i> Save Draft</button>
+
+                                                <button class="btn btn-danger me-1 mb-1 btn-icon-text float-end" type="reset"><i class="fa fa-cancel fa-fw btn-icon-prepend"></i> Cancel</button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </form>
                             {% endblock %}
                         </div>
                     </div>
@@ -150,11 +151,17 @@
       $(function() {
         let multi_select = $(".compose-multiple-select");
 
-        simplemde = wcaSystem.setup_mde_editor('simpleMdeEditor');
+        simplemde = wcaSystem.setup_mde_editor('#simpleMdeEditor');
 
         if (multi_select.length) {
-          multi_select.select2();
+          multi_select.select2({
+            tags: true,
+          });
         }
+
+        $("#compose_email_form").on('reset', function() {
+          simplemde.value('');
+        });
       })
     </script>
 {% endblock %}

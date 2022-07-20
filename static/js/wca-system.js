@@ -22,9 +22,9 @@ let wcaSystem = {
     return result;
   },
 
-  setup_mde_editor: function(element) {
+  setup_mde_editor: function(element, modal = true) {
     function db_insert_field(element_id, database_field) {
-      $("#" + element_id).on('click', function() {
+      $(element_id).on('click', function() {
         let text = simplemde.value();
 
         if(text.length > 0) {
@@ -39,7 +39,7 @@ let wcaSystem = {
       });
     }
 
-    let simplemde, editor = $("#" + element);
+    let simplemde, editor = $(element);
 
     if (editor.length) {
       simplemde = new SimpleMDE({
@@ -56,6 +56,14 @@ let wcaSystem = {
             title: 'Insert Database Field'
           }]
       });
+
+      if(modal) {
+        $(".template_container").parent().focus(function() {
+          simplemde.codemirror.refresh();
+        });
+      } else {
+        setTimeout(function() { simplemde.codemirror.refresh(); }, 100);
+      }
     }
 
     db_insert_field('insert_first_name_mde', '[[customer.first_name]]');

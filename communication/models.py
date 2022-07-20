@@ -12,8 +12,8 @@ class EmailTemplates(models.Model):
 
 
 class EmailHistory(models.Model):
-    send_bcc = models.TextField()
-    send_cc = models.TextField()
+    send_bcc = models.TextField(blank=True, null=True)
+    send_cc = models.TextField(blank=True, null=True)
     subject = models.CharField(max_length=200)
     message = models.TextField()
     template_used = models.ForeignKey(EmailTemplates, on_delete=models.CASCADE)

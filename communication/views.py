@@ -1,8 +1,10 @@
 import logging
+import markdown
 
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import EmailMultiAlternatives
 
 from .models import EmailHistory, EmailTemplates
 from .forms import CreateEmail, CreateTemplate
@@ -22,6 +24,33 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
         context['customers'] = JobSite.objects.filter(active=True).exclude(email=None)
         context['existing_templates'] = EmailTemplates.objects.all()
         return context
+
+    def post(self, request, *args, **kwargs):
+        send_email = CreateEmail(request.POST)
+
+        if send_email.is_valid():
+            message = EmailMultiAlternatives(
+                subject=request.POST.get('subject'),
+                body=request.POST.get('message'),
+                from_email='info@wcwater.com',
+                to=['info@wcwater.com'],
+                bcc=[request.POST.get('send_bcc')],
+                cc=[request.POST.get('send_cc')],
+            )
+
+            message.attach_alternative(markdown.markdown(request.POST.get('message')), 'text/html')
+
+            form_save = send_email.save(commit=False)
+            form_save.user = request.user
+            form_save.status = 'sent'
+
+            message.send(fail_silently=False)
+
+            form_save.save()
+
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            return HttpResponseBadRequest(send_email.errors)
 
 
 class AllTemplates(LoginRequiredMixin, generic.CreateView):
@@ -46,6 +75,30 @@ class AllTemplates(LoginRequiredMixin, generic.CreateView):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             return HttpResponseBadRequest(create_template.errors)
+
+
+class EditTemplate(LoginRequiredMixin, generic.UpdateView):
+    model = EmailTemplates
+    template_name = 'communication/modal/edit_template.html'
+    form_class = CreateTemplate
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['customers'] = JobSite.objects.filter(active=True).exclude(email=None)
+        context['existing_templates'] = EmailTemplates.objects.all()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        edit_template = CreateTemplate(request.POST)
+
+        if edit_template.is_valid():
+            data = edit_template.save(commit=False)
+            data.last_updated_by = request.user
+            data.save()
+
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            return HttpResponseBadRequest(edit_template.errors)
 
 
 class AllSentMail(LoginRequiredMixin, generic.ListView):

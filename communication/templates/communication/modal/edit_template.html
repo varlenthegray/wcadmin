@@ -42,14 +42,15 @@
                         <div class="mb-3">
                             {{ form.message.errors }}
                             <label class="form-label visually-hidden" for="{{ form.message.id_for_label }}">Email Message</label>
-                            <textarea name="{{ form.message.name }}" id="{{ form.message.id_for_label }}" class="form-control"></textarea>
+                            <textarea name="{{ form.message.name }}" id="{{ form.message.id_for_label }}" class="form-control">{{ form.message.value }}</textarea>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-secondary me-1 mb-1 btn-icon-text me-auto" type="button"><i class="fa fa-cancel fa-fw btn-icon-prepend"></i> Cancel</button>
+                <button class="btn btn-secondary me-1 mb-1 btn-icon-text" type="button"><i class="fa fa-cancel fa-fw btn-icon-prepend"></i> Cancel</button>
+                <button class="btn btn-danger mb-1 btn-icon-text me-auto" type="button"><i class="fa fa-trash-o fa-fw btn-icon-prepend"></i> Delete</button>
                 <button class="btn btn-success me-1 mb-1 btn-icon-text" type="submit"><i class="fa fa-save fa-fw btn-icon-prepend"></i> Save</button>
             </div>
         </form>
@@ -58,6 +59,11 @@
 
 <script>
   $(function() {
+     let message_mde = wcaSystem.setup_mde_editor('#{{ form.message.id_for_label }}'),
+        multi_select = $(".send_cc");
 
+    multi_select.select2({
+      dropdownParent: $(".template_container").parent(),
+    });
   })
 </script>
