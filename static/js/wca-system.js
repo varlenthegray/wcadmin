@@ -62,7 +62,7 @@ let wcaSystem = {
           simplemde.codemirror.refresh();
         });
       } else {
-        setTimeout(function() { simplemde.codemirror.refresh(); }, 100);
+        setTimeout(function() { simplemde.codemirror.refresh(); }, 20);
       }
     }
 

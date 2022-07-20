@@ -11,7 +11,7 @@
         <div class="d-flex align-items-center p-3 border-bottom tx-16">
             <i class="fa fa-fw fa-table me-2"></i> All Templates
 
-            <button type="button" class="btn btn-link btn-icon float-end" id="create_new_template">
+            <button type="button" class="btn btn-link btn-icon float-end create_new_template_btn">
                 <i class="fa fa-plus-circle"></i>
             </button>
         </div>
@@ -34,7 +34,7 @@
                 <tr>
                     <td colspan="3" class="text-center">
                         I checked the records... I can't find a template anywhere. Sorry.<br />
-                        Want to <a href="#" data-bs-toggle="modal" data-bs-target="#createNewTemplate">make a new template?</a>
+                        Want to <a href="#" class="create_new_template_btn">make a new template?</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -48,9 +48,9 @@
 
 {% block page_script %}
     <script>
-      $(function() {
-        let create_template = $("#createNewTemplate").html();
+      let message_mde;
 
+      $(function() {
         $(".view_template").on('click', function(e) {
           e.preventDefault();
 
@@ -59,16 +59,10 @@
           });
         });
 
-        $("#create_new_template").on('click', function() {
-          $("#createNewTemplate").html(create_template).modal('show');
-          simplemde.value('');
-        });
-
-        let message_mde = wcaSystem.setup_mde_editor('#id_message'),
-            multi_select = $(".send_cc");
-
-        multi_select.select2({
-          dropdownParent: $(".template_container").parent(),
+        $(".create_new_template_btn").on("click", function() {
+          $.ajax('{% url 'createNewTemplate' %}').done(function(data) {
+            $("#createNewTemplate").html(data).modal('show');
+          });
         });
       });
     </script>

@@ -24,8 +24,8 @@
                             <abbr title="Visible to recipients.">CC:</abbr>
                         </label>
                         <div class="col-md-10">
-                            <select class="modal-multiple-select form-select send_cc" name="{{ form.send_cc.name }}" id="{{ form.send_cc.id_for_label }}" multiple="multiple">
-                                <option value="WCWT Info <info@wcwater.com>" selected="selected">WCWT Info (info@wcwater.com)</option>
+                            <select class="modal-multiple-select form-select send_cc" name="{{ form.send_cc.name }}" id="{{ form.send_cc.id_for_label }}" multiple="multiple" style="width:100%;">
+                                <option value="WCWT Info <info@wcwater.com>">WCWT Info (info@wcwater.com)</option>
                                 <option value="Dennis Warwick <dennis@wcwater.com>">Dennis Warwick (dennis@wcwater.com)</option>
                                 <option value="{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %} <{{ user.email }}>">{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %} ({{ user.email }})</option>
                             </select>
@@ -58,6 +58,11 @@
 
 <script>
   $(function() {
+    message_mde = wcaSystem.setup_mde_editor('#{{ form.message.id_for_label }}');
 
-  })
+    $(".send_cc").select2({
+      dropdownParent: $(".template_container").parent(),
+      tags: true,
+    });
+  });
 </script>

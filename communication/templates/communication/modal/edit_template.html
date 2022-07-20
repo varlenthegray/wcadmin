@@ -5,6 +5,7 @@
         <form method="post" id="create_edit_template_form">
             {% csrf_token %}
             {{ form.non_field_errors }}
+            <input type="hidden" name="template_pk" value="{{ template_pk }}">
 
             <div class="modal-header">
                 <h5 class="modal-title"><i class="fa fa-feather-pointed"></i> Create Template</h5>
@@ -49,8 +50,8 @@
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-secondary me-1 mb-1 btn-icon-text" type="button"><i class="fa fa-cancel fa-fw btn-icon-prepend"></i> Cancel</button>
-                <button class="btn btn-danger mb-1 btn-icon-text me-auto" type="button"><i class="fa fa-trash-o fa-fw btn-icon-prepend"></i> Delete</button>
+                <button class="btn btn-secondary me-1 mb-1 btn-icon-text" type="button" data-bs-dismiss="modal"><i class="fa fa-cancel fa-fw btn-icon-prepend"></i> Cancel</button>
+                <button class="btn btn-danger mb-1 btn-icon-text me-auto" type="button" id="delete_template"><i class="fa fa-trash-o fa-fw btn-icon-prepend"></i> Delete</button>
                 <button class="btn btn-success me-1 mb-1 btn-icon-text" type="submit"><i class="fa fa-save fa-fw btn-icon-prepend"></i> Save</button>
             </div>
         </form>
@@ -59,11 +60,17 @@
 
 <script>
   $(function() {
-     let message_mde = wcaSystem.setup_mde_editor('#{{ form.message.id_for_label }}'),
+    let message_mde = wcaSystem.setup_mde_editor('#{{ form.message.id_for_label }}'),
         multi_select = $(".send_cc");
 
     multi_select.select2({
       dropdownParent: $(".template_container").parent(),
+    });
+
+    $("#delete_template").on('click', function() {
+      $.ajax('{% url 'deleteEmailTemplate' pk=template_pk %}').done(function() {
+        location.reload()
+      });
     });
   })
 </script>
