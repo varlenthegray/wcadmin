@@ -32,6 +32,7 @@
     <orderEntry type="library" name="ellipsis" level="application" />
     <orderEntry type="library" name="enum" level="application" />
     <orderEntry type="library" name="font-awesome" level="application" />
+    <orderEntry type="library" name="select2" level="application" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />

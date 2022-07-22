@@ -11,4 +11,4 @@ class CreateEmail(forms.ModelForm):
 class CreateTemplate(forms.ModelForm):
     class Meta:
         model = EmailTemplates
-        fields = ['template_name', 'subject', 'send_cc', 'message']
+        fields = ['template_name', 'subject', 'message']

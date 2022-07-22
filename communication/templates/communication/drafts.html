@@ -13,30 +13,48 @@
     </div>
 
     <div class="p-3 pb-0">
-        <table class="table table-sm">
-            {% if emailhistory_list %}
+        <table class="table table-sm table-dark table-bordered">
+            <tr>
+                <th width="45%">Subject</th>
+                <th width="20%">BCC</th>
+                <th width="20%">Saved On</th>
+                <th width="25%">Created By</th>
+            </tr>
+            {% for draft in email_drafts %}
                 <tr>
-                    <th>Actions</th>
-                    <th>Subject</th>
-                    <th>Sent On</th>
-                    <th>Sent By</th>
+                    <td><a href="{% url 'viewEmailDraft' pk=draft.pk %}" class="view_email_draft">{{ draft.subject }}</a></td>
+                    <td>{% if draft.send_bcc|length > 40 %}<abbr title="{{ draft.send_bcc }}">{% endif %}{{ draft.send_bcc|default:"N/A"|truncatechars:40 }}</abbr></td>
+                    <td>{{ draft.timestamp|date:'m-d-Y P' }}</td>
+                    <td>{% if draft.user.first_name %}{{ draft.user.first_name }} {{ draft.user.last_name }}{% else %}{{ draft.user.username }}{% endif %}</td>
                 </tr>
-                {% for draft in email_drafts %}
-                    <tr>
-                        <td></td>
-                        <td>{{ draft.subject }}</td>
-                        <td>{{ draft.last_updated_on|date:'m-d-Y h:i A' }}</td>
-                        <td>{% if draft.user.name %}{{ draft.user.name }}{% else %}{{ draft.user.username }}{% endif %}</td>
-                    </tr>
-                {% endfor %}
-            {% else %}
+            {% empty %}
                 <tr>
-                    <td class="text-center">
+                    <td colspan="4" class="text-center">
                         Did you click the save button? If you see this... you didn't.<br />
                         Time to <a href="{% url 'emailCompose' %}">start over!</a>
                     </td>
                 </tr>
-            {% endif %}
+            {% endfor %}
         </table>
     </div>
+
+    <div class="modal fade" tabindex="-1" id="showDraft" aria-labelledby="showDraftModal" aria-hidden="true">
+        <!-- loaded via AJAX -->
+    </div>
+{% endblock %}
+
+{% block page_script %}
+    <script>
+      let message_mde;
+
+      $(function() {
+        $(".view_email_draft").on('click', function(e) {
+          e.preventDefault();
+
+          $.ajax($(this).attr('href')).done(function(data) {
+            $("#showDraft").html(data).modal('show');
+          });
+        });
+      });
+    </script>
 {% endblock %}

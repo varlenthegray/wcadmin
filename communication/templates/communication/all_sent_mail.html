@@ -15,29 +15,27 @@
 
     <div class="p-3 pb-0">
         <table class="table table-sm table-dark table-bordered">
-            {% if emailhistory_list %}
+            <tr>
+                <th width="20%">Subject</th>
+                <th width="40%">Message</th>
+                <th width="20%">Sent On</th>
+                <th width="20%">Sent By</th>
+            </tr>
+            {% for sent_email in sent_email %}
                 <tr>
-                    <th width="20%">Subject</th>
-                    <th width="40%">Message</th>
-                    <th width="20%">Sent On</th>
-                    <th width="20%">Sent By</th>
+                    <td>{% if sent_email.subject|length > 30 %}<abbr title="{{ sent_email.subject }}">{% endif %}{{ sent_email.subject|truncatechars:30 }}</abbr></td>
+                    <td>{% if sent_email.message|length > 50 %}<abbr title="{{ sent_email.message|truncatechars:200|markdownify }}">{% endif %}{{ sent_email.message|truncatechars:50|markdownify }}</abbr></td>
+                    <td>{{ sent_email.timestamp|date:'m-d-Y h:i A' }}</td>
+                    <td>{% if sent_email.user.first_name %}{{ sent_email.user.first_name }} {{ sent_email.user.last_name }}{% else %}{{ sent_email.user.username }}{% endif %}</td>
                 </tr>
-                {% for sent_email in emailhistory_list %}
-                    <tr>
-                        <td>{% if sent_email.subject|length > 30 %}<abbr title="{{ sent_email.subject }}">{% endif %}{{ sent_email.subject|truncatechars:30 }}</abbr></td>
-                        <td>{% if sent_email.message|length > 50 %}<abbr title="{{ sent_email.message|truncatechars:200|markdownify }}">{% endif %}{{ sent_email.message|truncatechars:50|markdownify }}</abbr></td>
-                        <td>{{ sent_email.timestamp|date:'m-d-Y h:i A' }}</td>
-                        <td>{% if sent_email.user.first_name %}{{ sent_email.user.first_name }} {{ sent_email.user.last_name }}{% else %}{{ sent_email.user.username }}{% endif %}</td>
-                    </tr>
-                {% endfor %}
-            {% else %}
+            {% empty %}
                 <tr>
-                    <td class="text-center">
+                    <td colspan="4" class="text-center">
                         The database doesn't lie... I can't find any emails that have been sent.<br />
                         Want to <a href="{% url 'emailCompose' %}">send an email?</a>
                     </td>
                 </tr>
-            {% endif %}
+            {% endfor %}
         </table>
     </div>
 {% endblock %}

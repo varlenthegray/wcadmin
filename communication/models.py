@@ -19,8 +19,10 @@ class EmailHistory(models.Model):
     send_cc = models.TextField(blank=True, null=True)
     subject = models.CharField(max_length=200)
     message = models.TextField()
-    template_used = models.ForeignKey(EmailTemplates, on_delete=models.CASCADE)
+    template_used = models.ForeignKey(EmailTemplates, on_delete=models.CASCADE, blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, editable=False)
     status = models.CharField(max_length=50)
     timestamp = models.DateTimeField(auto_now_add=True, editable=False)
 
+    class Meta:
+        ordering = ['-timestamp']

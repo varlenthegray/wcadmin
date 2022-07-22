@@ -20,19 +20,6 @@
                         <div class="col-md-10">{{ form.template_name|add_class:"form-control" }}</div>
                     </div>
                     <div class="row mb-3">
-                        {{ form.send_cc.errors }}
-                        <label class="col-md-2 col-form-label" for="{{ form.send_cc.id_for_label }}">
-                            <abbr title="Visible to recipients.">CC:</abbr>
-                        </label>
-                        <div class="col-md-10">
-                            <select class="modal-multiple-select form-select send_cc" name="{{ form.send_cc.name }}" id="{{ form.send_cc.id_for_label }}" multiple="multiple">
-                                <option value="WCWT Info <info@wcwater.com>" selected="selected">WCWT Info (info@wcwater.com)</option>
-                                <option value="Dennis Warwick <dennis@wcwater.com>">Dennis Warwick (dennis@wcwater.com)</option>
-                                <option value="{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %} <{{ user.email }}>">{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %} ({{ user.email }})</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
                         {{ form.subject.errors }}
                         <label class="col-md-2 col-form-label" for="{{ form.subject.id_for_label }}">Subject</label>
                         <div class="col-md-10">{{ form.subject|add_class:"form-control" }}</div>

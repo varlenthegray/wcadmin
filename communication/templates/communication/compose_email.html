@@ -46,11 +46,6 @@
                                                 <i class="fa fa-file-text-o fa-fw me-2"></i> Drafts
                                             </a>
                                         </li>
-                                        <li class="nav-item {% if request.resolver_match.url_name == 'emailTrash' %}active{% endif %}">
-                                            <a class="nav-link d-flex align-items-center" href="{% url 'emailTrash' %}">
-                                                <i class="fa fa-fw fa-trash-o me-2"></i> Trash
-                                            </a>
-                                        </li>
                                         <li class="nav-item {% if request.resolver_match.url_name == 'emailAllTemplates' %}active{% endif %}">
                                             <a class="nav-link d-flex align-items-center" href="{% url 'emailAllTemplates' %}">
                                                 <i class="fa fa-fw fa-table me-2"></i> Templates
@@ -76,7 +71,7 @@
                                             {{ form.send_bcc.errors }}
                                             <label class="col-md-2 col-form-label" for="{{ form.send_bcc.id_for_label }}"><abbr title="Not visible to recipients.">BCC</abbr></label>
                                             <div class="col-md-10">
-                                                <select class="compose-multiple-select form-select" name="{{ form.send_bcc.name }}" id="{{ form.send_bcc.id_for_label }}" multiple="multiple">
+                                                <select class="compose-multiple-select form-select" name="{{ form.send_bcc.name }}[]" id="{{ form.send_bcc.id_for_label }}" multiple="multiple">
                                                     {% for customer in customers %}
                                                         {% if customer.email %}
                                                             <option value="{{ customer.name }} <{{ customer.email }}>">{{ customer.name }} ({{ customer.email }})</option>
@@ -105,8 +100,9 @@
                                             <label class="col-md-2 col-form-label" for="{{ form.template_used.id_for_label }}">Template</label>
                                             <div class="col-md-10">
                                                 <select class="compose-multiple-select form-select" name="{{ form.template_used.name }}" id="{{ form.template_used.id_for_label }}">
+                                                    <option value="" selected="selected">None</option>
                                                     {% for template in existing_templates %}
-                                                        <option value="{{ template.pk }}" {% if forloop.first %}selected="selected"{% endif %}>{{ template.template_name }}</option>
+                                                        <option value="{{ template.pk }}">{{ template.template_name }}</option>
                                                     {% empty %}
                                                         <option value="none" selected="selected">No Templates Exist</option>
                                                     {% endfor %}
@@ -119,14 +115,14 @@
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 {{ form.message.errors }}
-                                                <label class="form-label visually-hidden" for="simpleMdeEditor">Email Body </label>
-                                                <textarea class="form-control" name="{{ form.message.name }}" id="simpleMdeEditor" rows="5"></textarea>
+                                                <label class="form-label visually-hidden" for="{{ form.message.id_for_label }}">Email Body </label>
+                                                <textarea class="form-control" name="{{ form.message.name }}" id="{{ form.message.id_for_label }}" rows="5"></textarea>
                                             </div>
                                         </div>
                                         <div>
                                             <div class="col-md-12">
                                                 <button class="btn btn-success me-1 mb-1 btn-icon-text" type="submit"><i class="fa fa-send-o fa-fw btn-icon-prepend"></i> Send</button>
-                                                <button class="btn btn-secondary me-1 mb-1 btn-icon-text" type="submit"><i class="fa fa-save fa-fw btn-icon-prepend"></i> Save Draft</button>
+                                                <button class="btn btn-secondary me-1 mb-1 btn-icon-text" id="save_email_draft" type="button"><i class="fa fa-save fa-fw btn-icon-prepend"></i> Save Draft</button>
 
                                                 <button class="btn btn-danger me-1 mb-1 btn-icon-text float-end" type="reset"><i class="fa fa-cancel fa-fw btn-icon-prepend"></i> Cancel</button>
                                             </div>
@@ -151,16 +147,36 @@
       $(function() {
         let multi_select = $(".compose-multiple-select");
 
-        simplemde = wcaSystem.setup_mde_editor('#simpleMdeEditor');
+        simplemde = wcaSystem.setup_mde_editor('#{{ form.message.id_for_label }}');
 
-        if (multi_select.length) {
-          multi_select.select2({
-            tags: true,
-          });
-        }
+        let select = multi_select.select2({
+          tags: true,
+        });
+
+        $("#save_email_draft").on('click', function() {
+          $("#compose_email_form").attr('action', '?draft=true').submit();
+        });
+
+        select.on('change', function() {
+          let selected_id = $(this).val();
+          let get_template_url = '{% url 'getTemplate' pk=999999999 %}'.replace('999999999', selected_id);
+
+          if(selected_id === '') {
+            $("#compose_email_form").find('input:text, input:password, input:file, select, textarea').val('');
+            simplemde.value('');
+          } else {
+            $.ajax(get_template_url).done(function(data) {
+              let response = data[0];
+
+              $("#{{ form.subject.id_for_label }}").val(response.subject);
+              simplemde.value(response.message)
+            });
+          }
+        });
 
         $("#compose_email_form").on('reset', function() {
           simplemde.value('');
+          multi_select.val('none').trigger('change');
         });
       })
     </script>
