@@ -84,7 +84,9 @@
                                         <div class="row mb-3">
                                             {{ form.subject.errors }}
                                             <label class="col-md-2 col-form-label" for="{{ form.subject.id_for_label }}">Subject</label>
-                                            <div class="col-md-10">{{ form.subject|add_class:"form-control" }}</div>
+                                            <div class="col-md-10">
+                                                {{ form.subject|add_class:"form-control" }}
+                                            </div>
                                         </div>
                                         <div class="row mb-3">
                                             {{ form.template_used.errors }}
@@ -166,6 +168,10 @@
 
         if(wcaSystem.get_url_query().sent) {
           wcaSystem.show_notification('Successfully sent email.', 'success')
+        }
+
+        if(wcaSystem.get_url_query().save_draft) {
+          wcaSystem.show_notification('Successfully saved draft.', 'information')
         }
       });
     </script>

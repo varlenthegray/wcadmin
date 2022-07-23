@@ -23,7 +23,9 @@
             {% for draft in email_drafts %}
                 <tr>
                     <td><a href="{% url 'viewEmailDraft' pk=draft.pk %}" class="view_email_draft">{{ draft.subject }}</a></td>
-                    <td>{% if draft.send_bcc|length > 40 %}<abbr title="{{ draft.send_bcc }}">{% endif %}{{ draft.send_bcc|default:"N/A"|truncatechars:40 }}</abbr></td>
+                    <td>
+                        {% if draft.bcc_as_comma|length > 40 %}<abbr title="{{ draft.bcc_as_comma }}">{% endif %}{{ draft.bcc_as_comma|truncatechars:40 }}</abbr>
+                    </td>
                     <td>{{ draft.timestamp|date:'m-d-Y P' }}</td>
                     <td>{% if draft.user.first_name %}{{ draft.user.first_name }} {{ draft.user.last_name }}{% else %}{{ draft.user.username }}{% endif %}</td>
                 </tr>

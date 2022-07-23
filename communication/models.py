@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from customer.models import Customer
 
 
 class EmailTemplates(models.Model):
@@ -18,8 +19,8 @@ class EmailTemplates(models.Model):
 
 
 class EmailHistory(models.Model):
-    send_bcc = models.TextField(blank=True, null=True)
-    send_cc = models.TextField(blank=True, null=True)
+    send_bcc = models.ManyToManyField(Customer, blank=True, related_name='send_bcc')
+    send_cc = models.ManyToManyField(Customer, blank=True, related_name='send_cc')
     subject = models.CharField(max_length=200)
     message = models.TextField()
     template_used = models.ForeignKey(EmailTemplates, on_delete=models.CASCADE, blank=True, null=True)
@@ -29,3 +30,15 @@ class EmailHistory(models.Model):
 
     class Meta:
         ordering = ['-timestamp']
+
+    @property
+    def bcc_as_comma(self):
+        all_bcc = ''
+
+        for customer in self.send_bcc.all():
+            all_bcc += customer.email
+
+            if self.send_bcc.count() > 1:
+                all_bcc += ', '
+
+        return all_bcc[:-2]

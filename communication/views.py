@@ -28,11 +28,20 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
         context['existing_templates'] = EmailTemplates.objects.all()
         return context
 
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+
+        if self.request.accepts('text/html'):
+            return response
+        else:
+            return JsonResponse(form.errors, status=400)
+
     def form_valid(self, form):
         form_save = form.save(commit=False)
         form_save.user = self.request.user
+        draft = self.request.GET.get('draft')
 
-        if form.cleaned_data.get('draft'):
+        if draft:
             form_save.status = 'draft'
         else:
             form_save.status = 'sent'
@@ -59,49 +68,12 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
 
             message.send(fail_silently=False)
 
-        form_save.save()
+        form.save()
 
-        return super().form_valid(form)
-
-    # def post(self, request, *args, **kwargs):
-    #     send_email = CreateEmail(request.POST)
-    #
-    #     if send_email.is_valid():
-    #         form_save = send_email.save(commit=False)
-    #         form_save.user = request.user
-    #
-    #         if request.GET.get('draft'):
-    #             form_save.status = 'draft'
-    #         else:
-    #             form_save.status = 'sent'
-    #
-    #             send_cc = []
-    #             send_bcc = []
-    #
-    #             for customer in send_email.cleaned_data.get('send_cc'):
-    #                 send_cc.append(customer.email)
-    #
-    #             for customer in send_email.cleaned_data.get('send_bcc'):
-    #                 send_bcc.append(customer.email)
-    #
-    #             message = EmailMultiAlternatives(
-    #                 subject=send_email.cleaned_data.get('subject'),
-    #                 body=send_email.cleaned_data.get('message'),
-    #                 from_email='info@wcwater.com',
-    #                 to=['info@wcwater.com'],
-    #                 bcc=send_bcc,
-    #                 cc=send_cc,
-    #             )
-    #
-    #             message.attach_alternative(markdown.markdown(send_email.cleaned_data.get('message')), 'text/html')
-    #
-    #             message.send(fail_silently=False)
-    #
-    #         form_save.save()
-    #
-    #         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    #     else:
-    #         return HttpResponseBadRequest(send_email.errors)
+        if not draft:
+            return super().form_valid(form)
+        else:
+            return HttpResponseRedirect('?save_draft=true')
 
 
 class AllTemplates(LoginRequiredMixin, generic.CreateView):
