@@ -57,6 +57,14 @@
             $("#showDraft").html(data).modal('show');
           });
         });
+
+        if(wcaSystem.get_url_query().sent) {
+          wcaSystem.show_notification('Successfully sent email.', 'success');
+        }
+
+        if(wcaSystem.get_url_query().save_draft) {
+          wcaSystem.show_notification('Successfully saved draft.', 'information');
+        }
       });
     </script>
 {% endblock %}

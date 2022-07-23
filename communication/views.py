@@ -4,9 +4,11 @@ import markdown
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponse, JsonResponse
+from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import EmailMultiAlternatives
+from django.shortcuts import redirect
 
 from .models import EmailHistory, EmailTemplates
 from .forms import CreateEmail, CreateTemplate
@@ -20,7 +22,7 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
     model = EmailHistory
     template_name = 'communication/compose_email.html'
     form_class = CreateEmail
-    success_url = 'compose_email?sent=true'
+    success_url = '?sent=true'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -188,21 +190,59 @@ class ViewDraft(LoginRequiredMixin, generic.UpdateView):
     model = EmailHistory
     template_name = 'communication/modal/view_draft.html'
     form_class = CreateEmail
+    success_url = '/email/drafts?sent=true'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['customers'] = JobSite.objects.filter(active=True).exclude(email=None)
         return context
-    #
-    # def post(self, request, *args, **kwargs):
-    #     existing_template = EmailTemplates.objects.get(pk=request.POST.get('template_pk'))
-    #     edit_template = CreateTemplate(request.POST, instance=existing_template)
-    #
-    #     if edit_template.is_valid():
-    #         data = edit_template.save(commit=False)
-    #         data.last_updated_by = request.user
-    #         data.save()
-    #
-    #         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    #     else:
-    #         return HttpResponseBadRequest(edit_template.errors)
+
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+
+        if self.request.accepts('text/html'):
+            return response
+        else:
+            return JsonResponse(form.errors, status=400)
+
+    def form_valid(self, form):
+        form_save = form.save(commit=False)
+        form_save.user = self.request.user
+        draft = self.request.GET.get('draft')
+
+        if draft:
+            form_save.status = 'draft'
+        else:
+            form_save.status = 'sent'
+
+            send_cc = []
+            send_bcc = []
+
+            for customer in form.cleaned_data.get('send_cc'):
+                send_cc.append(customer.email)
+
+            for customer in form.cleaned_data.get('send_bcc'):
+                send_bcc.append(customer.email)
+
+            message = EmailMultiAlternatives(
+                subject=form.cleaned_data.get('subject'),
+                body=form.cleaned_data.get('message'),
+                from_email='info@wcwater.com',
+                to=['info@wcwater.com'],
+                bcc=send_bcc,
+                cc=send_cc,
+            )
+
+            message.attach_alternative(markdown.markdown(form.cleaned_data.get('message')), 'text/html')
+
+            message.send(fail_silently=False)
+
+        form.save()
+
+        if not draft:
+            return super().form_valid(form)
+        else:
+            response = redirect('emailDrafts')
+            response['Location'] += '?save_draft=true'
+
+            return response

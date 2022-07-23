@@ -2,7 +2,7 @@
 
 <div class="modal-dialog modal-xl template_container">
     <div class="modal-content">
-        <form method="post">
+        <form method="post" action="{% url 'viewEmailDraft' pk=object.pk %}" id="draft_form">
             {% csrf_token %}
 
             <div>
@@ -63,7 +63,12 @@
 <script>
   $(function() {
     message_mde = wcaSystem.setup_mde_editor('#{{ form.message.id_for_label }}');
+
     let container = $(".template_container");
+
+    $("#save_email_draft").on('click', function() {
+      $("#draft_form").attr('action', '{% url 'viewEmailDraft' pk=object.pk %}?draft=true').submit();
+    });
 
     $("#{{ form.send_bcc.id_for_label }}").select2({
       tags: true,
