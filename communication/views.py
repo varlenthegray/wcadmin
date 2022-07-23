@@ -4,7 +4,6 @@ import markdown
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponse, JsonResponse
-from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import EmailMultiAlternatives
@@ -172,6 +171,17 @@ class AllSentMail(LoginRequiredMixin, generic.ListView):
         context = super().get_context_data(**kwargs)
         context['customers'] = JobSite.objects.filter(active=True).exclude(email=None)
         context['sent_email'] = EmailHistory.objects.filter(~Q(status='draft'))
+        return context
+
+
+class ViewSentEmail(LoginRequiredMixin, generic.DetailView):
+    model = EmailHistory
+    template_name = 'communication/modal/view_sent_email.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sent_email'] = EmailHistory.objects.prefetch_related('send_bcc', 'send_cc__send_cc').get(pk=self.object.pk)
+
         return context
 
 

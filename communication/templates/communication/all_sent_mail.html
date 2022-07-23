@@ -3,8 +3,8 @@
 {% load static %}
 {% load markdownify %}
 
-{% block title %}All Templates{% endblock %}
-{% block page_header %}All Templates{% endblock %}
+{% block title %}Sent Mail{% endblock %}
+{% block page_header %}Sent Mail{% endblock %}
 
 {% block email_action %}
     <div>
@@ -16,17 +16,19 @@
     <div class="p-3 pb-0">
         <table class="table table-sm table-dark table-bordered">
             <tr>
-                <th width="20%">Subject</th>
-                <th width="40%">Message</th>
-                <th width="20%">Sent On</th>
-                <th width="20%">Sent By</th>
+                <th width="45%">Subject</th>
+                <th width="20%">BCC</th>
+                <th width="20%">Saved On</th>
+                <th width="25%">Sent By</th>
             </tr>
-            {% for sent_email in sent_email %}
+            {% for email in sent_email %}
                 <tr>
-                    <td>{% if sent_email.subject|length > 30 %}<abbr title="{{ sent_email.subject }}">{% endif %}{{ sent_email.subject|truncatechars:30 }}</abbr></td>
-                    <td>{% if sent_email.message|length > 50 %}<abbr title="{{ sent_email.message|truncatechars:200|markdownify }}">{% endif %}{{ sent_email.message|truncatechars:50|markdownify }}</abbr></td>
-                    <td>{{ sent_email.timestamp|date:'m-d-Y h:i A' }}</td>
-                    <td>{% if sent_email.user.first_name %}{{ sent_email.user.first_name }} {{ sent_email.user.last_name }}{% else %}{{ sent_email.user.username }}{% endif %}</td>
+                    <td><a href="{% url 'emailViewSentEmail' pk=email.pk %}" class="view_sent_email">{{ email.subject }}</a></td>
+                    <td>
+                        {% if email.bcc_as_comma|length > 40 %}<abbr title="{{ email.bcc_as_comma }}">{% endif %}{{ email.bcc_as_comma|truncatechars:40 }}</abbr>
+                    </td>
+                    <td>{{ email.timestamp|date:'m-d-Y P' }}</td>
+                    <td>{% if email.user.first_name %}{{ email.user.first_name }} {{ email.user.last_name }}{% else %}{{ email.user.username }}{% endif %}</td>
                 </tr>
             {% empty %}
                 <tr>
@@ -38,4 +40,22 @@
             {% endfor %}
         </table>
     </div>
+
+    <div class="modal fade" tabindex="-1" id="showSentEmail" aria-labelledby="showSentEmailModal" aria-hidden="true">
+        <!-- loaded via AJAX -->
+    </div>
+{% endblock %}
+
+{% block page_script %}
+    <script>
+      $(function() {
+        $(".view_sent_email").on('click', function(e) {
+          e.preventDefault();
+
+          $.ajax($(this).attr('href')).done(function(data) {
+            $("#showSentEmail").html(data).modal('show');
+          });
+        });
+      });
+    </script>
 {% endblock %}
