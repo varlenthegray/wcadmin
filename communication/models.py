@@ -13,6 +13,9 @@ class EmailTemplates(models.Model):
     class Meta:
         ordering = ['-last_updated_on']
 
+    def __str__(self):
+        return f'{self.template_name}'
+
 
 class EmailHistory(models.Model):
     send_bcc = models.TextField(blank=True, null=True)

@@ -71,23 +71,14 @@
                                             {{ form.send_bcc.errors }}
                                             <label class="col-md-2 col-form-label" for="{{ form.send_bcc.id_for_label }}"><abbr title="Not visible to recipients.">BCC</abbr></label>
                                             <div class="col-md-10">
-                                                <select class="compose-multiple-select form-select" name="{{ form.send_bcc.name }}[]" id="{{ form.send_bcc.id_for_label }}" multiple="multiple">
-                                                    {% for customer in customers %}
-                                                        {% if customer.email %}
-                                                            <option value="{{ customer.name }} <{{ customer.email }}>">{{ customer.name }} ({{ customer.email }})</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </select>
+                                                {{ form.send_bcc|add_class:"form-control" }}
                                             </div>
                                         </div>
                                         <div class="row mb-3">
                                             {{ form.send_cc.errors }}
                                             <label class="col-md-2 col-form-label" for="{{ form.send_cc.id_for_label }}"><abbr title="Visible to recipients.">CC:</abbr></label>
                                             <div class="col-md-10">
-                                                <select class="compose-multiple-select form-select" name="{{ form.send_cc.name }}" id="{{ form.send_cc.id_for_label }}" multiple="multiple">
-                                                    <option value="Dennis Warwick <dennis@wcwater.com>">Dennis Warwick (dennis@wcwater.com)</option>
-                                                    <option value="{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %} <{{ user.email }}>">{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %} ({{ user.email }})</option>
-                                                </select>
+                                                {{ form.send_cc|add_class:"form-control" }}
                                             </div>
                                         </div>
                                         <div class="row mb-3">
@@ -99,14 +90,7 @@
                                             {{ form.template_used.errors }}
                                             <label class="col-md-2 col-form-label" for="{{ form.template_used.id_for_label }}">Template</label>
                                             <div class="col-md-10">
-                                                <select class="compose-multiple-select form-select" name="{{ form.template_used.name }}" id="{{ form.template_used.id_for_label }}">
-                                                    <option value="" selected="selected">None</option>
-                                                    {% for template in existing_templates %}
-                                                        <option value="{{ template.pk }}">{{ template.template_name }}</option>
-                                                    {% empty %}
-                                                        <option value="none" selected="selected">No Templates Exist</option>
-                                                    {% endfor %}
-                                                </select>
+                                                {{ form.template_used|add_class:"form-control" }}
                                             </div>
                                         </div>
                                     </div>
@@ -145,19 +129,17 @@
       let simplemde;
 
       $(function() {
-        let multi_select = $(".compose-multiple-select");
-
         simplemde = wcaSystem.setup_mde_editor('#{{ form.message.id_for_label }}');
 
-        let select = multi_select.select2({
+        $("#{{ form.send_bcc.id_for_label }}").select2({
           tags: true,
         });
 
-        $("#save_email_draft").on('click', function() {
-          $("#compose_email_form").attr('action', '?draft=true').submit();
+        $("#{{ form.send_cc.id_for_label }}").select2({
+          tags: true,
         });
 
-        select.on('change', function() {
+        $("#{{ form.template_used.id_for_label }}").on('change', function() {
           let selected_id = $(this).val();
           let get_template_url = '{% url 'getTemplate' pk=999999999 %}'.replace('999999999', selected_id);
 
@@ -174,11 +156,18 @@
           }
         });
 
+        $("#save_email_draft").on('click', function() {
+          $("#compose_email_form").attr('action', '?draft=true').submit();
+        });
+
         $("#compose_email_form").on('reset', function() {
           simplemde.value('');
-          multi_select.val('none').trigger('change');
         });
-      })
+
+        if(wcaSystem.get_url_query().sent) {
+          wcaSystem.show_notification('Successfully sent email.', 'success')
+        }
+      });
     </script>
 {% endblock %}
 
