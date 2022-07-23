@@ -15,23 +15,14 @@
                     {{ form.send_bcc.errors }}
                     <label class="col-md-2 col-form-label" for="{{ form.send_bcc.id_for_label }}"><abbr title="Not visible to recipients.">BCC</abbr></label>
                     <div class="col-md-10">
-                        <select class="compose-multiple-select form-select" name="{{ form.send_bcc.name }}" id="{{ form.send_bcc.id_for_label }}" multiple="multiple" style="width:100%;">
-                            {% for customer in customers %}
-                                {% if customer.email %}
-                                    <option value="{{ customer.name }} <{{ customer.email }}>">{{ customer.name }} ({{ customer.email }})</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
+                        {{ form.send_bcc|add_class:"form-control"|attr:"style:width:100%" }}
                     </div>
                 </div>
                 <div class="row mb-3">
                     {{ form.send_cc.errors }}
                     <label class="col-md-2 col-form-label" for="{{ form.send_cc.id_for_label }}"><abbr title="Visible to recipients.">CC:</abbr></label>
                     <div class="col-md-10">
-                        <select class="compose-multiple-select form-select" name="{{ form.send_cc.name }}" id="{{ form.send_cc.id_for_label }}" multiple="multiple" style="width:100%;">
-                            <option value="Dennis Warwick <dennis@wcwater.com>">Dennis Warwick (dennis@wcwater.com)</option>
-                            <option value="{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %} <{{ user.email }}>">{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %} ({{ user.email }})</option>
-                        </select>
+                        {{ form.send_cc|add_class:"form-control"|attr:"style:width:100%" }}
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -43,14 +34,7 @@
                     {{ form.template_used.errors }}
                     <label class="col-md-2 col-form-label" for="{{ form.template_used.id_for_label }}">Template</label>
                     <div class="col-md-10">
-                        <select class="compose-multiple-select form-select" name="{{ form.template_used.name }}" id="{{ form.template_used.id_for_label }}" style="width:100%;">
-                            <option value="" selected="selected">None</option>
-                            {% for template in existing_templates %}
-                                <option value="{{ template.pk }}">{{ template.template_name }}</option>
-                            {% empty %}
-                                <option value="none" selected="selected">No Templates Exist</option>
-                            {% endfor %}
-                        </select>
+                        {{ form.template_used|add_class:"form-control" }}
                     </div>
                 </div>
             </div>
@@ -60,7 +44,7 @@
                     <div class="mb-3">
                         {{ form.message.errors }}
                         <label class="form-label visually-hidden" for="simpleMdeEditor">Email Body </label>
-                        <textarea class="form-control" name="{{ form.message.name }}" id="{{ form.message.id_for_label }}" rows="5">{{ form.message.value }}</textarea>
+                        {{ form.message|add_class:"form-control"|attr:"rows:5" }}
                     </div>
                 </div>
                 <div>
@@ -79,27 +63,16 @@
 <script>
   $(function() {
     message_mde = wcaSystem.setup_mde_editor('#{{ form.message.id_for_label }}');
+    let container = $(".template_container");
 
-    $(".compose-multiple-select").select2({
-      dropdownParent: $(".template_container").parent(),
+    $("#{{ form.send_bcc.id_for_label }}").select2({
       tags: true,
+      dropdownParent: container.parent(),
     });
 
-    $.ajax('{% url 'getEmailHistory' pk=email_pk %}').done(function(data) {
-      data = data[0];
-
-      let option = new Option(data.send_bcc, data.id, true, true);
-      let select = $("#{{ form.send_bcc.id_for_label }}");
-
-      select.append(option).trigger('change');
-
-      // manually trigger the `select2:select` event
-      select.trigger({
-        type: 'select2:select',
-        params: {
-          data: data
-        }
-      });
+    $("#{{ form.send_cc.id_for_label }}").select2({
+      tags: true,
+      dropdownParent: container.parent(),
     });
   });
 </script>

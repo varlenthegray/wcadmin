@@ -187,24 +187,22 @@ class AllDrafts(LoginRequiredMixin, generic.ListView):
 class ViewDraft(LoginRequiredMixin, generic.UpdateView):
     model = EmailHistory
     template_name = 'communication/modal/view_draft.html'
-    form_class = CreateTemplate
+    form_class = CreateEmail
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['customers'] = JobSite.objects.filter(active=True).exclude(email=None)
-        context['existing_templates'] = EmailTemplates.objects.all()
-        context['email_pk'] = self.kwargs['pk']
         return context
-
-    def post(self, request, *args, **kwargs):
-        existing_template = EmailTemplates.objects.get(pk=request.POST.get('template_pk'))
-        edit_template = CreateTemplate(request.POST, instance=existing_template)
-
-        if edit_template.is_valid():
-            data = edit_template.save(commit=False)
-            data.last_updated_by = request.user
-            data.save()
-
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        else:
-            return HttpResponseBadRequest(edit_template.errors)
+    #
+    # def post(self, request, *args, **kwargs):
+    #     existing_template = EmailTemplates.objects.get(pk=request.POST.get('template_pk'))
+    #     edit_template = CreateTemplate(request.POST, instance=existing_template)
+    #
+    #     if edit_template.is_valid():
+    #         data = edit_template.save(commit=False)
+    #         data.last_updated_by = request.user
+    #         data.save()
+    #
+    #         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    #     else:
+    #         return HttpResponseBadRequest(edit_template.errors)
