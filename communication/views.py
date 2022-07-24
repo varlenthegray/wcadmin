@@ -11,7 +11,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import redirect
 
 from .models import EmailHistory, EmailTemplates
-from .forms import CreateEmail, CreateTemplate
+from .forms import CreateEmail, CreateTemplate, SendField
+from customer.models import Customer
 
 from customer.models import JobSite
 
@@ -30,71 +31,76 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
         context['existing_templates'] = EmailTemplates.objects.all()
         return context
 
-    def post(self, request, *args, **kwargs):
-        data = request.POST.get('data')
+    def form_valid(self, form):
+        form_save = form.save(commit=False)
+        form_save.user = self.request.user
+        draft = self.request.GET.get('draft')
 
-        if data:
+        if draft:
+            form_save.status = 'draft'
+        else:
+            form_save.status = 'sent'
+
+            send_cc = []
+            send_bcc = []
+
+            for customer in form.cleaned_data.get('send_cc'):
+                send_cc.append(customer.email)
+
+            for customer in form.cleaned_data.get('send_bcc'):
+                send_bcc.append(customer.email)
+
+            message = EmailMultiAlternatives(
+                subject=form.cleaned_data.get('subject'),
+                body=form.cleaned_data.get('message'),
+                from_email='info@wcwater.com',
+                to=['info@wcwater.com'],
+                bcc=send_bcc,
+                cc=send_cc,
+            )
+
+            message.attach_alternative(markdown.markdown(form.cleaned_data.get('message')), 'text/html')
+
+            message.send(fail_silently=False)
+
+        form.save()
+
+        if not draft:
+            return super().form_valid(form)
+        else:
+            return HttpResponseRedirect('?save_draft=true')
+
+    def form_invalid(self, form):
+        bcc_form = form
+
+        if self.request.POST.get('data'):
             # fancy footwork to get POST data and represent it as an array, then get objects from the array
-            raw_job_site_ids = simplejson.loads(request.POST['data'])['body']
+            raw_job_site_ids = simplejson.loads(self.request.POST.get('data'))['body']
             job_site_ids = []
 
             # this has to be done, it's a 3D array initially with 1 array, [0] didn't work
             for js_id in raw_job_site_ids:
                 job_site_ids.append(js_id[0])
 
-            job_sites = JobSite.objects.filter(pk__in=job_site_ids)
+            job_sites = JobSite.objects.filter(pk__in=job_site_ids).prefetch_related('customer')
+            customers = Customer.objects.filter(jobsite__in=job_site_ids).values_list('id', flat=True)
 
-            form = CreateEmail(request.POST, initial={'send_bcc': job_sites})
+            field_def = Customer.objects.filter(jobsite__in=job_site_ids).exclude(email=None) \
+                .order_by('first_name', 'last_name', 'company', 'email').values_list('id', flat=True)
+
+            logger.warning(field_def)
+
+            bcc_form = CreateEmail(initial={'send_bcc': Customer.objects.filter(jobsite__in=job_site_ids).exclude(email=None) \
+                .order_by('first_name', 'last_name', 'company', 'email')})
+
+            logger.warning(bcc_form.fields['send_bcc'].__dict__)
+
+        response = super().form_invalid(bcc_form)
+
+        if self.request.accepts('text/html'):
+            return response
         else:
-            form = CreateEmail(request.POST)
-
-        if form.is_valid():
-            form_save = form.save(commit=False)
-            form_save.user = self.request.user
-            draft = self.request.GET.get('draft')
-
-            if draft:
-                form_save.status = 'draft'
-            else:
-                form_save.status = 'sent'
-
-                send_cc = []
-                send_bcc = []
-
-                for customer in form.cleaned_data.get('send_cc'):
-                    send_cc.append(customer.email)
-
-                for customer in form.cleaned_data.get('send_bcc'):
-                    send_bcc.append(customer.email)
-
-                message = EmailMultiAlternatives(
-                    subject=form.cleaned_data.get('subject'),
-                    body=form.cleaned_data.get('message'),
-                    from_email='info@wcwater.com',
-                    to=['info@wcwater.com'],
-                    bcc=send_bcc,
-                    cc=send_cc,
-                )
-
-                message.attach_alternative(markdown.markdown(form.cleaned_data.get('message')), 'text/html')
-
-                message.send(fail_silently=False)
-
-            form.save()
-
-            if not draft:
-                return super().form_valid(form)
-            else:
-                return HttpResponseRedirect('?save_draft=true')
-        else:
-            logger.warning('Email Form Invalid.')
-
-            response = super().form_invalid(form)
-
-            if self.request.accepts('text/html'):
-                return response
-            else:
-                return JsonResponse(form.errors, status=400)
+            return JsonResponse(form.errors, status=400)
 
 
 class AllTemplates(LoginRequiredMixin, generic.CreateView):
@@ -200,7 +206,8 @@ class ViewSentEmail(LoginRequiredMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['sent_email'] = EmailHistory.objects.prefetch_related('send_bcc', 'send_cc__send_cc').get(pk=self.object.pk)
+        context['sent_email'] = EmailHistory.objects.prefetch_related('send_bcc', 'send_cc__send_cc').get(
+            pk=self.object.pk)
 
         return context
 

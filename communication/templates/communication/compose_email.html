@@ -70,14 +70,14 @@
                                         <div class="row mb-3">
                                             {{ form.send_bcc.errors }}
                                             <label class="col-md-2 col-form-label" for="{{ form.send_bcc.id_for_label }}"><abbr title="Not visible to recipients.">BCC</abbr></label>
-                                            <div class="col-md-10">
+                                            <div class="col-md-10" style="max-height: 120px; overflow-y: auto; overflow-x: hidden;">
                                                 {{ form.send_bcc|add_class:"form-control" }}
                                             </div>
                                         </div>
                                         <div class="row mb-3">
                                             {{ form.send_cc.errors }}
                                             <label class="col-md-2 col-form-label" for="{{ form.send_cc.id_for_label }}"><abbr title="Visible to recipients.">CC:</abbr></label>
-                                            <div class="col-md-10">
+                                            <div class="col-md-10" style="max-height: 120px; overflow-y: auto; overflow-x: hidden;">
                                                 {{ form.send_cc|add_class:"form-control" }}
                                             </div>
                                         </div>
