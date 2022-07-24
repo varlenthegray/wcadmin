@@ -315,7 +315,7 @@ def insert_qb_customers(request, changes_only=False):
         else:
             qb_customer_count = qbCustomer.count("Active in (True, False)", qb=client)
 
-        logger.warning(f"{timezone.now()} Customer Update Count: {qb_customer_count}")
+        # logger.warning(f"{timezone.now()} Customer Update Count: {qb_customer_count}")
     except QuickbooksException as e:
         return HttpResponse(str(e.error_code) + ' - ' + e.message)
     else:
@@ -325,13 +325,13 @@ def insert_qb_customers(request, changes_only=False):
             start_count = (current_run * max_per_run) - max_per_run
 
             if changes_only:
-                logger.warning("Checking for changes to customers.")
+                # logger.warning("Checking for changes to customers.")
                 customers = qbCustomer.query(
                     f"SELECT * FROM Customer WHERE Active in (True, False) AND Metadata.LastUpdatedTime > '{last_run}' STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
                     qb=client
                 )
             else:
-                logger.warning("Getting all customer data from Quickbooks.")
+                # logger.warning("Getting all customer data from Quickbooks.")
                 customers = qbCustomer.query(
                     f"SELECT * FROM Customer WHERE Active in (True, False) STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
                     qb=client
@@ -492,7 +492,7 @@ def get_service_data(request, changes_only=False):
         else:
             invoice_count = qbInvoice.count(qb=client)
 
-        logger.warning(f"{timezone.now()} Invoices to Update: {invoice_count}")
+        # logger.warning(f"{timezone.now()} Invoices to Update: {invoice_count}")
     except QuickbooksException as e:
         return HttpResponse(str(e.error_code) + ' - ' + e.message)
     else:
@@ -502,12 +502,12 @@ def get_service_data(request, changes_only=False):
             start_count = (current_run * max_per_run) - max_per_run
 
             if changes_only:
-                logger.warning("Checking for service changes.")
+                # logger.warning("Checking for service changes.")
                 invoices = qbInvoice.query(
                     f"SELECT * FROM Invoice WHERE Metadata.LastUpdatedTime > '{last_run}' STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
                     qb=client)
             else:
-                logger.warning("Updating all service records.")
+                # logger.warning("Updating all service records.")
                 invoices = qbInvoice.query(
                     f"SELECT * FROM Invoice STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
                     qb=client)
@@ -626,7 +626,7 @@ def get_equipment_qb(request, changes_only=False):
         else:
             item_count = qbItem.count("ParentRef in ('316', '318')", qb=client)
 
-        logger.warning(f"{timezone.now()} Equipment to update: {item_count}")
+        # logger.warning(f"{timezone.now()} Equipment to update: {item_count}")
     except QuickbooksException as e:
         return HttpResponse(str(e.error_code) + ' - ' + e.message)
     else:
@@ -636,12 +636,12 @@ def get_equipment_qb(request, changes_only=False):
             start_count = (current_run * max_per_run) - max_per_run
 
             if changes_only:
-                logger.warning("Checking equipment for latest changes.")
+                # logger.warning("Checking equipment for latest changes.")
                 items = qbItem.query(
                     f"SELECT * FROM Item WHERE ParentRef IN ('316', '318') AND Metadata.LastUpdatedTime > '{last_run}' STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
                     qb=client)
             else:
-                logger.warning("Updating all equipment.")
+                # logger.warning("Updating all equipment.")
                 items = qbItem.query(
                     f"SELECT * FROM Item WHERE ParentRef IN ('316', '318') STARTPOSITION {start_count} MAXRESULTS {max_per_run}",
                     qb=client)
@@ -736,7 +736,7 @@ def get_print_on_check_name_from_qb(request):
 
     try:
         customer_count = qbCustomer.count("Active in (True, False)", qb=client)
-        logger.warning(f"{timezone.now()} Customers getting Print on Check name for: {customer_count}")
+        # logger.warning(f"{timezone.now()} Customers getting Print on Check name for: {customer_count}")
     except QuickbooksException as e:
         return HttpResponse(str(e.error_code) + ' - ' + e.message)
     else:
@@ -773,7 +773,7 @@ def get_qb_created_on(request):
 
     try:
         customer_count = qbCustomer.count("Active in (True, False)", qb=client)
-        logger.warning(f"{timezone.now()} Customers getting created date for: {customer_count}")
+        # logger.warning(f"{timezone.now()} Customers getting created date for: {customer_count}")
     except QuickbooksException as e:
         return HttpResponse(str(e.error_code) + ' - ' + e.message)
     else:

@@ -1,0 +1,29 @@
+<div class="modal fade bd-example-modal-lg" id="emailCustomerList" tabindex="-1" aria-labelledby="emailCustomerListModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Email Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
+            </div>
+            <div class="modal-body">
+                <p><em><b>Due to constraints, the following need to be observed and are important:</b></em></p>
+
+                <ul>
+                    <li>Customers missing an email address will <b>NOT</b> be included in the outbound email.</li>
+                    <li>The following customers will <b>NOT</b> be included in the email report due to missing an email address:</li>
+                    <ul id="customers_missing_emails">
+                        {% for job in job_sites %}
+                            {% if not job.email %}
+                                <li><a href="{% url 'viewSpecificJobSite' pk=job.pk %}" target="_blank">{{ job.name }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" id="prepare_sent_email" data-bs-dismiss="modal">Let's Go</button>
+            </div>
+        </div>
+    </div>
+</div>

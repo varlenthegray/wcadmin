@@ -20,10 +20,16 @@
 
 {% include 'customer/modal/schedule_service.html' %}
 {% include 'customer/modal/print_address_labels.html' %}
+{% include 'customer/modal/email_customers.html' %}
 
 <form action="{% url 'printAddrLabels' %}" method="post" target="_blank" id="dt_data_form">
     {% csrf_token %}
     <input type="hidden" name="data" id="dt_data" />
+</form>
+
+<form action="{% url 'emailCompose' %}" method="post" id="dt_email_data_form">
+    {% csrf_token %}
+    <input type="hidden" name="data" id="dt_email_data" />
 </form>
 
 <script>
@@ -45,7 +51,6 @@
       scrollY: scroll_height,
       scrollX: false,
       scrollResize: true,
-      //ajax: '{% url 'allJobSitesJSON' %}',
       ajax: '/customers/api/allJobSitesRest/?format=datatables',
       serverSide: true,
       stateSave: true,
@@ -242,8 +247,6 @@
               for (const value in customers['body']) {
                 let row = customers['body'][value];
 
-                console.log(row);
-
                 if(row[1] === 'N/A') {
                   output += '<li><a href="https://wcadev.innovated.tech/customers/view/job_site/' + row[2] + '" target="_blank">' + customers['body'][value][0] + '</a></li>';
                 }
@@ -256,6 +259,29 @@
               ul_update.html(output);
             },
             className: 'btn btn-outline-primary buttons-addr-label',
+          },
+          {
+            text: 'emailcustomers',
+            action: function ( e, dt ) {
+              let ul_update = $("#customers_missing_emails");
+              let customers = dt.buttons.exportData({ columns: [0, 3, 7] });
+              let output = '';
+
+              for (const value in customers['body']) {
+                let row = customers['body'][value];
+
+                if(row[1] === 'N/A') {
+                  output += '<li><a href="https://wcadev.innovated.tech/customers/view/job_site/' + row[2] + '" target="_blank">' + customers['body'][value][0] + '</a></li>';
+                }
+              }
+
+              if(output === '') {
+                output = '<li>No customers will be excluded from this email.</li>';
+              }
+
+              ul_update.html(output);
+            },
+            className: 'btn btn-outline-primary buttons-send-email',
           },
         ]
       },
@@ -281,13 +307,6 @@
       window.alert("Copied.");
     });
 
-    $("#print_address_labels_confirmed").on('click', function() {
-      let data = JSON.stringify( job_site_table.buttons.exportData({ columns: 7 }) );
-
-      $("#dt_data").val(data);
-      $("#dt_data_form").submit();
-    });
-
     $("#dt_button_csv").on("click", function() {
       job_site_table.buttons('.buttons-csv').trigger();
     });
@@ -310,6 +329,24 @@
 
     $("#dt_button_print_addr_labels").on("click", function() {
       job_site_table.buttons('.buttons-addr-label').trigger();
+    });
+
+    $("#print_address_labels_confirmed").on('click', function() {
+      let data = JSON.stringify( job_site_table.buttons.exportData({ columns: 7 }) );
+
+      $("#dt_data").val(data);
+      $("#dt_data_form").submit();
+    });
+
+    $("#dt_email_report").on("click", function() {
+      job_site_table.buttons('.buttons-send-email').trigger();
+    });
+
+    $("#prepare_sent_email").on('click', function() {
+      let data = JSON.stringify( job_site_table.buttons.exportData({ columns: 7 }) );
+
+      $("#dt_email_data").val(data);
+      $("#dt_email_data_form").submit();
     });
 
     $("#modalConfirmedSchedule").on("click", function() {

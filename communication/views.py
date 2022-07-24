@@ -1,5 +1,6 @@
 import logging
 import markdown
+import simplejson
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -29,52 +30,71 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
         context['existing_templates'] = EmailTemplates.objects.all()
         return context
 
-    def form_invalid(self, form):
-        response = super().form_invalid(form)
+    def post(self, request, *args, **kwargs):
+        data = request.POST.get('data')
 
-        if self.request.accepts('text/html'):
-            return response
+        if data:
+            # fancy footwork to get POST data and represent it as an array, then get objects from the array
+            raw_job_site_ids = simplejson.loads(request.POST['data'])['body']
+            job_site_ids = []
+
+            # this has to be done, it's a 3D array initially with 1 array, [0] didn't work
+            for js_id in raw_job_site_ids:
+                job_site_ids.append(js_id[0])
+
+            job_sites = JobSite.objects.filter(pk__in=job_site_ids)
+
+            form = CreateEmail(request.POST, initial={'send_bcc': job_sites})
         else:
-            return JsonResponse(form.errors, status=400)
+            form = CreateEmail(request.POST)
 
-    def form_valid(self, form):
-        form_save = form.save(commit=False)
-        form_save.user = self.request.user
-        draft = self.request.GET.get('draft')
+        if form.is_valid():
+            form_save = form.save(commit=False)
+            form_save.user = self.request.user
+            draft = self.request.GET.get('draft')
 
-        if draft:
-            form_save.status = 'draft'
+            if draft:
+                form_save.status = 'draft'
+            else:
+                form_save.status = 'sent'
+
+                send_cc = []
+                send_bcc = []
+
+                for customer in form.cleaned_data.get('send_cc'):
+                    send_cc.append(customer.email)
+
+                for customer in form.cleaned_data.get('send_bcc'):
+                    send_bcc.append(customer.email)
+
+                message = EmailMultiAlternatives(
+                    subject=form.cleaned_data.get('subject'),
+                    body=form.cleaned_data.get('message'),
+                    from_email='info@wcwater.com',
+                    to=['info@wcwater.com'],
+                    bcc=send_bcc,
+                    cc=send_cc,
+                )
+
+                message.attach_alternative(markdown.markdown(form.cleaned_data.get('message')), 'text/html')
+
+                message.send(fail_silently=False)
+
+            form.save()
+
+            if not draft:
+                return super().form_valid(form)
+            else:
+                return HttpResponseRedirect('?save_draft=true')
         else:
-            form_save.status = 'sent'
+            logger.warning('Email Form Invalid.')
 
-            send_cc = []
-            send_bcc = []
+            response = super().form_invalid(form)
 
-            for customer in form.cleaned_data.get('send_cc'):
-                send_cc.append(customer.email)
-
-            for customer in form.cleaned_data.get('send_bcc'):
-                send_bcc.append(customer.email)
-
-            message = EmailMultiAlternatives(
-                subject=form.cleaned_data.get('subject'),
-                body=form.cleaned_data.get('message'),
-                from_email='info@wcwater.com',
-                to=['info@wcwater.com'],
-                bcc=send_bcc,
-                cc=send_cc,
-            )
-
-            message.attach_alternative(markdown.markdown(form.cleaned_data.get('message')), 'text/html')
-
-            message.send(fail_silently=False)
-
-        form.save()
-
-        if not draft:
-            return super().form_valid(form)
-        else:
-            return HttpResponseRedirect('?save_draft=true')
+            if self.request.accepts('text/html'):
+                return response
+            else:
+                return JsonResponse(form.errors, status=400)
 
 
 class AllTemplates(LoginRequiredMixin, generic.CreateView):
