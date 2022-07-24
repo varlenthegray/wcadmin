@@ -85,7 +85,7 @@
 
             if(data.address !== '' && data.address !== null) {
               return '<a href="https://www.google.com/maps/place/' + data.address + ',' + data.city + ',' + data.state + ' ' + data.zip + '" target="_blank">' +
-                  '<i class="fa fa-map-pin"></i> &nbsp; ' + stringManipulations.truncate(data.address, trim) + '<br>' + stringManipulations.truncate(data.city, trim) + ', ' + data.state + ' ' + data.zip +
+                  '<i class="mdi mdi-map-marker"></i> &nbsp; ' + stringManipulations.truncate(data.address, trim) + '<br>' + stringManipulations.truncate(data.city, trim) + ', ' + data.state + ' ' + data.zip +
                   '</a>';
             } else {
               return 'N/A';
@@ -100,7 +100,7 @@
             let trim = 18;
 
             if(data.phone_number !== '' && data.phone_number !== null) {
-              return '<a href="tel:1' + data.phone_number + '"><i class="fa fa-phone"></i> &nbsp; ' + stringManipulations.truncate(data.phone_number, trim);
+              return '<a href="tel:1' + data.phone_number + '"><i class="mdi mdi-phone"></i> &nbsp; ' + stringManipulations.truncate(data.phone_number, trim);
             } else {
               return 'N/A';
             }
@@ -113,7 +113,7 @@
             let trim = 20;
 
             if(data.email !== '' && data.email !== null) {
-              return '<a href="mailto:' + data.email + '"><i class="fa fa-envelope"></i> &nbsp; ' + stringManipulations.truncate(data.email, trim) + '</a>';
+              return '<a href="mailto:' + data.email + '"><i class="mdi mdi-email"></i> &nbsp; ' + stringManipulations.truncate(data.email, trim) + '</a>';
             } else {
               return 'N/A';
             }
@@ -151,7 +151,7 @@
               let nsd_date = luxon.DateTime.fromISO(data.next_service_date);
 
               if(!data.service_scheduled && (nsd_date.hasSame(luxon.DateTime.now(), 'month') || nsd_date >= luxon.DateTime.now().minus({ years: 3 }))) {
-                return '<button class="dt_show_modal btn btn-link p-0 m-0" data-bs-toggle="modal" data-bs-target="#setServiceScheduledModal" data-google-url="' + google_url + '" data-job-name="' + data.name + '" data-job-id="' + data.id + '"><i class="fa fa-calendar-day"></i> ' + disabled + nsd_formatted + '</span></button>';
+                return '<button class="dt_show_modal btn btn-link p-0 m-0" data-bs-toggle="modal" data-bs-target="#setServiceScheduledModal" data-google-url="' + google_url + '" data-job-name="' + data.name + '" data-job-id="' + data.id + '"><i class="mdi mdi-calendar-plus"></i> ' + disabled + nsd_formatted + '</span></button>';
               } else {
                 return disabled + nsd_formatted + '</span>';
               }

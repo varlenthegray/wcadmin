@@ -15,14 +15,14 @@
         <li class="nav-item nav-category">Main</li>
         <li class="nav-item">
             <a href="{% url 'dashboard' %}" class="nav-link">
-                <i class="link-icon fa fa-dashboard"></i>
+                <i class="link-icon mdi mdi-view-dashboard-variant-outline"></i>
                 <span class="link-title">Dashboard</span>
             </a>
         </li>
         {% if request.user.is_superuser %}
         <li class="nav-item">
             <a href="{% url 'qbDashboard' %}" class="nav-link">
-                <i class="link-icon fa fa-bolt-lightning"></i>
+                <i class="link-icon mdi mdi-satellite-uplink"></i>
                 <span class="link-title">QuickBooks</span>
             </a>
         </li>
@@ -30,11 +30,10 @@
         <li class="nav-item nav-category">Apps</li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#uiCustomers" role="button" aria-expanded="false" aria-controls="uiCustomers">
-                <i class="link-icon fa fa-users"></i>
+                <i class="link-icon fa mdi mdi-account-multiple"></i>
                 <span class="link-title">Customers</span>
-                <i class="link-arrow fa fa-chevron-down"></i>
+                <i class="link-arrow mdi mdi-chevron-down"></i>
             </a>
-
             <div class="collapse" id="uiCustomers">
                 <ul class="nav sub-menu">
                     <li class="nav-item"><a href="{% url 'addCustomer' %}" class="nav-link">New Customer</a></li>
@@ -44,9 +43,9 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#uiEquipment" role="button" aria-expanded="false" aria-controls="uiEquipment">
-                <i class="link-icon fa fa-boxes-packing"></i>
+                <i class="link-icon mdi mdi-archive"></i>
                 <span class="link-title">Equipment</span>
-                <i class="link-arrow fa fa-chevron-down"></i>
+                <i class="link-arrow mdi mdi-chevron-down"></i>
             </a>
             <div class="collapse" id="uiEquipment">
                 <ul class="nav sub-menu">
@@ -57,9 +56,9 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#uiReports" role="button" aria-expanded="false" aria-controls="uiReports">
-                <i class="link-icon fa fa-arrow-trend-up"></i>
+                <i class="link-icon mdi mdi-trending-up"></i>
                 <span class="link-title">Reports</span>
-                <i class="link-arrow fa fa-chevron-down"></i>
+                <i class="link-arrow mdi mdi-chevron-down"></i>
             </a>
             <div class="collapse" id="uiReports">
                 <ul class="nav sub-menu">
@@ -75,9 +74,9 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#uiEmail" role="button" aria-expanded="false" aria-controls="uiEmail">
-                <i class="link-icon fa fa-envelope-open"></i>
+                <i class="link-icon mdi mdi-email-open"></i>
                 <span class="link-title">Email</span>
-                <i class="link-arrow fa fa-chevron-down"></i>
+                <i class="link-arrow mdi mdi-chevron-down"></i>
             </a>
             <div class="collapse" id="uiEmail">
                 <ul class="nav sub-menu">

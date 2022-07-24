@@ -12,7 +12,8 @@
     <title>WCWT Admin - {% block title %}Dashboard{% endblock %}</title>
 
     <!-- Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{#    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />#}
+{#    <link rel="stylesheet" href="{% static 'assets/vendors/font-awesome-6/css/all.min.css' %}">#}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -42,6 +43,7 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="{% static 'assets/fonts/feather-font/css/iconfont.css' %}">
 {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/js/all.min.js"></script>#}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.css" integrity="sha512-NXUhxhkDgZYOMjaIgd89zF2w51Mub53Ru3zCNp5LTlEzMbNNAjTjDbpURYGS5Mop2cU4b7re1nOIucsVlrx9fA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- endinject -->
@@ -61,7 +63,7 @@
 
     <div class="page-wrapper">
         <nav class="navbar">
-            <a href="#" class="sidebar-toggler"><i class="fa fa-hamburger"></i></a>
+            <a href="#" class="sidebar-toggler"><i class="mdi mdi-menu"></i></a>
 
             <div class="navbar-content">
                 <div class="search-form">
@@ -74,7 +76,7 @@
                     </li>
                     <li class="nav-item mx-2 dropdown">
                         <button class="nav-link dropdown-toggle btn btn-link btn-icon-text" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="icon-lg btn-icon-prepend fa fa-user-o"></i>
+                            <i class="icon-lg btn-icon-prepend mdi mdi-account"></i>
                             <span>{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %}</span>
                         </button>
                         <div class="dropdown-menu p-0" aria-labelledby="profileDropdown">
@@ -86,26 +88,26 @@
                             </div>
                             <div class="d-grid gap-2 p-1">
                                 <button onclick="location.href='/admin/auth/user/{{ user.pk }}/change/'" type="button" class="text-start btn btn-link ms-0">
-                                    <i class="me-2 icon-md fa fa-user-edit"></i>
+                                    <i class="me-2 icon-md mdi mdi-account-edit"></i>
                                     <span>Edit Profile</span>
                                 </button>
                                 {% if request.user.is_superuser %}
                                     <button onclick="location.href='/admin/'" type="button" class="text-start btn btn-link ms-0">
-                                        <i class="me-2 icon-md fa fa-cogs"></i>
+                                        <i class="me-2 icon-md mdi mdi-cogs"></i>
                                         <span>Admin Panel</span>
                                     </button>
                                 {% endif %}
                                 <button type="button" id="change_theme" class="text-start btn btn-link ms-0">
                                     {% if THEME == 'demo2' %}
-                                        <i class="me-2 icon-md fa fa-lightbulb"></i>
+                                        <i class="me-2 icon-md mdi mdi-lightbulb"></i>
                                         <span>Light Theme</span>
                                     {% else %}
-                                        <i class="me-2 icon-md fa fa-lightbulb-o"></i>
+                                        <i class="me-2 icon-md mdi mdi-lightbulb-outline"></i>
                                         <span>Dark Theme</span>
                                     {% endif %}
                                 </button>
                                 <button onclick="location.href='{% url 'logout' %}'" type="button" class="text-start btn btn-link ms-0">
-                                    <i class="me-2 icon-md fa fa-right-from-bracket"></i>
+                                    <i class="me-2 icon-md mdi mdi-logout-variant"></i>
                                     <span>Log Out</span>
                                 </button>
                             </div>
@@ -127,7 +129,7 @@
                                     <h6 class="card-title mb-0">{% block card_title %}All Active Customers{% endblock %}</h6>
                                     <div class="dropdown mb-2">
                                         <button class="btn p-0" type="button" id="dropdownMenuButton7" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="icon-lg text-muted pb-3px fa fa-ellipsis"></i>
+                                            <i class="icon-lg text-muted pb-3px mdi mdi-dots-horizontal"></i>
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton7">
                                             {% include 'base/datatable_dropdown.html' %}
@@ -147,7 +149,7 @@
         <footer class="footer d-flex flex-column flex-md-row align-items-center justify-content-between px-4 py-3 border-top small">
             <p class="text-muted mb-1 mb-md-0">Copyright © 2022 <a href="https://www.wcwater.com" target="_blank">WCWater</a></p>
             <p><a href="#" data-bs-toggle="modal" data-bs-target="#showChangeLog">v{{ LATEST_VERSION.version }}</a></p>
-            <p class="text-muted">Handcrafted With <i class="mb-1 text-primary mx-1 icon-sm fa fa-heart-o"></i> by <a href="https://innovated.tech">Innovated Tech</a></p>
+            <p class="text-muted">Handcrafted With <i class="mb-1 text-primary mx-1 icon-sm mdi mdi-heart"></i> by <a href="https://innovated.tech">Innovated Tech</a></p>
         </footer>
         <!-- partial -->
     </div>

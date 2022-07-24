@@ -1,6 +1,6 @@
 <div class="col-sm-12 table-responsive">
     <h5 class="mb-2">
-        Equipment <button type="button" class="btn btn-link btn-icon float-end" id="addEquipment"><i class="fa fa-plus-circle"></i></button>
+        Equipment <button type="button" class="btn btn-link btn-icon float-end" id="addEquipment"><i class="mdi mdi-plus-circle"></i></button>
     </h5>
 
     <table class="table table-sm">
@@ -16,7 +16,7 @@
             {% for equipment_line in existing_equipment %}
                 <tr>
                     <td style="border-bottom: 0;">
-                        <button type="button" class="btn btn-link btn-icon editEquipmentRow" data-equip-id="{{ equipment_line.pk }}"><i class="fa fa-pencil"></i></button>
+                        <button type="button" class="btn btn-link btn-icon editEquipmentRow" data-equip-id="{{ equipment_line.pk }}"><i class="mdi mdi-pencil"></i></button>
                     </td>
                     <td style="border-bottom: 0;">
                         {% if equipment_line.equipment.name|length > 50 %}<abbr title="{{ equipment_line.equipment.name }}">{% endif %}{{ equipment_line.equipment.name|truncatechars:50 }}</abbr>

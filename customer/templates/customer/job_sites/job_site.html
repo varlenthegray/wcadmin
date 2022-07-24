@@ -4,8 +4,8 @@
 {% if not jobsite.active.value or jobsite.requires_supporting_technician.value %}
     <div class="row">
         <div class="col-sm-12">
-            {% if not jobsite.active.value %}<div class="alert alert-danger" role="alert"><i class="fa fa-user-alt"></i>Job Site is inactive or deleted.</div>{% endif %}
-            {% if jobsite.requires_supporting_technician.value %}<div class="alert alert-warning" role="alert"><i class="fa fa-users"></i>Requires two technicians!</div>{% endif %}
+            {% if not jobsite.active.value %}<div class="alert alert-danger" role="alert"><i class="mdi mdi-account-cancel"></i>Job Site is inactive or deleted.</div>{% endif %}
+            {% if jobsite.requires_supporting_technician.value %}<div class="alert alert-warning" role="alert"><i class="mdi mdi-account-multiple"></i>Requires two technicians!</div>{% endif %}
         </div>
     </div>
 {% endif %}
@@ -23,12 +23,12 @@
             <div class="dropdown-menu">
                 {% for job_site in all_job_sites %}
                     <button type="button" data-job="{{ job_site.pk }}" class="dropdown-item btn btn-sm btn-primary btn-icon-text job_site_load {% if job_site.pk == job_site_id %}active{% endif %}">
-                        <i class="btn-icon-prepend pb-2px fa fa-truck"></i> {% if job_site.name|length > 30 %}<abbr title="{{ job_site.name }}">{% endif %}{{ job_site.name|truncatechars:30 }}</abbr>
+                        <i class="btn-icon-prepend pb-2px mdi mdi-truck"></i> {% if job_site.name|length > 30 %}<abbr title="{{ job_site.name }}">{% endif %}{{ job_site.name|truncatechars:30 }}</abbr>
                     </button>
                 {% endfor %}
                 <div class="dropdown-divider"></div>
                 <button type="button" class="dropdown-item btn btn-sm btn-primary btn-icon-text" data-bs-toggle="modal" data-bs-target="#addJobSiteModal">
-                    <i class="btn-icon-prepend pb-2px fa fa-plus"></i> Add New Job Site
+                    <i class="btn-icon-prepend pb-2px mdi mdi-plus"></i> Add New Job Site
                 </button>
             </div>
         </div>
@@ -39,12 +39,12 @@
 
         {# http://www.google.com/calendar/event?action=TEMPLATE&dates=20220714T010000Z%2F20220714T010000Z&text=Test&location=&details=This%20is%20a%20test #}
         <button class="btn btn-icon p-0 m-0 btn-sm" id="schedule_google_cal" style="padding:0;height:20px;"  title="Schedule on Google Calendar" data-bs-toggle="modal" data-bs-target="#setServiceScheduledModal" data-job-id="{{ job_obj.pk }}" data-job-name="{{ job_obj.name }}" data-google-url="http://www.google.com/calendar/event?action=TEMPLATE&dates={{ job_obj.next_service_date|date:'Ymd' }}T120000%2F{{ job_obj.next_service_date|date:'Ymd' }}T130000&text={{ job_obj.name }} - Scheduled Service&location={{ job_obj.address }}, {{ job_obj.city }}, {{ job_obj.state }} {{ job_obj.zip }}&details={{ job_obj.phone_number }}">
-            <i class="fa fa-calendar-day text-success"></i>
+            <i class="mdi mdi-calendar-plus text-success"></i>
         </button>
 
         <strong class="ms-2 card-title text-uppercase fw-bold">{% if jobsite.name.value|length > 45 %}<abbr title="{{ jobsite.name.value }}">{% endif %}{{ jobsite.name.value|truncatechars:45 }}</abbr></strong>
         <button type="button" class="btn btn-link btn-icon float-end btn-sm" style="padding:0;height:20px;"  data-bs-toggle="modal" data-bs-target="#addJobSiteModal">
-            <i class="fa fa-plus-circle"></i>
+            <i class="mdi mdi-plus-circle"></i>
         </button>
     </div>
 

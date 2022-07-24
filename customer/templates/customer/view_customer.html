@@ -3,7 +3,7 @@
 {% if not customer.is_active.value %}
     <div class="row">
         <div class="col-sm-12">
-            <div class="alert alert-danger" role="alert"><i class="fa fa-user-alt"></i>Customer is inactive or deleted.</div>
+            <div class="alert alert-danger" role="alert"><i class="mdi mdi-account-cancel"></i>Customer is inactive or deleted.</div>
         </div>
     </div>
 {% endif %}
@@ -82,7 +82,7 @@
                     <div class="tab-content border border-top-0 p-3" id="myTabContent">
                         <div class="tab-pane fade show active" id="notes" role="tabpanel" aria-labelledby="notes-tab">
                             <h5 class="mb-2">
-                                Internal Notes <button type="button" class="btn btn-link btn-icon float-end" data-bs-toggle="modal" data-bs-target="#addNoteToCustomer"><i class="fa fa-plus-circle"></i></button>
+                                Internal Notes <button type="button" class="btn btn-link btn-icon float-end" data-bs-toggle="modal" data-bs-target="#addNoteToCustomer"><i class="mdi mdi-plus-circle"></i></button>
                             </h5>
 
                             <div class="row">
