@@ -41,22 +41,4 @@ class EmailHistory(models.Model):
             if self.send_bcc.count() > 1:
                 all_bcc += ', '
 
-        if self.send_bcc.count() > 1:
-            return all_bcc[:-2]
-        else:
-            return all_bcc
-
-    @property
-    def cc_as_comma(self):
-        all_cc = ''
-
-        for customer in self.send_cc.all():
-            all_cc += customer.email
-
-            if self.send_cc.count() > 1:
-                all_cc += ', '
-
-        if self.send_bcc.count() > 1:
-            return all_cc[:-2]
-        else:
-            return all_cc
+        return all_bcc[:-2]
