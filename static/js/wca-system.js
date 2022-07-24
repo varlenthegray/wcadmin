@@ -24,7 +24,7 @@ let wcaSystem = {
 
   setup_mde_editor: function(element, modal = true) {
     function db_insert_field(element_id, database_field) {
-      $(element_id).on('click', function() {
+      $("#" + element_id).on('click', function() {
         let text = simplemde.value();
 
         if(text.length > 0) {
@@ -66,13 +66,13 @@ let wcaSystem = {
       }
     }
 
-    db_insert_field('insert_first_name_mde', '[[customer.first_name]]');
-    db_insert_field('insert_last_name_mde', '[[customer.last_name]]');
-    db_insert_field('insert_company_name_mde', '[[customer.company]]');
-    db_insert_field('insert_print_on_check_name_mde', '[[jobsite.print_on_check_name]]');
-    db_insert_field('insert_email_mde', '[[customer.email]]');
-    db_insert_field('insert_jobsite_name_mde', '[[jobsite.name]]');
-    db_insert_field('insert_next_service_date_mde', '[[jobsite.next_service_date]]');
+    db_insert_field('insert_first_name_mde', '{{customer.first_name}}');
+    db_insert_field('insert_last_name_mde', '{{customer.last_name}}');
+    db_insert_field('insert_company_name_mde', '{{customer.company}}');
+    db_insert_field('insert_print_on_check_name_mde', '{{jobsite.print_on_check_name}}');
+    db_insert_field('insert_email_mde', '{{customer.email}}');
+    db_insert_field('insert_jobsite_name_mde', '{{jobsite.name}}');
+    db_insert_field('insert_next_service_date_mde', '{{jobsite.next_service_date}}');
 
     return simplemde;
   }

@@ -11,10 +11,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import redirect
 
 from .models import EmailHistory, EmailTemplates
-from .forms import CreateEmail, CreateTemplate, SendField
-from customer.models import Customer
-
-from customer.models import JobSite
+from .forms import CreateEmail, CreateTemplate
+from customer.models import Customer, CustomerNotes, JobSite
 
 logger = logging.getLogger(__name__)
 
@@ -36,32 +34,60 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
         form_save.user = self.request.user
         draft = self.request.GET.get('draft')
 
+        cc_form_value = form.cleaned_data.get('send_cc')
+        bcc_form_value = form.cleaned_data.get('send_bcc')
+
         if draft:
             form_save.status = 'draft'
         else:
             form_save.status = 'sent'
 
             send_cc = []
-            send_bcc = []
 
-            for customer in form.cleaned_data.get('send_cc'):
-                send_cc.append(customer.email)
+            for user in cc_form_value:
+                send_cc.append(user.email)
 
-            for customer in form.cleaned_data.get('send_bcc'):
-                send_bcc.append(customer.email)
+            for customer in bcc_form_value:
+                note = CustomerNotes(
+                    subject="Email Sent",
+                    note="An email was sent to this customer.",
+                    created_by=self.request.user,
+                    customer=customer
+                )
 
-            message = EmailMultiAlternatives(
-                subject=form.cleaned_data.get('subject'),
-                body=form.cleaned_data.get('message'),
-                from_email='info@wcwater.com',
-                to=['info@wcwater.com'],
-                bcc=send_bcc,
-                cc=send_cc,
-            )
+                note.save()
 
-            message.attach_alternative(markdown.markdown(form.cleaned_data.get('message')), 'text/html')
+                job_site_record = JobSite.objects.get(customer=customer)
 
-            message.send(fail_silently=False)
+                message_raw = form.cleaned_data.get('message')
+                message_output = message_raw.replace('{{customer.first_name}}', customer.first_name)
+                message_output = message_output.replace('{{customer.last_name}}', customer.last_name)
+                message_output = message_output.replace('{{customer.last_name}}', customer.last_name)
+                message_output = message_output.replace('{{customer.company}}', customer.company)
+                message_output = message_output.replace('{{jobsite.print_on_check_name}}',
+                                                        job_site_record.print_on_check_name)
+                message_output = message_output.replace('{{customer.email}}', customer.email)
+                message_output = message_output.replace('{{jobsite.name}}', job_site_record.name)
+
+                if job_site_record.next_service_date:
+                    message_output = message_output.replace('{{jobsite.next_service_date}}',
+                                                            job_site_record.next_service_date.strftime("%b %d, %Y"))
+                else:
+                    message_output = message_output.replace('{{jobsite.next_service_date}}', "Not Scheduled")
+
+                message = EmailMultiAlternatives(
+                    subject=form.cleaned_data.get('subject'),
+                    body=message_output,
+                    from_email='info@wcwater.com',
+                    to=[customer.email],
+                    cc=send_cc,
+                )
+
+                message.attach_alternative(markdown.markdown(message_output), 'text/html')
+
+                message.send(fail_silently=False)
+
+                form.message = message_output
 
         form.save()
 
@@ -82,18 +108,8 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
             for js_id in raw_job_site_ids:
                 job_site_ids.append(js_id[0])
 
-            job_sites = JobSite.objects.filter(pk__in=job_site_ids).prefetch_related('customer')
-            customers = Customer.objects.filter(jobsite__in=job_site_ids).values_list('id', flat=True)
-
-            field_def = Customer.objects.filter(jobsite__in=job_site_ids).exclude(email=None) \
-                .order_by('first_name', 'last_name', 'company', 'email').values_list('id', flat=True)
-
-            logger.warning(field_def)
-
-            bcc_form = CreateEmail(initial={'send_bcc': Customer.objects.filter(jobsite__in=job_site_ids).exclude(email=None) \
-                .order_by('first_name', 'last_name', 'company', 'email')})
-
-            logger.warning(bcc_form.fields['send_bcc'].__dict__)
+            bcc_form = CreateEmail(initial={'send_bcc': Customer.objects.filter(jobsite__in=job_site_ids)
+                                   .exclude(email=None).order_by('first_name', 'last_name', 'company', 'email')})
 
         response = super().form_invalid(bcc_form)
 
@@ -253,26 +269,51 @@ class ViewDraft(LoginRequiredMixin, generic.UpdateView):
             form_save.status = 'sent'
 
             send_cc = []
-            send_bcc = []
 
-            for customer in form.cleaned_data.get('send_cc'):
-                send_cc.append(customer.email)
+            for user in form.cleaned_data.get('send_cc'):
+                send_cc.append(user.email)
 
             for customer in form.cleaned_data.get('send_bcc'):
-                send_bcc.append(customer.email)
+                note = CustomerNotes(
+                    subject="Email Sent",
+                    note="An email was sent to this customer.",
+                    created_by=self.request.user,
+                    customer=customer
+                )
 
-            message = EmailMultiAlternatives(
-                subject=form.cleaned_data.get('subject'),
-                body=form.cleaned_data.get('message'),
-                from_email='info@wcwater.com',
-                to=['info@wcwater.com'],
-                bcc=send_bcc,
-                cc=send_cc,
-            )
+                note.save()
 
-            message.attach_alternative(markdown.markdown(form.cleaned_data.get('message')), 'text/html')
+                job_site_record = JobSite.objects.get(customer=customer)
 
-            message.send(fail_silently=False)
+                message_raw = form.cleaned_data.get('message')
+                message_output = message_raw.replace('{{customer.first_name}}', customer.first_name)
+                message_output = message_output.replace('{{customer.last_name}}', customer.last_name)
+                message_output = message_output.replace('{{customer.last_name}}', customer.last_name)
+                message_output = message_output.replace('{{customer.company}}', customer.company)
+                message_output = message_output.replace('{{jobsite.print_on_check_name}}',
+                                                        job_site_record.print_on_check_name)
+                message_output = message_output.replace('{{customer.email}}', customer.email)
+                message_output = message_output.replace('{{jobsite.name}}', job_site_record.name)
+
+                if job_site_record.next_service_date:
+                    message_output = message_output.replace('{{jobsite.next_service_date}}',
+                                                            job_site_record.next_service_date.strftime("%b %d, %Y"))
+                else:
+                    message_output = message_output.replace('{{jobsite.next_service_date}}', "Not Scheduled")
+
+                message = EmailMultiAlternatives(
+                    subject=form.cleaned_data.get('subject'),
+                    body=message_output,
+                    from_email='info@wcwater.com',
+                    to=[customer.email],
+                    cc=send_cc,
+                )
+
+                message.attach_alternative(markdown.markdown(message_output), 'text/html')
+
+                message.send(fail_silently=False)
+
+                form.message = message_output
 
         form.save()
 

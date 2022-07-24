@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.conf import settings
 from customer.models import Customer
@@ -20,7 +21,7 @@ class EmailTemplates(models.Model):
 
 class EmailHistory(models.Model):
     send_bcc = models.ManyToManyField(Customer, blank=True, related_name='send_bcc')
-    send_cc = models.ManyToManyField(Customer, blank=True, related_name='send_cc')
+    send_cc = models.ManyToManyField(User, blank=True, related_name='send_cc')
     subject = models.CharField(max_length=200)
     message = models.TextField()
     template_used = models.ForeignKey(EmailTemplates, on_delete=models.CASCADE, blank=True, null=True)
