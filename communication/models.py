@@ -20,7 +20,7 @@ class EmailTemplates(models.Model):
 
 
 class EmailHistory(models.Model):
-    send_bcc = models.ManyToManyField(Customer, blank=True, related_name='send_bcc')
+    send_to = models.ManyToManyField(Customer, blank=True, related_name='send_to')
     send_cc = models.ManyToManyField(User, blank=True, related_name='send_cc')
     subject = models.CharField(max_length=200)
     message = models.TextField()
@@ -33,19 +33,19 @@ class EmailHistory(models.Model):
         ordering = ['-timestamp']
 
     @property
-    def bcc_as_comma(self):
-        all_bcc = ''
+    def to_as_comma(self):
+        all_to = ''
 
-        for customer in self.send_bcc.all():
-            all_bcc += customer.email
+        for customer in self.send_to.all():
+            all_to += customer.email
 
-            if self.send_bcc.count() > 1:
-                all_bcc += ', '
+            if self.send_to.count() > 1:
+                all_to += ', '
 
-        if self.send_bcc.count() > 1:
-            return all_bcc[:-2]
+        if self.send_to.count() > 1:
+            return all_to[:-2]
         else:
-            return all_bcc
+            return all_to
 
     @property
     def cc_as_comma(self):
@@ -57,7 +57,7 @@ class EmailHistory(models.Model):
             if self.send_cc.count() > 1:
                 all_cc += ', '
 
-        if self.send_bcc.count() > 1:
+        if self.send_cc.count() > 1:
             return all_cc[:-2]
         else:
             return all_cc

@@ -16,7 +16,7 @@ class SendField(ModelMultipleChoiceField):
 
 
 class CreateEmail(forms.ModelForm):
-    send_bcc = SendField(queryset=Customer.objects.all().exclude(email=None)
+    send_to = SendField(queryset=Customer.objects.all().exclude(email=None)
                          .order_by('first_name', 'last_name', 'company', 'email'), required=False)
     send_cc = SendField(queryset=User.objects.all().exclude(email='')
                         .order_by('first_name', 'last_name', 'username'), required=False)
@@ -24,7 +24,7 @@ class CreateEmail(forms.ModelForm):
 
     class Meta:
         model = EmailHistory
-        fields = ['send_bcc', 'send_cc', 'subject', 'message', 'template_used']
+        fields = ['send_to', 'send_cc', 'subject', 'message', 'template_used']
 
 
 class CreateTemplate(forms.ModelForm):

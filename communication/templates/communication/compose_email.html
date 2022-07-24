@@ -68,10 +68,10 @@
                                     </div>
                                     <div class="p-3 pb-0">
                                         <div class="row mb-3">
-                                            {{ form.send_bcc.errors }}
-                                            <label class="col-md-2 col-form-label" for="{{ form.send_bcc.id_for_label }}"><abbr title="Not visible to recipients.">BCC</abbr></label>
+                                            {{ form.send_to.errors }}
+                                            <label class="col-md-2 col-form-label" for="{{ form.send_to.id_for_label }}"><abbr title="Not visible to recipients.">TO:</abbr></label>
                                             <div class="col-md-10" style="max-height: 120px; overflow-y: auto; overflow-x: hidden;">
-                                                {{ form.send_bcc|add_class:"form-control" }}
+                                                {{ form.send_to|add_class:"form-control" }}
                                             </div>
                                         </div>
                                         <div class="row mb-3">
@@ -133,7 +133,7 @@
       $(function() {
         simplemde = wcaSystem.setup_mde_editor('#{{ form.message.id_for_label }}');
 
-        $("#{{ form.send_bcc.id_for_label }}").select2({
+        $("#{{ form.send_to.id_for_label }}").select2({
           tags: true,
         });
 

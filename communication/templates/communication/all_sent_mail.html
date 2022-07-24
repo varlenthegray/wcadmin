@@ -17,7 +17,7 @@
         <table class="table table-sm table-dark table-bordered">
             <tr>
                 <th width="45%">Subject</th>
-                <th width="20%">BCC</th>
+                <th width="20%">To</th>
                 <th width="20%">Saved On</th>
                 <th width="25%">Sent By</th>
             </tr>
@@ -25,7 +25,7 @@
                 <tr>
                     <td><a href="{% url 'emailViewSentEmail' pk=email.pk %}" class="view_sent_email">{{ email.subject }}</a></td>
                     <td>
-                        {% if email.bcc_as_comma|length > 40 %}<abbr title="{{ email.bcc_as_comma }}">{% endif %}{{ email.bcc_as_comma|truncatechars:40 }}</abbr>
+                        {% if email.to_as_comma|length > 40 %}<abbr title="{{ email.to_as_comma }}">{% endif %}{{ email.to_as_comma|truncatechars:40 }}</abbr>
                     </td>
                     <td>{{ email.timestamp|date:'m-d-Y P' }}</td>
                     <td>{% if email.user.first_name %}{{ email.user.first_name }} {{ email.user.last_name }}{% else %}{{ email.user.username }}{% endif %}</td>

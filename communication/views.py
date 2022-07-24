@@ -35,7 +35,7 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
         draft = self.request.GET.get('draft')
 
         cc_form_value = form.cleaned_data.get('send_cc')
-        bcc_form_value = form.cleaned_data.get('send_bcc')
+        to_form_value = form.cleaned_data.get('send_to')
 
         if draft:
             form_save.status = 'draft'
@@ -47,7 +47,7 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
             for user in cc_form_value:
                 send_cc.append(user.email)
 
-            for customer in bcc_form_value:
+            for customer in to_form_value:
                 note = CustomerNotes(
                     subject="Email Sent",
                     note="An email was sent to this customer.",
@@ -97,7 +97,7 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
             return HttpResponseRedirect('?save_draft=true')
 
     def form_invalid(self, form):
-        bcc_form = form
+        to_form = form
 
         if self.request.POST.get('data'):
             # fancy footwork to get POST data and represent it as an array, then get objects from the array
@@ -108,10 +108,10 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
             for js_id in raw_job_site_ids:
                 job_site_ids.append(js_id[0])
 
-            bcc_form = CreateEmail(initial={'send_bcc': Customer.objects.filter(jobsite__in=job_site_ids)
-                                   .exclude(email=None).order_by('first_name', 'last_name', 'company', 'email')})
+            to_form = CreateEmail(initial={'send_to': Customer.objects.filter(jobsite__in=job_site_ids)
+                                  .exclude(email=None).order_by('first_name', 'last_name', 'company', 'email')})
 
-        response = super().form_invalid(bcc_form)
+        response = super().form_invalid(to_form)
 
         if self.request.accepts('text/html'):
             return response
@@ -188,9 +188,9 @@ def get_existing_template(request, pk):
 @login_required
 def get_email_history(request, pk):
     existing_email = EmailHistory.objects.filter(pk=pk).values()
-    bcc_list = list(existing_email)
+    to_list = list(existing_email)
 
-    return JsonResponse(bcc_list, safe=False)
+    return JsonResponse(to_list, safe=False)
 
 
 class CreateNewTemplate(LoginRequiredMixin, generic.CreateView):
@@ -222,7 +222,7 @@ class ViewSentEmail(LoginRequiredMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['sent_email'] = EmailHistory.objects.prefetch_related('send_bcc', 'send_cc__send_cc').get(
+        context['sent_email'] = EmailHistory.objects.prefetch_related('send_to__send_to', 'send_cc__send_cc').get(
             pk=self.object.pk)
 
         return context
@@ -273,7 +273,7 @@ class ViewDraft(LoginRequiredMixin, generic.UpdateView):
             for user in form.cleaned_data.get('send_cc'):
                 send_cc.append(user.email)
 
-            for customer in form.cleaned_data.get('send_bcc'):
+            for customer in form.cleaned_data.get('send_to'):
                 note = CustomerNotes(
                     subject="Email Sent",
                     note="An email was sent to this customer.",

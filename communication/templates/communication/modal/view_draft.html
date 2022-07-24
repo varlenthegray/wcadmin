@@ -12,10 +12,10 @@
             </div>
             <div class="p-3 pb-0">
                 <div class="row mb-3">
-                    {{ form.send_bcc.errors }}
-                    <label class="col-md-2 col-form-label" for="{{ form.send_bcc.id_for_label }}"><abbr title="Not visible to recipients.">BCC</abbr></label>
+                    {{ form.send_to.errors }}
+                    <label class="col-md-2 col-form-label" for="{{ form.send_to.id_for_label }}"><abbr title="Not visible to recipients.">TO:</abbr></label>
                     <div class="col-md-10">
-                        {{ form.send_bcc|add_class:"form-control"|attr:"style:width:100%" }}
+                        {{ form.send_to|add_class:"form-control"|attr:"style:width:100%" }}
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -70,7 +70,7 @@
       $("#draft_form").attr('action', '{% url 'viewEmailDraft' pk=object.pk %}?draft=true').submit();
     });
 
-    $("#{{ form.send_bcc.id_for_label }}").select2({
+    $("#{{ form.send_to.id_for_label }}").select2({
       tags: true,
       dropdownParent: container.parent(),
     });

@@ -10,9 +10,9 @@
         </div>
         <div class="p-3 pb-0">
             <div class="row mb-3">
-                <div class="col-md-1 col-form-label"><abbr title="Not visible to recipients.">BCC:</abbr></div>
+                <div class="col-md-1 col-form-label"><abbr title="Not visible to recipients.">TO:</abbr></div>
                 <div class="col-md-11 col-form-label">
-                    {{ sent_email.bcc_as_comma|default:"<em>N/A</em>" }}
+                    {{ sent_email.to_as_comma|default:"<em>N/A</em>" }}
                 </div>
             </div>
             <div class="row mb-3">

@@ -16,7 +16,7 @@
         <table class="table table-sm table-dark table-bordered">
             <tr>
                 <th width="45%">Subject</th>
-                <th width="20%">BCC</th>
+                <th width="20%">To</th>
                 <th width="20%">Saved On</th>
                 <th width="25%">Created By</th>
             </tr>
@@ -24,7 +24,7 @@
                 <tr>
                     <td><a href="{% url 'viewEmailDraft' pk=draft.pk %}" class="view_email_draft">{{ draft.subject }}</a></td>
                     <td>
-                        {% if draft.bcc_as_comma|length > 40 %}<abbr title="{{ draft.bcc_as_comma }}">{% endif %}{{ draft.bcc_as_comma|truncatechars:40 }}</abbr>
+                        {% if draft.to_as_comma|length > 40 %}<abbr title="{{ draft.to_as_comma }}">{% endif %}{{ draft.to_as_comma|truncatechars:40 }}</abbr>
                     </td>
                     <td>{{ draft.timestamp|date:'m-d-Y P' }}</td>
                     <td>{% if draft.user.first_name %}{{ draft.user.first_name }} {{ draft.user.last_name }}{% else %}{{ draft.user.username }}{% endif %}</td>
