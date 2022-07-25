@@ -78,7 +78,7 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
                 message = EmailMultiAlternatives(
                     subject=form.cleaned_data.get('subject'),
                     body=message_output,
-                    from_email='info@wcwater.com',
+                    from_email='West Carolina Water Treatment <info@wcwater.com>',
                     to=[customer.email],
                     cc=send_cc,
                 )
@@ -304,7 +304,7 @@ class ViewDraft(LoginRequiredMixin, generic.UpdateView):
                 message = EmailMultiAlternatives(
                     subject=form.cleaned_data.get('subject'),
                     body=message_output,
-                    from_email='info@wcwater.com',
+                    from_email='West Carolina Water Treatment <info@wcwater.com>',
                     to=[customer.email],
                     cc=send_cc,
                 )
