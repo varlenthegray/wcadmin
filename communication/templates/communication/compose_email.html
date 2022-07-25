@@ -133,13 +133,9 @@
       $(function() {
         simplemde = wcaSystem.setup_mde_editor('#{{ form.message.id_for_label }}');
 
-        $("#{{ form.send_to.id_for_label }}").select2({
-          tags: true,
-        });
+        $("#{{ form.send_to.id_for_label }}").select2();
 
-        $("#{{ form.send_cc.id_for_label }}").select2({
-          tags: true,
-        });
+        $("#{{ form.send_cc.id_for_label }}").select2();
 
         $("#{{ form.template_used.id_for_label }}").on('change', function() {
           let selected_id = $(this).val();
