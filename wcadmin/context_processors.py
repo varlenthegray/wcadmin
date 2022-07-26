@@ -5,6 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from qb.models import QBSystem
 from main.models import VersionLog
 from users.models import Preferences
+from customer.models import JobSite
 
 
 def load_qb_system(request):
@@ -32,3 +33,8 @@ def get_theme(request):
             return {'THEME': preferences.theme}
     else:
         return {'THEME': 'demo2'}
+
+
+def get_all_jobsites(request):
+    job_sites = JobSite.objects.filter(active=True)
+    return {'ALL_JOB_SITES': job_sites}

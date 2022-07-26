@@ -83,6 +83,7 @@ TEMPLATES = [
                 'wcadmin.context_processors.determine_production_status',
                 'wcadmin.context_processors.get_version_info',
                 'wcadmin.context_processors.get_theme',
+                'wcadmin.context_processors.get_all_jobsites',
             ],
         },
     },

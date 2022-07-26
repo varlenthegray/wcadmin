@@ -12,6 +12,15 @@
 
 <div class="sidebar-body">
     <ul class="nav">
+        <li class="nav-item nav-category"><label for="global_select_customer">Select Customer</label></li>
+        <li class="nav-item">
+            <select class="form-control" id="global_select_customer" style="width:100%;">
+                <option value="" disabled selected>---------</option>
+                {% for job_site in ALL_JOB_SITES %}
+                    <option value="{{ job_site.pk }}">{{ job_site.name }}</option>
+                {% endfor %}
+            </select>
+        </li>
         <li class="nav-item nav-category">Main</li>
         <li class="nav-item">
             <a href="{% url 'dashboard' %}" class="nav-link">
@@ -20,12 +29,12 @@
             </a>
         </li>
         {% if request.user.is_superuser %}
-        <li class="nav-item">
-            <a href="{% url 'qbDashboard' %}" class="nav-link">
-                <i class="link-icon mdi mdi-satellite-uplink"></i>
-                <span class="link-title">QuickBooks</span>
-            </a>
-        </li>
+            <li class="nav-item">
+                <a href="{% url 'qbDashboard' %}" class="nav-link">
+                    <i class="link-icon mdi mdi-satellite-uplink"></i>
+                    <span class="link-title">QuickBooks</span>
+                </a>
+            </li>
         {% endif %}
         <li class="nav-item nav-category">Apps</li>
         <li class="nav-item">
@@ -89,3 +98,17 @@
         </li>
     </ul>
 </div>
+
+<script>
+  $(function() {
+    let select_ele = $("#global_select_customer");
+
+    let select = select_ele.select2({
+      dropdownParent: $(".sidebar-body"),
+    });
+
+    select.on("change", function() {
+      location.href = '{% url 'viewSpecificJobSite' pk=999999999 %}'.replace(/999999999/, $(this).val());
+    });
+  });
+</script>
