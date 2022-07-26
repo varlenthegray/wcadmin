@@ -85,7 +85,7 @@
 
             if(data.address !== '' && data.address !== null) {
               return '<a href="https://www.google.com/maps/place/' + data.address + ',' + data.city + ',' + data.state + ' ' + data.zip + '" target="_blank">' +
-                  '<i class="mdi mdi-map-marker"></i> &nbsp; ' + stringManipulations.truncate(data.address, trim) + '<br>' + stringManipulations.truncate(data.city, trim) + ', ' + data.state + ' ' + data.zip +
+                  '<i class="mdi mdi-map-marker"></i> &nbsp; ' + stringManipulations.truncate(data.address, trim) + '&nbsp;<br>' + stringManipulations.truncate(data.city, trim) + ', ' + data.state + ' ' + data.zip +
                   '</a>';
             } else {
               return 'N/A';
