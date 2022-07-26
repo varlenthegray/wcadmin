@@ -54,7 +54,7 @@ let wcaSystem = {
             },
             className: 'fa fa-magic',
             title: 'Insert Database Field'
-          }]
+          }],
       });
 
       if(modal) {

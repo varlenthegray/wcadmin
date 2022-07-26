@@ -56,7 +56,7 @@
     {% for job in jobsite %}
         {% if job.address %}
             <div class="address-label">
-                {{ job.print_on_check_name }}<br/>
+                {% if job.print_on_check_name|length > 1 %}{{ job.print_on_check_name }}{% else %}{{ job.first_name }} {{ job.last_name }}{% endif %}<br/>
                 {{ job.customer.billing_address_1 }}<br/>
                 {% if job.customer.billing_address_2 %}{{ job.customer.billing_address_2 }}<br/>{% endif %}
                 {{ job.customer.billing_city }}, {{ job.customer.billing_state }} {{ job.customer.billing_zip }}
