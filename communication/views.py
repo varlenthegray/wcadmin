@@ -75,11 +75,13 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
                 else:
                     message_output = message_output.replace('{{jobsite.next_service_date}}', "Not Scheduled")
 
+                email_addresses_exploded = customer.email.split(',')
+
                 message = EmailMultiAlternatives(
                     subject=form.cleaned_data.get('subject'),
                     body=message_output,
                     from_email='West Carolina Water Treatment <info@wcwater.com>',
-                    to=[customer.email],
+                    to=[email_addresses_exploded],
                     cc=send_cc,
                 )
 
