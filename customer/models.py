@@ -1,3 +1,5 @@
+import re
+
 from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.utils import timezone
@@ -31,6 +33,9 @@ class Customer(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+    def phone_digits_only(self):
+        return re.sub("[^0-9]", "", self.main_phone)
 
 
 class CustomerNotes(models.Model):
@@ -68,6 +73,9 @@ class JobSite(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+    def phone_digits_only(self):
+        return re.sub("[^0-9]", "", self.phone_number)
 
     @property
     def is_past_due(self):

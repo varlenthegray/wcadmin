@@ -1,5 +1,12 @@
 {% load static %}
 
+<style>
+    #bloodhound_customers .tt-menu {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+</style>
+
 <div class="sidebar-header">
     <a href="{% url 'dashboard' %}" class="sidebar-brand">WCWT<span class="{% if not IS_LIVE %}text-danger{% endif %}">{% if IS_LIVE %}Admin{% else %}Dev{% endif %}</span></a>
 
@@ -12,14 +19,11 @@
 
 <div class="sidebar-body">
     <ul class="nav">
-        <li class="nav-item nav-category"><label for="global_select_customer">Select Customer</label></li>
+        <li class="nav-item nav-category"><label for="global_search_customers">Search Customers</label></li>
         <li class="nav-item">
-            <select class="form-control" id="global_select_customer" style="width:100%;">
-                <option value="" disabled selected>---------</option>
-                {% for job_site in ALL_JOB_SITES %}
-                    <option value="{{ job_site.pk }}">{{ job_site.name }}</option>
-                {% endfor %}
-            </select>
+            <div id="bloodhound_customers">
+                <input class="typeahead form-control" type="text" id="global_search_customers" placeholder="Search Customers...">
+            </div>
         </li>
         <li class="nav-item nav-category">Main</li>
         <li class="nav-item">
@@ -109,6 +113,25 @@
 
     select.on("change", function() {
       location.href = '{% url 'viewSpecificJobSite' pk=999999999 %}'.replace(/999999999/, $(this).val());
+    });
+
+    let allJobSites = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      prefetch: '{% url 'mainSearchDefault' %}',
+      remote: {
+        url: '{% url 'mainSearchSpecific' search_term='ZZZZZZZXXXXXX1' %}'.replace('ZZZZZZZXXXXXX1', '%QUERY'),
+        wildcard: '%QUERY'
+      }
+    });
+
+    $('#bloodhound_customers .typeahead').typeahead({
+      highlight: true,
+    }, {
+      name: 'search-all-customers',
+      display: 'value',
+      limit: 30,
+      source: allJobSites
     });
   });
 </script>

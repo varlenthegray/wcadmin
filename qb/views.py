@@ -30,7 +30,6 @@ from quickbooks.objects.item import Item as qbItem
 from quickbooks.objects.company_info import CompanyInfo as qbCompanyInfo
 
 from customer.models import Customer, JobSite, JobSiteEquipment
-# from jobsite.models import JobSite, JobSiteEquipment
 from equipment.models import Equipment
 
 from .models import Invoice, InvoiceLine, QBSystem
