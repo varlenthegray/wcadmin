@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_datatables',
     'markdownify',
-    'haystack',
 ]
 
 MIDDLEWARE = [
@@ -168,10 +167,4 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
     'PAGE_SIZE': 50,
-}
-
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
-    },
 }
