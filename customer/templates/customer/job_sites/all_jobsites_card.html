@@ -98,9 +98,10 @@
           orderable: false,
           render: function (data, type, row, meta) {
             let trim = 18;
+            let phone_formatted = data.phone_number.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
 
             if(data.phone_number !== '' && data.phone_number !== null) {
-              return '<a href="tel:1' + data.phone_number + '"><i class="mdi mdi-phone"></i> &nbsp; ' + stringManipulations.truncate(data.phone_number, trim);
+              return '<a href="tel:1' + data.phone_number + '"><i class="mdi mdi-phone"></i> &nbsp; ' + stringManipulations.truncate(phone_formatted, trim);
             } else {
               return 'N/A';
             }

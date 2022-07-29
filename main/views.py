@@ -1,15 +1,14 @@
 import logging
-import re
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.search import SearchVector, SearchQuery
-from django.db.models import Q, F
+from django.utils.text import Truncator
+from django.db.models import Q
 from django.http import JsonResponse
 from django.views import generic
 
 from .models import VersionLog
-
 from customer.models import JobSite
 
 logger = logging.getLogger(__name__)
@@ -29,7 +28,11 @@ def search_system(request, search_term=False):
             Q(last_name__icontains=search_term) |
             Q(quickbooks_id__icontains=search_term) |
             Q(email__icontains=search_term) |
-            Q(phone_number_digits=search_term)
+            Q(phone_number__icontains=search_term) |
+            Q(address__icontains=search_term) |
+            Q(city__icontains=search_term) |
+            Q(state__icontains=search_term) |
+            Q(zip__icontains=search_term)
         )
     else:
         job_sites = JobSite.objects.all().prefetch_related('customer')
@@ -37,12 +40,7 @@ def search_system(request, search_term=False):
     data = []
 
     for job in job_sites:
-        if job.first_name and job.last_name:
-            name = job.first_name + ' ' + job.last_name
-        elif job.customer.company:
-            name = job.customer.company
-        else:
-            name = job.customer.first_name + ' ' + job.customer.last_name
+        name = Truncator(job.display_name).chars(25)
 
         this_job = {'value': name}
 

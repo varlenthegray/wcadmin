@@ -188,7 +188,7 @@
 {% block page_script %}
     <script>
       $(function() {
-        $("#{{ form.phone_number.id_for_label }}").inputmask("(999) 999-9999");
+        $("#{{ form.phone_number.id_for_label }}").inputmask("(999) 999-9999", {removeMaskOnSubmit: true});
 
         let datePickerNextDate = $("#{{ form.next_service_date.id_for_label }}");
 

@@ -78,6 +78,15 @@ class JobSite(models.Model):
         return re.sub("[^0-9]", "", self.phone_number)
 
     @property
+    def display_name(self):
+        if self.first_name:
+            return f"{self.first_name} {self.last_name}"
+        elif self.customer.company:
+            return f"{self.customer.company}"
+        else:
+            return f"{self.customer.first_name} {self.customer.last_name}"
+
+    @property
     def is_past_due(self):
         ignore_after = timezone.localdate() - relativedelta(years=5)
 

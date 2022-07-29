@@ -104,7 +104,7 @@
   $(function() {
     let nsd_field = $(".next-service-date");
 
-    $(".phone-number").inputmask("(999) 999-9999");
+    $(".phone-number").inputmask("(999) 999-9999", {removeMaskOnSubmit: true});
     nsd_field.inputmask("99-99-9999");
     $(".service-int").inputmask("999");
     $(".state").inputmask("AA");
