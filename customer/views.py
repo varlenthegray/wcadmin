@@ -293,7 +293,7 @@ class JobSitesREST(viewsets.ModelViewSet):
             base_query = JobSite.objects.filter(active=True).filter(disable_service=False)
 
         if search:
-            base_query = JobSite.objects.filter(
+            base_query = JobSite.objects.distinct.filter(
                 Q(first_name__icontains=search) | Q(last_name__icontains=search) |
                 Q(quickbooks_id__icontains=search) | Q(email__icontains=search) |
                 Q(phone_number__icontains=search) | Q(address__icontains=search) |
