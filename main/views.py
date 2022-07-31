@@ -23,7 +23,7 @@ class GetChangeLog(LoginRequiredMixin, generic.ListView):
 @login_required
 def search_system(request, search_term=False):
     if search_term:
-        job_sites = JobSite.objects.distinct.filter(
+        job_sites = JobSite.objects.filter(
             Q(first_name__icontains=search_term) | Q(last_name__icontains=search_term) |
             Q(quickbooks_id__icontains=search_term) | Q(email__icontains=search_term) |
             Q(phone_number__icontains=search_term) | Q(address__icontains=search_term) |
