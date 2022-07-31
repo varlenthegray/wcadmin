@@ -2,5 +2,8 @@ from django.contrib import admin
 from . import models
 
 
-# Register your models here.
-admin.site.register(models.Equipment)
+class EquipmentAdmin(admin.ModelAdmin):
+    list_display = ['quickbooks_id', 'sku', 'name', 'cost', 'is_active', 'created_on']
+
+
+admin.site.register(models.Equipment, EquipmentAdmin)

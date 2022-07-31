@@ -1,4 +1,9 @@
 from django.contrib import admin
 from . import models
 
-admin.site.register(models.VersionLog)
+
+class VersionLogAdmin(admin.ModelAdmin):
+    list_display = ['version', 'when']
+
+
+admin.site.register(models.VersionLog, VersionLogAdmin)

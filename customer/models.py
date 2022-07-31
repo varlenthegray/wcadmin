@@ -31,6 +31,10 @@ class Customer(models.Model):
     is_active = models.BooleanField(default=True)
     qb_created_on = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        verbose_name = 'Customer'
+        verbose_name_plural = 'Customers'
+
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
@@ -44,6 +48,13 @@ class CustomerNotes(models.Model):
     timestamp = models.DateTimeField(editable=False, auto_now=True)
     note = models.TextField()
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
+
+    class Meta:
+        verbose_name = 'Customer Note'
+        verbose_name_plural = 'Customer Notes'
+
+    def __str__(self):
+        return f"{self.note}"
 
 
 class JobSite(models.Model):
@@ -70,6 +81,10 @@ class JobSite(models.Model):
     service_scheduled = models.BooleanField(default=False)
     disable_service = models.BooleanField(default=False)
     qb_created_on = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Job Site'
+        verbose_name_plural = 'Job Sites'
 
     def __str__(self):
         return f'{self.name}'
@@ -116,6 +131,10 @@ class JobSiteEquipment(models.Model):
     tags = models.CharField(max_length=512, blank=True, null=True)
     added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, editable=False)
     installed_on = models.DateField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Job Site Equipment'
+        verbose_name_plural = 'All Job Site Equipment'
 
     def tags_as_list(self):
         return self.tags.split(',')

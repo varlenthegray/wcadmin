@@ -14,6 +14,8 @@ class EmailTemplates(models.Model):
 
     class Meta:
         ordering = ['-last_updated_on']
+        verbose_name = 'Email Template'
+        verbose_name_plural = 'Email Templates'
 
     def __str__(self):
         return f'{self.template_name}'
@@ -31,6 +33,11 @@ class EmailHistory(models.Model):
 
     class Meta:
         ordering = ['-timestamp']
+        verbose_name = 'Email History'
+        verbose_name_plural = 'All Email History'
+
+    def __str__(self):
+        return f'{self.subject}'
 
     @property
     def to_as_comma(self):

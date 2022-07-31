@@ -22,6 +22,8 @@ class Equipment(models.Model):
 
     class Meta:
         ordering = ['name']
+        verbose_name = 'Equipment'
+        verbose_name_plural = 'All Equipment'
 
     def __str__(self):
         return f"{self.name}"
