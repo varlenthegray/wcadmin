@@ -93,6 +93,13 @@ class JobSite(models.Model):
         return re.sub("[^0-9]", "", self.phone_number)
 
     @property
+    def display_full_address(self):
+        if self.address_2:
+            return f"{self.address} \n{self.address_2} \n{self.city}, {self.state} {self.zip}"
+        else:
+            return f"{self.address} \n{self.city}, {self.state} {self.zip}"
+
+    @property
     def display_name(self):
         if self.first_name:
             return f"{self.first_name} {self.last_name}"

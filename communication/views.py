@@ -68,6 +68,7 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
                                                         job_site_record.print_on_check_name)
                 message_output = message_output.replace('{{customer.email}}', customer.email)
                 message_output = message_output.replace('{{jobsite.name}}', job_site_record.name)
+                message_output = message_output.replace('{{jobsite.address_full}}', job_site_record.display_full_address)
 
                 if job_site_record.next_service_date:
                     message_output = message_output.replace('{{jobsite.next_service_date}}',

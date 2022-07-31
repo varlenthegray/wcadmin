@@ -73,6 +73,7 @@ let wcaSystem = {
     db_insert_field('insert_email_mde', '{{customer.email}}');
     db_insert_field('insert_jobsite_name_mde', '{{jobsite.name}}');
     db_insert_field('insert_next_service_date_mde', '{{jobsite.next_service_date}}');
+    db_insert_field('insert_address_mde', '{{jobsite.address_full}}');
 
     return simplemde;
   }
