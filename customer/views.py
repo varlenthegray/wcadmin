@@ -2,6 +2,7 @@ import logging
 import simplejson
 
 from django.contrib.postgres.search import SearchVector
+from django.db.models import Q
 from django.shortcuts import render
 from django.utils import timezone
 from django.views import generic
@@ -292,10 +293,12 @@ class JobSitesREST(viewsets.ModelViewSet):
             base_query = JobSite.objects.filter(active=True).filter(disable_service=False)
 
         if search:
-            base_query = JobSite.objects.annotate(
-                search=SearchVector('quickbooks_id', 'name', 'address', 'address_2', 'city', 'state', 'zip',
-                                    'phone_number', 'email', 'customer__company', 'invoice__invoice_num')
-            ).filter(search__icontains=search)
+            base_query = JobSite.objects.filter(
+                Q(first_name__icontains=search) | Q(last_name__icontains=search) |
+                Q(quickbooks_id__icontains=search) | Q(email__icontains=search) |
+                Q(phone_number__icontains=search) | Q(address__icontains=search) |
+                Q(city__icontains=search) | Q(state__icontains=search) | Q(zip__icontains=search)
+            )
 
         if report_info == 'last_month':
             base_query = base_query.filter(next_service_date__month=(timezone.now().month - 1)) \

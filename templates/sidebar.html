@@ -22,7 +22,7 @@
         <li class="nav-item nav-category"><label for="global_search_customers">Search Customers</label></li>
         <li class="nav-item">
             <div id="bloodhound_customers">
-                <input class="typeahead form-control" type="text" id="global_search_customers" placeholder="Search Customers...">
+                <input class="typeahead form-control" type="text" id="global_search_customers" placeholder="Search...">
             </div>
         </li>
         <li class="nav-item nav-category">Main</li>
@@ -118,10 +118,21 @@
     let allJobSites = new Bloodhound({
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
-      prefetch: '{% url 'mainSearchDefault' %}',
+      prefetch: {
+        url: '{% url 'mainSearchDefault' %}'
+      },
       remote: {
         url: '{% url 'mainSearchSpecific' search_term='ZZZZZZZXXXXXX1' %}'.replace('ZZZZZZZXXXXXX1', '%QUERY'),
-        wildcard: '%QUERY'
+        wildcard: '%QUERY',
+        filter: function (data) {
+          if (data) {
+            return $.map(data, function (object) {
+              return { id: object.id, value: object.value };
+            });
+          } else {
+            return {};
+          }
+        }
       }
     });
 
@@ -132,6 +143,8 @@
       display: 'value',
       limit: 100,
       source: allJobSites
+    }).on('typeahead:selected', function (e, suggestion) {
+      window.location.replace('{% url 'viewSpecificJobSite' pk=999999999 %}'.replace('999999999', suggestion.id))
     });
   });
 </script>

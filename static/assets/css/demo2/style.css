@@ -2287,7 +2287,7 @@ progress {
 
 .form-control, .typeahead.tt-input,
 .typeahead.tt-hint, .select2-container--default .select2-search--dropdown .select2-search__field {
-  display: block;
+  display: inline-block;
   width: 100%;
   padding: 0.469rem 0.8rem;
   font-size: 0.875rem;
