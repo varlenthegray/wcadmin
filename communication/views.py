@@ -52,7 +52,8 @@ class EmailHomepage(LoginRequiredMixin, generic.CreateView):
                     subject="Email Sent",
                     note="An email was sent to this customer.",
                     created_by=self.request.user,
-                    customer=customer
+                    customer=customer,
+                    system_note=True
                 )
 
                 note.save()
@@ -282,7 +283,8 @@ class ViewDraft(LoginRequiredMixin, generic.UpdateView):
                     subject="Email Sent",
                     note="An email was sent to this customer.",
                     created_by=self.request.user,
-                    customer=customer
+                    customer=customer,
+                    system_note=True
                 )
 
                 note.save()

@@ -48,6 +48,7 @@ class CustomerNotes(models.Model):
     timestamp = models.DateTimeField(editable=False, auto_now=True)
     note = models.TextField()
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
+    system_note = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Customer Note'

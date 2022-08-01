@@ -365,7 +365,8 @@ def print_address_labels(request, *args, **kwargs):
             subject='Address Label requested to print',
             note=f'{request.user.first_name} {request.user.last_name} attempted to print address labels.',
             created_by=request.user,
-            customer=job.customer
+            customer=job.customer,
+            system_note=True
         )
 
         note.save()
