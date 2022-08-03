@@ -36,6 +36,8 @@
     <orderEntry type="library" name="@mdi/font" level="application" />
     <orderEntry type="library" name="jquery-typeahead" level="application" />
     <orderEntry type="library" name="corejs-typeahead" level="application" />
+    <orderEntry type="library" name="bootstrap" level="application" />
+    <orderEntry type="library" name="html2pdf.js" level="application" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />

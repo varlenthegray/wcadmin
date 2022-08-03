@@ -2,7 +2,6 @@ import logging
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.postgres.search import SearchVector, SearchQuery
 from django.utils.text import Truncator
 from django.db.models import Q
 from django.http import JsonResponse
@@ -27,7 +26,8 @@ def search_system(request, search_term=False):
             Q(first_name__icontains=search_term) | Q(last_name__icontains=search_term) |
             Q(quickbooks_id__icontains=search_term) | Q(email__icontains=search_term) |
             Q(phone_number__icontains=search_term) | Q(address__icontains=search_term) |
-            Q(city__icontains=search_term) | Q(state__icontains=search_term) | Q(zip__icontains=search_term)
+            Q(city__icontains=search_term) | Q(state__icontains=search_term) | Q(zip__icontains=search_term) |
+            Q(customer__company__icontains=search_term)
         )
     else:
         job_sites = JobSite.objects.all().prefetch_related('customer')

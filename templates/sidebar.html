@@ -49,8 +49,20 @@
             </a>
             <div class="collapse" id="uiCustomers">
                 <ul class="nav sub-menu">
-                    <li class="nav-item"><a href="{% url 'addCustomer' %}" class="nav-link">New Customer</a></li>
                     <li class="nav-item"><a href="{% url 'allJobSites' %}" class="nav-link">All Customers</a></li>
+                    <li class="nav-item"><a href="{% url 'addCustomer' %}" class="nav-link">New Customer</a></li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#uiWaterTest" role="button" aria-expanded="false" aria-controls="uiWaterTest">
+                <i class="link-icon mdi mdi-flask"></i>
+                <span class="link-title">Water Testing</span>
+                <i class="link-arrow mdi mdi-chevron-down"></i>
+            </a>
+            <div class="collapse" id="uiWaterTest">
+                <ul class="nav sub-menu">
+                    <li class="nav-item"><a href="{% url 'viewAllWaterTests' %}" class="nav-link">All Test Results</a></li>
                 </ul>
             </div>
         </li>
@@ -62,8 +74,8 @@
             </a>
             <div class="collapse" id="uiEquipment">
                 <ul class="nav sub-menu">
-                    <li class="nav-item"><a href="{% url 'addEquipment' %}" class="nav-link">New Equipment</a></li>
                     <li class="nav-item"><a href="{% url 'allEquipment' %}" class="nav-link">All Equipment</a></li>
+                    <li class="nav-item"><a href="{% url 'addEquipment' %}" class="nav-link">New Equipment</a></li>
                 </ul>
             </div>
         </li>

@@ -5,8 +5,8 @@ from django.conf import settings
 
 class Equipment(models.Model):
     quickbooks_id = models.IntegerField(blank=True, null=True)
-    sku = models.CharField(max_length=100, blank=True, null=True)
-    name = models.CharField(max_length=100)
+    sku = models.CharField(max_length=100, blank=True, null=True, unique=True)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)
 
     url = models.URLField(blank=True, null=True)

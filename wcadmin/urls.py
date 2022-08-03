@@ -27,5 +27,5 @@ urlpatterns = [
     path('qb/', include('qb.urls'), name='qb'),
     path('email/', include('communication.urls'), name='email'),
     path('main/', include('main.urls'), name='main'),
-    path('water_test/', include('water_testing.urls'), name='water_test'),
+    path('water_testing/', include('water_testing.urls'), name='water_test'),
 ]

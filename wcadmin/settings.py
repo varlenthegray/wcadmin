@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'qb',
     'communication',
     'main',
+    'water_testing.apps.WaterTestingConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
